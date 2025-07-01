@@ -4,11 +4,7 @@
   <meta charset="UTF-8">
   <title>Tente a sua sorte!</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
       background-color: #ffffff;
@@ -20,14 +16,11 @@
       padding: 10px;
       font-size: 14px;
     }
-    h1 {
-      font-size: 24px;
-      margin: 20px 0;
-    }
+    h1 { font-size: 24px; margin: 20px 0; }
     #roleta-container {
       margin: 0 auto;
-      width: 320px;
-      height: 320px;
+      width: 360px;
+      height: 360px;
       position: relative;
     }
     #svg-roleta {
@@ -52,24 +45,56 @@
       justify-content: center;
       gap: 30px;
     }
-    .contador div {
-      font-size: 24px;
-    }
+    .contador div { font-size: 24px; }
     #mensagem-final {
-      background: #eee;
+      background: #fff3cd;
       padding: 20px;
       margin-top: 20px;
-      font-weight: bold;
       font-size: 18px;
+      border-top: 2px solid #ffc107;
+      animation: none;
+    }
+    .animate-prize {
+      animation: blink 1s ease-in-out 4;
+    }
+    @keyframes blink {
+      0%, 100% { background-color: #fff3cd; }
+      50% { background-color: #ffe57f; }
+    }
+    .info-final {
+      background: #f8f9fa;
+      padding: 20px;
+      text-align: left;
+      margin: 30px auto;
+      max-width: 600px;
+      font-size: 16px;
+      line-height: 1.6;
+      border-top: 2px solid #ccc;
+    }
+    .info-final ul { list-style: none; padding-left: 0; }
+    .info-final ul li::before { content: '✅ '; }
+    .info-final button, .info-final a {
+      margin-top: 10px;
+      display: inline-block;
+      padding: 10px 20px;
+      background: #25d366;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+    .copied-msg {
+      color: green;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
     }
   </style>
 </head>
 <body>
-
   <div class="top-bar">
     ⏳ Você tem <span id="min">02</span>:<span id="seg">00</span> para girar e garantir sua chance gratuita!
   </div>
-
   <h1>🎯 Tente a sua sorte! 🎯</h1>
   <p>Clique no botão e gire a roleta para ganhar prêmios!</p>
 
@@ -88,7 +113,38 @@
     <div><strong id="tempoSeg">00</strong><br>Segundos</div>
   </div>
 
-  <div id="mensagem-final">Chegou sua vez de ganhar!</div>
+  <div id="mensagem-final">Para começar, basta apertar o botão dourado escrito GIRAR!<br><br>
+    💡 Você tem 2 tentativas totalmente grátis!<br><br>
+    A roleta está cheia de prêmios esperando por você!
+  </div>
+
+  <div class="info-final">
+    <h2>🎁 Prêmios da Roleta da Sorte</h2>
+    <ul>
+      <li>10 Meticais – Comece com sorte!</li>
+      <li>100 Meticais – Já dá pra comemorar!</li>
+      <li>500 Meticais – Subindo o nível!</li>
+      <li>1.000 Meticais – Agora sim!</li>
+      <li>5.000 Meticais – Sorte grande!</li>
+      <li>10.000 Meticais – O prêmio dos sonhos! 💸</li>
+    </ul>
+    <br>
+    <strong>🔁 GANHE MAIS GIROS GRÁTIS!</strong><br>
+    Compartilhe o site <strong>nova-roleta-de-ganhar-dinheiro.vercel.app</strong> com seus amigos e familiares.<br><br>
+
+    💬 Frase pronta para enviar:<br><br>
+    🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: <strong>https://nova-roleta-de-ganhar-dinheiro.vercel.app</strong><br><br>
+
+    <button id="copiar">📋 Copiar mensagem</button>
+    <a href="https://wa.me/?text=🚀%20Acabei%20de%20girar%20uma%20roleta%20e%20ganhei%20um%20prêmio!%20Você%20também%20pode%20ganhar%20até%2010.000%20MT%20grátis.%20Entra%20aqui:%20https://nova-roleta-de-ganhar-dinheiro.vercel.app" target="_blank">📲 Compartilhar no WhatsApp</a>
+    <div class="copied-msg" id="copiado-msg">✅ Mensagem copiada com sucesso!</div>
+
+    <br><br>
+    <small>Termos de Uso e Direitos Reservados</small>
+  </div>
+
+  <audio id="som-girar" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_740dc91a7f.mp3?filename=slot-machine-spin-1-179128.mp3"></audio>
+  <audio id="som-premio" src="https://cdn.pixabay.com/download/audio/2021/11/25/audio_bfa4f55fb3.mp3?filename=correct-2-46134.mp3"></audio>
 
   <script>
     const premios = [
@@ -96,12 +152,7 @@
       "BOA SORTE", "10.000 METICAIS", "500 METICAIS", "500 METICAIS", "BOA SORTE",
       "10.000 METICAIS", "5.000 METICAIS"
     ];
-
-    const cores = [
-      "#f44336", "#2196f3", "#4caf50", "#e91e63", "#ff9800", "#9c27b0",
-      "#00bcd4", "#3f51b5", "#8bc34a", "#9c27b0", "#ff5722", "#03a9f4"
-    ];
-
+    const cores = ["#f44336", "#2196f3", "#4caf50", "#e91e63", "#ff9800", "#9c27b0", "#00bcd4", "#3f51b5", "#8bc34a", "#9c27b0", "#ff5722", "#03a9f4"];
     const numPremios = premios.length;
     const anguloPorSetor = 360 / numPremios;
     const grupo = document.getElementById("fatias");
@@ -113,7 +164,6 @@
       const y1 = 150 + 145 * Math.sin((Math.PI / 180) * angIni);
       const x2 = 150 + 145 * Math.cos((Math.PI / 180) * angFim);
       const y2 = 150 + 145 * Math.sin((Math.PI / 180) * angFim);
-
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
       path.setAttribute("d", `M150,150 L${x1},${y1} A145,145 0 0,1 ${x2},${y2} Z`);
       path.setAttribute("fill", cores[i % cores.length]);
@@ -142,6 +192,10 @@
       if (girando) return;
       girando = true;
 
+      const somGirar = document.getElementById("som-girar");
+      somGirar.currentTime = 0;
+      somGirar.play();
+
       const giros = 5;
       const anguloRandom = Math.floor(Math.random() * 360);
       anguloTotal += giros * 360 + anguloRandom;
@@ -153,7 +207,12 @@
         let index = Math.floor((360 - angFinal) / anguloPorSetor) % numPremios;
         if (index < 0) index += numPremios;
 
-        document.getElementById("mensagem-final").innerText = `🎉 Você ganhou: ${premios[index]}!`;
+        const premio = premios[index];
+        const msg = document.getElementById("mensagem-final");
+        msg.innerText = `🎉 Você ganhou: ${premio}!`;
+        msg.classList.add("animate-prize");
+
+        document.getElementById("som-premio").play();
 
         setTimeout(() => {
           window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
@@ -161,6 +220,12 @@
 
         girando = false;
       }, 3000);
+    });
+
+    document.getElementById("copiar").addEventListener("click", () => {
+      navigator.clipboard.writeText("🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: https://nova-roleta-de-ganhar-dinheiro.vercel.app");
+      document.getElementById("copiado-msg").style.display = "block";
+      setTimeout(() => document.getElementById("copiado-msg").style.display = "none", 3000);
     });
 
     let min = 2;

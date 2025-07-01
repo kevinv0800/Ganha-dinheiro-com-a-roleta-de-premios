@@ -1,180 +1,166 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Roleta de Prêmios</title>
+  <meta charset="UTF-8">
+  <title>Roleta da Sorte</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background: #222;
-      color: #eee;
+      background: #fff8e1;
       margin: 0;
       padding: 20px;
-      user-select: none;
     }
-    #canvas {
-      background: #333;
-      border-radius: 50%;
-      margin: 20px auto;
-      display: block;
-      box-shadow: 0 0 15px #0008;
+
+    h1 {
+      color: #d32f2f;
     }
+
+    #roleta-container {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin: 0 auto 20px;
+    }
+
+    #svg-roleta {
+      transform: rotate(0deg);
+      transition: transform 3s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+
     #girar {
-      background: #3498db;
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: gold;
       border: none;
-      padding: 15px 40px;
-      color: white;
-      font-size: 20px;
       border-radius: 10px;
       cursor: pointer;
-      margin: 15px auto;
-      display: block;
-      transition: background 0.3s ease;
+      font-weight: bold;
     }
-    #girar:hover:not(:disabled) {
-      background: #2980b9;
-    }
-    #girar:disabled {
-      background: #555;
-      cursor: not-allowed;
-    }
+
     #resultado {
-      margin-top: 25px;
       font-size: 24px;
-      min-height: 30px;
-      font-weight: bold;
-      color: #f1c40f;
+      margin-top: 20px;
+      color: green;
     }
+
     #timer {
-      font-size: 22px;
+      font-size: 18px;
       margin-top: 10px;
-      font-weight: bold;
-      letter-spacing: 1px;
+    }
+
+    ul {
+      text-align: left;
+      display: inline-block;
     }
   </style>
 </head>
 <body>
-  <h1>Roleta de Prêmios</h1>
 
-  <canvas id="canvas" width="400" height="400"></canvas>
+  <h1>🎉 Chegou sua vez de ganhar!</h1>
+  <p>Para começar, basta apertar o botão dourado escrito <strong>GIRAR</strong>!</p>
+  <p>💡 Você tem <strong>2 tentativas totalmente grátis</strong>!</p>
 
-  <button id="girar">Girar</button>
-
-  <div id="resultado"></div>
-
-  <div id="timer">
-    Tempo restante: <span id="minutos">02</span>:<span id="segundos">00</span>
+  <div id="roleta-container">
+    <svg width="300" height="300" viewBox="0 0 300 300" id="svg-roleta">
+      <circle cx="150" cy="150" r="145" fill="gold" stroke="black" stroke-width="2"/>
+      <g id="fatias"></g>
+      <circle cx="150" cy="150" r="40" fill="gold" stroke="black" stroke-width="2"/>
+    </svg>
   </div>
 
+  <h2>🎁 Prêmios da Roleta da Sorte</h2>
+  <ul>
+    <li>✅ 10 Meticais – Comece com sorte!</li>
+    <li>✅ 100 Meticais – Já dá pra comemorar!</li>
+    <li>✅ 500 Meticais – Subindo o nível!</li>
+    <li>✅ 1.000 Meticais – Agora sim!</li>
+    <li>✅ 5.000 Meticais – Sorte grande!</li>
+    <li>✅ 10.000 Meticais – O prêmio dos sonhos! 💸</li>
+  </ul>
+
+  <button id="girar">GIRAR</button>
+  <div id="resultado"></div>
+  <div id="timer">⏳ Tempo restante: <span id="minutos">02</span>:<span id="segundos">00</span></div>
+
   <script>
-    // Variáveis globais
-    let girando = false;
-    let anguloAtual = 0;
-
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-
-    // Prêmios da roleta - personalize aqui!
     const premios = [
-      'R$10',
-      'R$20',
-      'R$50',
-      'R$100',
-      'Brinde',
-      'Surpresa',
+      "100 Meticais", "10 Meticais", "1.000 Meticais", "BOA SORTE", "5.000 Meticais",
+      "BOA SORTE", "1000 Meticais", "5.000 Meticais", "10.000 Meticais", "500 Meticais",
+      "BOA SORTE", "500 Meticais"
+    ];
+
+    const cores = [
+      "#f44336", "#2196f3", "#4caf50", "#ff9800", "#9c27b0", "#e91e63",
+      "#03a9f4", "#8bc34a", "#ffc107", "#3f51b5", "#ff5722", "#00bcd4"
     ];
 
     const numPremios = premios.length;
-    const anguloPorPremio = (2 * Math.PI) / numPremios;
+    const anguloPorSetor = 360 / numPremios;
+    const grupo = document.getElementById("fatias");
 
-    // Função para desenhar a roleta
-    function desenharRoleta() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Desenha setores da roleta
+    for (let i = 0; i < numPremios; i++) {
+      const anguloInicial = i * anguloPorSetor;
+      const anguloFinal = anguloInicial + anguloPorSetor;
+      const x1 = 150 + 145 * Math.cos((Math.PI / 180) * anguloInicial);
+      const y1 = 150 + 145 * Math.sin((Math.PI / 180) * anguloInicial);
+      const x2 = 150 + 145 * Math.cos((Math.PI / 180) * anguloFinal);
+      const y2 = 150 + 145 * Math.sin((Math.PI / 180) * anguloFinal);
 
-      const centroX = canvas.width / 2;
-      const centroY = canvas.height / 2;
-      const raio = centroX;
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("d", `M150,150 L${x1},${y1} A145,145 0 0,1 ${x2},${y2} Z`);
+      path.setAttribute("fill", cores[i % cores.length]);
 
-      for (let i = 0; i < numPremios; i++) {
-        const angInicio = i * anguloPorPremio + anguloAtual;
-        const angFim = angInicio + anguloPorPremio;
+      const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      const anguloTexto = anguloInicial + anguloPorSetor / 2;
+      const tx = 150 + 90 * Math.cos((Math.PI / 180) * anguloTexto);
+      const ty = 150 + 90 * Math.sin((Math.PI / 180) * anguloTexto);
+      text.setAttribute("x", tx);
+      text.setAttribute("y", ty);
+      text.setAttribute("text-anchor", "middle");
+      text.setAttribute("dominant-baseline", "middle");
+      text.setAttribute("font-size", "10");
+      text.setAttribute("fill", "#fff");
+      text.setAttribute("transform", `rotate(${anguloTexto}, ${tx}, ${ty})`);
+      text.textContent = premios[i];
 
-        // Cores alternadas para cada setor
-        ctx.fillStyle = i % 2 === 0 ? '#3498db' : '#9b59b6';
-
-        ctx.beginPath();
-        ctx.moveTo(centroX, centroY);
-        ctx.arc(centroX, centroY, raio, angInicio, angFim);
-        ctx.closePath();
-        ctx.fill();
-
-        // Texto do prêmio
-        ctx.save();
-        ctx.translate(centroX, centroY);
-        ctx.rotate(angInicio + anguloPorPremio / 2);
-        ctx.textAlign = 'right';
-        ctx.fillStyle = '#fff';
-        ctx.font = '18px Arial';
-        ctx.fillText(premios[i], raio - 20, 8);
-        ctx.restore();
-      }
-
-      // Desenha o ponteiro da roleta (no topo)
-      ctx.fillStyle = '#e74c3c';
-      ctx.beginPath();
-      ctx.moveTo(centroX, centroY - raio - 10);
-      ctx.lineTo(centroX - 20, centroY - raio + 30);
-      ctx.lineTo(centroX + 20, centroY - raio + 30);
-      ctx.closePath();
-      ctx.fill();
+      grupo.appendChild(path);
+      grupo.appendChild(text);
     }
 
-    // Função para girar a roleta
-    function girarRoleta() {
+    // Lógica de rotação
+    let anguloTotal = 0;
+    let girando = false;
+
+    document.getElementById('girar').addEventListener('click', () => {
       if (girando) return;
       girando = true;
 
-      document.getElementById('resultado').innerText = '';
-      document.getElementById('girar').disabled = true;
+      const svg = document.getElementById("svg-roleta");
+      const giros = 5;
+      const anguloAleatorio = Math.floor(Math.random() * 360);
+      anguloTotal += giros * 360 + anguloAleatorio;
 
-      const girosCompletos = 5;
-      const giroAleatorio = Math.floor(Math.random() * 360);
-      const giroTotalGraus = 360 * girosCompletos + giroAleatorio;
-      const duracao = 4000;
-      const inicio = Date.now();
+      svg.style.transform = `rotate(${anguloTotal}deg)`;
 
-      function animar() {
-        const agora = Date.now();
-        const tempoDecorrido = agora - inicio;
-        const progresso = Math.min(tempoDecorrido / duracao, 1);
+      setTimeout(() => {
+        const anguloFinal = anguloTotal % 360;
+        let index = Math.floor((360 - anguloFinal) / anguloPorSetor) % numPremios;
+        if (index < 0) index += numPremios;
 
-        const anguloGraus = giroTotalGraus * (1 - Math.pow(1 - progresso, 3));
-        anguloAtual = (anguloGraus * Math.PI / 180) % (2 * Math.PI);
+        const premio = premios[index];
+        document.getElementById('resultado').innerText = `🎉 Você ganhou: ${premio}!`;
 
-        desenharRoleta();
+        setTimeout(() => {
+          window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
+        }, 2000);
 
-        if (progresso < 1) {
-          requestAnimationFrame(animar);
-        } else {
-          let indexPremio = Math.floor(numPremios - (anguloAtual / anguloPorPremio)) % numPremios;
-          if (indexPremio < 0) indexPremio += numPremios;
+        girando = false;
+      }, 3000);
+    });
 
-          document.getElementById('resultado').innerText = `🎉 Você ganhou: ${premios[indexPremio]}!`;
-          girando = false;
-          document.getElementById('girar').disabled = false;
-
-          setTimeout(() => {
-            window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
-          }, 2000);
-        }
-      }
-
-      animar();
-    }
-
-    // Timer regressivo
+    // Timer
     let minutos = 2;
     let segundos = 0;
 
@@ -194,11 +180,6 @@
       setTimeout(atualizarTimer, 1000);
     }
 
-    // Evento do botão girar
-    document.getElementById('girar').addEventListener('click', girarRoleta);
-
-    // Inicializações
-    desenharRoleta();
     atualizarTimer();
   </script>
 </body>

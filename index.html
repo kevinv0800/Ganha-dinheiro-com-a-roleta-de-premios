@@ -19,44 +19,75 @@
     h1 { font-size: 24px; margin: 20px 0; }
     #roleta-container {
       margin: 0 auto;
-      width: 420px;  /* maior */
-      height: 420px;
+      width: 480px;
+      height: 480px;
       position: relative;
+      filter: drop-shadow(0 0 15px #ff9800);
+      border-radius: 50%;
+      overflow: visible;
     }
     #svg-roleta {
       width: 100%;
       height: 100%;
       transform: rotate(0deg);
       transition: transform 3s cubic-bezier(0.33, 1, 0.68, 1);
+      margin-top: 35px;
+      filter: drop-shadow(0 0 10px #ffa726);
     }
-    /* Seta indicadora no topo da roleta */
+    /* Seta indicadora no topo da roleta com brilho animado */
     #seta {
       position: absolute;
-      top: -25px;
+      top: -30px;
       left: 50%;
       transform: translateX(-50%);
       width: 0; 
       height: 0; 
-      border-left: 20px solid transparent;
-      border-right: 20px solid transparent;
-      border-bottom: 30px solid #ff9800;
-      filter: drop-shadow(0 0 3px #d46a00);
+      border-left: 25px solid transparent;
+      border-right: 25px solid transparent;
+      border-bottom: 35px solid #ff9800;
+      filter: drop-shadow(0 0 8px #d46a00);
       z-index: 10;
+      animation: piscaSeta 1.5s infinite ease-in-out;
+    }
+    @keyframes piscaSeta {
+      0%, 100% { filter: drop-shadow(0 0 8px #d46a00); }
+      50% { filter: drop-shadow(0 0 20px #ff6f00); }
     }
     .btn-girar {
-      margin-top: 20px;
-      padding: 20px 40px;
-      font-size: 24px;
+      margin-top: 40px;
+      padding: 25px 50px;
+      font-size: 28px;
       background-color: #ffc107;
       border: none;
       border-radius: 12px;
       cursor: pointer;
       font-weight: bold;
       box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
     }
     .btn-girar:hover {
       background-color: #ffca28;
+      transform: scale(1.1);
+      box-shadow: 0 6px 12px rgba(255, 193, 7, 0.8);
+    }
+    .btn-girar:active {
+      animation: pressionado 0.3s ease forwards;
+      box-shadow: 0 0 20px #ff9800;
+      transform: scale(0.95);
+    }
+    @keyframes pressionado {
+      0% {
+        box-shadow: 0 0 0 #ff9800;
+      }
+      50% {
+        box-shadow: 0 0 20px #ff9800;
+      }
+      100% {
+        box-shadow: 0 0 0 #ff9800;
+      }
     }
     .contador {
       margin: 20px auto;
@@ -95,10 +126,12 @@
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
     .info-final h2 {
-      font-size: 28px;
-      margin-bottom: 20px;
+      font-size: 32px;
+      margin-bottom: 30px;
       color: #333;
       text-align: center;
+      letter-spacing: 1.5px;
+      font-weight: 900;
     }
     .info-final ul {
       list-style: none;
@@ -106,27 +139,31 @@
       margin-bottom: 30px;
     }
     .info-final ul li {
-      margin-bottom: 15px;
+      margin-bottom: 18px;
       font-weight: 600;
       color: #555;
       line-height: 1.3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    /* Prêmios em duas linhas estreitas */
     .premio-valor {
-      font-size: 22px;
+      font-size: 28px;
       font-weight: 900;
       line-height: 1;
       color: #ff9800;
       text-align: center;
+      user-select: none;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
     }
     .premio-texto {
       font-size: 16px;
       font-weight: 700;
       text-align: center;
       color: #333;
+      user-select: none;
     }
 
-    /* Botões copiar e whatsapp lado a lado e maiores */
     .btns-compartilhar {
       display: flex;
       justify-content: center;
@@ -136,7 +173,7 @@
     }
     .btns-compartilhar button,
     .btns-compartilhar a {
-      padding: 15px 25px;
+      padding: 15px 40px;
       font-size: 18px;
       font-weight: bold;
       border-radius: 10px;
@@ -147,6 +184,7 @@
       justify-content: center;
       box-shadow: 0 4px 6px rgba(0,0,0,0.2);
       transition: background-color 0.3s ease;
+      user-select: none;
     }
     .btns-compartilhar button {
       background: #25d366;
@@ -172,23 +210,16 @@
       text-align: center;
     }
 
-    /* Modal estilo para diálogo de prêmio */
     #modal-prize {
       display: none;
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(0,0,0,0.85);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0,0,0,0.45);
+      border-radius: 15px;
+      padding: 20px 40px;
       z-index: 9999;
-      justify-content: center;
-      align-items: center;
-      animation: fadeInBg 0.5s ease forwards;
-    }
-    #modal-content {
-      background: transparent;
-      padding: 40px 60px;
-      border-radius: 20px;
-      text-align: center;
-      font-size: 38px;
+      font-size: 30px;
       font-weight: 900;
       color: white;
       text-transform: uppercase;
@@ -196,14 +227,17 @@
       user-select: none;
       text-shadow: 0 0 8px #ff9800, 0 0 12px #ffa726;
       max-width: 90%;
-    }
-    @keyframes fadeInBg {
-      0% {opacity: 0;}
-      100% {opacity: 1;}
+      text-align: center;
+      pointer-events: none;
     }
     @keyframes oscillateColor {
       0%, 100% { color: white; text-shadow: 0 0 8px #ff9800, 0 0 12px #ffa726; }
       50% { color: #ff9800; text-shadow: 0 0 20px #ff5722, 0 0 30px #ff7043; }
+    }
+    /* Brilho suave nas fatias */
+    path:hover {
+      filter: drop-shadow(0 0 10px #fff176);
+      transition: filter 0.3s ease;
     }
   </style>
 </head>
@@ -216,7 +250,7 @@
 
   <div id="roleta-container">
     <div id="seta"></div>
-    <svg viewBox="0 0 300 300" id="svg-roleta" style="margin-top:25px;">
+    <svg viewBox="0 0 300 300" id="svg-roleta">
       <circle cx="150" cy="150" r="145" fill="#ffc107" stroke="#333" stroke-width="4"/>
       <g id="fatias"></g>
       <circle cx="150" cy="150" r="40" fill="#ffc107" stroke="#333" stroke-width="2"/>
@@ -262,13 +296,11 @@
     <small>Termos de Uso e Direitos Reservados</small>
   </div>
 
-  <audio id="som-girar" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_740dc91a7f.mp3?filename=slot-machine-spin-1-179128.mp3"></audio>
+  <audio id="som-girar" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_740dc91a7f.mp3?filename=slot-machine-spin-1-179128.mp3" loop></audio>
   <audio id="som-premio" src="https://cdn.pixabay.com/download/audio/2021/11/25/audio_bfa4f55fb3.mp3?filename=correct-2-46134.mp3"></audio>
+  <audio id="som-clique" src="https://cdn.pixabay.com/download/audio/2021/12/10/audio_95272f2b43.mp3?filename=button-click-01.mp3"></audio>
 
-  <!-- Modal do prêmio -->
-  <div id="modal-prize">
-    <div id="modal-content"></div>
-  </div>
+  <div id="modal-prize"></div>
 
   <script>
     const premios = [
@@ -280,6 +312,17 @@
     const numPremios = premios.length;
     const anguloPorSetor = 360 / numPremios;
     const grupo = document.getElementById("fatias");
+
+    function formatPremio(text) {
+      if(text.includes("METICAIS")) {
+        let valor = text.replace(" METICAIS", "");
+        return { valor, texto: "Meticais" };
+      }
+      if(text === "BOA SORTE") {
+        return { valor: "BOA", texto: "SORTE" };
+      }
+      return { valor: text, texto: "" };
+    }
 
     for (let i = 0; i < numPremios; i++) {
       const angIni = i * anguloPorSetor;
@@ -293,36 +336,59 @@
       path.setAttribute("fill", cores[i % cores.length]);
       path.setAttribute("stroke", "#000");
       path.setAttribute("stroke-width", "1");
+      path.style.filter = "drop-shadow(0 0 3px white)";
 
-      const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      const { valor, texto } = formatPremio(premios[i]);
+
+      const textValor = document.createElementNS("http://www.w3.org/2000/svg", "text");
       const angText = angIni + anguloPorSetor / 2;
-      const tx = 150 + 90 * Math.cos((Math.PI / 180) * angText);
-      const ty = 150 + 90 * Math.sin((Math.PI / 180) * angText);
-      text.setAttribute("x", tx);
-      text.setAttribute("y", ty);
-      text.setAttribute("text-anchor", "middle");
-      text.setAttribute("dominant-baseline", "middle");
-      text.setAttribute("font-size", "14");
-      text.setAttribute("fill", "#fff");
-      text.setAttribute("transform", `rotate(${angText}, ${tx}, ${ty})`);
-      text.style.textShadow = "1px 1px 2px rgba(0,0,0,0.8)";
-      text.textContent = premios[i];
+      const tx = 150 + 70 * Math.cos((Math.PI / 180) * angText);
+      const ty = 150 + 60 * Math.sin((Math.PI / 180) * angText);
+      textValor.setAttribute("x", tx);
+      textValor.setAttribute("y", ty);
+      textValor.setAttribute("text-anchor", "middle");
+      textValor.setAttribute("dominant-baseline", "middle");
+      textValor.setAttribute("font-size", "22");
+      textValor.setAttribute("fill", "#fff");
+      textValor.setAttribute("font-weight", "bold");
+      textValor.setAttribute("transform", `rotate(${angText}, ${tx}, ${ty})`);
+      textValor.style.textShadow = "2px 2px 6px rgba(0,0,0,0.9)";
+      textValor.textContent = valor;
+
+      const textTexto = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      const ty2 = ty + 28;
+      textTexto.setAttribute("x", tx);
+      textTexto.setAttribute("y", ty2);
+      textTexto.setAttribute("text-anchor", "middle");
+      textTexto.setAttribute("dominant-baseline", "middle");
+      textTexto.setAttribute("font-size", "14");
+      textTexto.setAttribute("fill", "#fff");
+      textTexto.setAttribute("font-weight", "bold");
+      textTexto.setAttribute("transform", `rotate(${angText}, ${tx}, ${ty2})`);
+      textTexto.style.textShadow = "1px 1px 4px rgba(0,0,0,0.7)";
+      textTexto.textContent = texto;
 
       grupo.appendChild(path);
-      grupo.appendChild(text);
+      grupo.appendChild(textValor);
+      grupo.appendChild(textTexto);
     }
 
     let anguloTotal = 0;
     let girando = false;
 
     const modal = document.getElementById("modal-prize");
-    const modalContent = document.getElementById("modal-content");
+    const somGirar = document.getElementById("som-girar");
+    const somPremio = document.getElementById("som-premio");
+    const somClique = document.getElementById("som-clique");
+    const seta = document.getElementById("seta");
 
     document.getElementById("girar").addEventListener("click", () => {
       if (girando) return;
       girando = true;
 
-      const somGirar = document.getElementById("som-girar");
+      somClique.currentTime = 0;
+      somClique.play();
+
       somGirar.currentTime = 0;
       somGirar.play();
 
@@ -330,31 +396,33 @@
       const anguloRandom = Math.floor(Math.random() * 360);
       anguloTotal += giros * 360 + anguloRandom;
 
+      // Começa animação e luz da seta
+      document.getElementById("svg-roleta").style.transition = "transform 4s cubic-bezier(0.33, 1, 0.68, 1)";
       document.getElementById("svg-roleta").style.transform = `rotate(${anguloTotal}deg)`;
+      seta.style.animationPlayState = "running";
 
       setTimeout(() => {
+        somGirar.pause();
+        somPremio.currentTime = 0;
+        somPremio.play();
+
         const angFinal = anguloTotal % 360;
         let index = Math.floor((360 - angFinal) / anguloPorSetor) % numPremios;
         if (index < 0) index += numPremios;
 
         const premio = premios[index];
-        const msg = document.getElementById("mensagem-final");
-        msg.innerText = `🎉 Você ganhou: ${premio}!`;
-        msg.classList.add("animate-prize");
+        modal.innerHTML = `🎉 PARABÉNS GANHAS: <br><span style="color:#ff9800">${premio}</span> 🚀`;
+        modal.style.display = "block";
 
-        document.getElementById("som-premio").play();
+        seta.style.animationPlayState = "paused";
 
-        // Modal com texto personalizado e animação oscilante
-        modalContent.textContent = `🎉PARABÉNS GANHAS: ${premio} 🚀`;
-        modal.style.display = "flex";
-
-        // Redirecionar automaticamente após 3 segundos
         setTimeout(() => {
+          modal.style.display = "none";
           window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
-        }, 3000);
+        }, 3500);
 
         girando = false;
-      }, 3000);
+      }, 4000);
     });
 
     document.getElementById("copiar").addEventListener("click", () => {

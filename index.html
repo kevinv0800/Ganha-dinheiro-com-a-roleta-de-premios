@@ -25,7 +25,7 @@
       filter: drop-shadow(0 0 25px #ff9800);
       border-radius: 50%;
       overflow: visible;
-      margin-top: 50px; /* abaixei a roleta um pouco */
+      margin-top: 20px; /* voltou a posição original, sem abaixar */
       background: radial-gradient(circle at center, #fff8e1, #ffecb3 60%, transparent 85%);
     }
     #svg-roleta {
@@ -225,6 +225,49 @@
       text-shadow: 2px 2px 6px rgba(0,0,0,0.9);
       user-select: none;
     }
+    /* Modal saída */
+    #modal-sair {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 10000;
+      color: white;
+      font-size: 26px;
+      font-weight: bold;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      text-align: center;
+      user-select: none;
+    }
+    #modal-sair p {
+      margin-bottom: 30px;
+      line-height: 1.5;
+      max-width: 600px;
+    }
+    #modal-sair .btns {
+      display: flex;
+      gap: 30px;
+    }
+    #modal-sair button {
+      background: #25d366;
+      color: white;
+      border: none;
+      padding: 18px 45px;
+      border-radius: 10px;
+      font-size: 22px;
+      cursor: pointer;
+      font-weight: 900;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+    #modal-sair button:hover {
+      background: #1ebe57;
+    }
   </style>
 </head>
 <body>
@@ -291,6 +334,18 @@
 
   <div id="modal-prize" role="alert" aria-live="assertive" aria-atomic="true"></div>
 
+  <div id="modal-sair" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-sair" aria-describedby="desc-modal-sair">
+    <h2 id="titulo-modal-sair">Espere!</h2>
+    <p id="desc-modal-sair">
+      Antes de sair, compartilhe o link para ganhar mais giros grátis!<br>
+      🚀 <strong>https://ganha-dinheiro-com-a-roleta-de-prem-wine.vercel.app/</strong>
+    </p>
+    <div class="btns">
+      <button id="btn-compartilhar">Compartilhar</button>
+      <button id="btn-fechar-modal">Continuar aqui</button>
+    </div>
+  </div>
+
   <script>
     const premios = [
       "100 METICAIS", "10 METICAIS", "1.000 METICAIS", "BOA SORTE", "5.000 METICAIS",
@@ -327,7 +382,9 @@
       text.setAttribute("font-size", "14");
       text.setAttribute("fill", "#fff");
       text.setAttribute("transform", `rotate(${angText}, ${tx}, ${ty})`);
+      text.style.fontWeight = "bold";
       text.style.textShadow = "2px 2px 6px rgba(0,0,0,0.9)";
+      text.style.userSelect = "none";
       text.textContent = premios[i];
 
       grupo.appendChild(path);
@@ -338,17 +395,12 @@
     let girando = false;
 
     const modal = document.getElementById("modal-prize");
-    const somGirar = document.getElementById("som-girar");
-    const somPremio = document.getElementById("som-premio");
-    const somClique = document.getElementById("som-clique");
 
     document.getElementById("girar").addEventListener("click", () => {
       if (girando) return;
       girando = true;
 
-      somClique.currentTime = 0;
-      somClique.play();
-
+      const somGirar = document.getElementById("som-girar");
       somGirar.currentTime = 0;
       somGirar.play();
 
@@ -356,14 +408,9 @@
       const anguloRandom = Math.floor(Math.random() * 360);
       anguloTotal += giros * 360 + anguloRandom;
 
-      document.getElementById("svg-roleta").style.transition = "transform 3s cubic-bezier(0.33, 1, 0.68, 1)";
       document.getElementById("svg-roleta").style.transform = `rotate(${anguloTotal}deg)`;
 
       setTimeout(() => {
-        somGirar.pause();
-        somPremio.currentTime = 0;
-        somPremio.play();
-
         const angFinal = anguloTotal % 360;
         let index = Math.floor((360 - angFinal) / anguloPorSetor) % numPremios;
         if (index < 0) index += numPremios;
@@ -372,10 +419,14 @@
         modal.innerText = `🎉PARABÉNS GANHAS:\n${premio} 🚀`;
         modal.style.display = "block";
 
+        const somPremio = document.getElementById("som-premio");
+        somPremio.currentTime = 0;
+        somPremio.play();
+
         setTimeout(() => {
           modal.style.display = "none";
           window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
-        }, 2000);
+        }, 2600);
 
         girando = false;
       }, 3000);
@@ -388,6 +439,7 @@
       setTimeout(() => { msg.style.display = "none"; }, 3000);
     });
 
+    // Timer de contagem regressiva
     let min = 2;
     let seg = 0;
     function timer() {
@@ -405,6 +457,38 @@
       setTimeout(timer, 1000);
     }
     timer();
+
+    // Controle do modal de saída
+    const modalSair = document.getElementById("modal-sair");
+    const btnCompartilhar = document.getElementById("btn-compartilhar");
+    const btnFecharModal = document.getElementById("btn-fechar-modal");
+
+    let saiuTentativa = false;
+
+    // Antes de sair da página
+    window.addEventListener('beforeunload', (event) => {
+      if (!saiuTentativa) {
+        event.preventDefault();
+        event.returnValue = '';
+        modalSair.style.display = 'flex';
+        saiuTentativa = true;
+        return '';
+      }
+    });
+
+    // Botão compartilhar no modal de saída
+    btnCompartilhar.addEventListener('click', () => {
+      navigator.clipboard.writeText("🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: https://ganha-dinheiro-com-a-roleta-de-prem-wine.vercel.app/");
+      alert('Link copiado! Agora compartilhe para ganhar mais giros grátis!');
+      modalSair.style.display = 'none';
+      saiuTentativa = false;
+    });
+
+    // Botão continuar na página
+    btnFecharModal.addEventListener('click', () => {
+      modalSair.style.display = 'none';
+      saiuTentativa = false;
+    });
   </script>
 </body>
 </html>

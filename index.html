@@ -157,7 +157,6 @@
     const anguloPorSetor = 360 / numPremios;
     const grupo = document.getElementById("fatias");
 
-    // Cria as fatias e textos da roleta
     for (let i = 0; i < numPremios; i++) {
       const angIni = i * anguloPorSetor;
       const angFim = angIni + anguloPorSetor;
@@ -215,8 +214,9 @@
 
         document.getElementById("som-premio").play();
 
+        console.log("Prêmio ganho, redirecionando em 2 segundos...");
+
         setTimeout(() => {
-          // Redireciona para o link ao ganhar
           window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
         }, 2000);
 

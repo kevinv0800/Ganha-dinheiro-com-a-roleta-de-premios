@@ -18,63 +18,37 @@
     }
     h1 { font-size: 24px; margin: 20px 0; }
     #roleta-container {
-      margin: 0 auto;
-      width: 600px;
-      height: 600px;
+      margin: 10px auto 0 auto; /* subiu a roleta */
+      width: 420px;
+      height: 420px;
       position: relative;
-      filter: drop-shadow(0 0 25px #ff9800);
+      background: radial-gradient(circle at center, #fff3cd 60%, #ffc107 95%);
       border-radius: 50%;
-      overflow: visible;
-      margin-top: 20px; /* voltou a posição original, sem abaixar */
-      background: radial-gradient(circle at center, #fff8e1, #ffecb3 60%, transparent 85%);
+      box-shadow: 0 0 30px 10px #ffc107aa;
     }
     #svg-roleta {
       width: 100%;
       height: 100%;
       transform: rotate(0deg);
       transition: transform 3s cubic-bezier(0.33, 1, 0.68, 1);
-      margin-top: 40px;
-      filter: drop-shadow(0 0 20px #ffa726);
-    }
-    #seta {
-      position: absolute;
-      top: -40px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0; 
-      height: 0; 
-      border-left: 30px solid transparent;
-      border-right: 30px solid transparent;
-      border-bottom: 40px solid #ff9800;
-      filter: drop-shadow(0 0 12px #d46a00);
-      z-index: 10;
-      animation: piscaSeta 1.5s infinite ease-in-out;
-    }
-    @keyframes piscaSeta {
-      0%, 100% { filter: drop-shadow(0 0 12px #d46a00); }
-      50% { filter: drop-shadow(0 0 25px #ff6f00); }
+      border-radius: 50%;
+      user-select: none;
+      cursor: pointer;
     }
     .btn-girar {
-      margin-top: 80px;
-      padding: 36px 72px;
-      font-size: 34px;
+      margin-top: 30px; /* mais espaçamento para não ficar colado */
+      padding: 22px 50px;
+      font-size: 24px;
       background-color: #ffc107;
       border: none;
       border-radius: 14px;
       cursor: pointer;
       font-weight: bold;
-      box-shadow: 0 7px 10px rgba(0,0,0,0.35);
-      transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
-      user-select: none;
+      box-shadow: 0 5px 10px #d49c00;
+      transition: background-color 0.3s ease;
     }
     .btn-girar:hover {
-      background-color: #ffca28;
-      transform: scale(1.1);
-      box-shadow: 0 10px 18px rgba(255, 193, 7, 0.9);
-    }
-    .btn-girar:active {
-      transform: scale(0.95);
-      box-shadow: 0 0 25px #ff9800;
+      background-color: #e6ac00;
     }
     .contador {
       margin: 20px auto;
@@ -85,16 +59,16 @@
     .contador div { font-size: 24px; }
     #mensagem-final {
       background: #fff3cd;
-      padding: 25px 40px;
-      margin: 20px auto;
-      font-size: 16px; /* tamanho normal */
-      border-top: 3px solid #ffc107;
+      padding: 20px 50px;
+      margin-top: 20px;
+      font-size: 18px;
+      border-top: 2px solid #ffc107;
+      animation: none;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
       border-radius: 10px;
-      max-width: 700px;
-      box-shadow: 0 0 15px #ff9800;
-      color: #5a4d00;
-      line-height: 1.5;
-      text-align: center;
+      box-shadow: 0 0 10px #ffc107aa;
     }
     .animate-prize {
       animation: blink 1s ease-in-out 4;
@@ -105,246 +79,193 @@
     }
     .info-final {
       background: #f8f9fa;
-      padding: 35px 30px;
+      padding: 30px 40px;
       text-align: left;
       margin: 30px auto;
-      max-width: 700px;
+      max-width: 900px;
       font-size: 18px;
-      line-height: 1.6;
+      line-height: 1.8;
       border-top: 2px solid #ccc;
       border-radius: 10px;
-      box-shadow: 0 0 18px rgba(0,0,0,0.12);
-    }
-    .info-final h2 {
-      font-size: 34px;
-      margin-bottom: 35px;
-      color: #333;
-      text-align: center;
-      letter-spacing: 1.6px;
-      font-weight: 900;
+      box-shadow: 0 0 12px #ccc;
     }
     .info-final ul {
       list-style: none;
       padding-left: 0;
-      margin-bottom: 30px;
+      max-width: 300px;
+      margin-bottom: 20px;
     }
     .info-final ul li {
-      margin-bottom: 20px;
-      font-weight: 700;
-      color: #555;
-      line-height: 1.3;
-      user-select: none;
-    }
-    .btns-compartilhar {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 15px;
-      margin-bottom: 20px;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .btns-compartilhar button,
-    .btns-compartilhar a {
-      padding: 20px 52px;
-      font-size: 22px;
+      margin-bottom: 15px;
       font-weight: bold;
-      border-radius: 12px;
+    }
+    .info-final ul li span.valor {
+      display: block;
+      font-size: 32px;
+      color: #ff9800;
+      line-height: 1;
+    }
+    .info-final ul li span.unidade {
+      font-size: 18px;
+      color: #666;
+      margin-top: 3px;
+    }
+    .info-final strong {
+      display: block;
+      margin-top: 30px;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .info-final p {
+      margin-bottom: 15px;
+    }
+    .btns-share {
+      display: flex;
+      gap: 15px;
+      max-width: 500px;
+      margin-top: 10px;
+      margin-bottom: 30px;
+    }
+    .btns-share button, .btns-share a {
+      flex: 1;
+      padding: 15px 20px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 10px;
+      border: none;
       cursor: pointer;
       text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 6px 8px rgba(0,0,0,0.25);
-      transition: background-color 0.3s ease;
+      color: #fff;
       user-select: none;
+      transition: background-color 0.3s ease;
     }
-    .btns-compartilhar button {
-      background: #25d366;
-      color: white;
-      border: none;
+    .btns-share button {
+      background-color: #25d366;
+      box-shadow: 0 4px 8px #1da851aa;
     }
-    .btns-compartilhar button:hover {
-      background: #1ebe57;
+    .btns-share button:hover {
+      background-color: #1da851;
     }
-    .btns-compartilhar a {
-      background: #128c7e;
-      color: white;
+    .btns-share a {
+      background-color: #128c7e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 8px #0d6b5caa;
     }
-    .btns-compartilhar a:hover {
-      background: #0e6f65;
+    .btns-share a:hover {
+      background-color: #0d6b5c;
     }
     .copied-msg {
       color: green;
       font-size: 14px;
       margin-top: 5px;
       display: none;
-      text-align: center;
+      user-select: none;
     }
+    #seta-indicadora {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0; 
+      height: 0; 
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 30px solid #ff9800;
+      filter: drop-shadow(0 0 5px #ff9800cc);
+      z-index: 10;
+      pointer-events: none;
+      user-select: none;
+    }
+    /* Modal de premiação */
     #modal-prize {
       display: none;
       position: fixed;
-      top: 50%; left: 50%;
+      top: 30%;
+      left: 50%;
       transform: translate(-50%, -50%);
-      background-color: rgba(0,0,0,0.6);
-      border-radius: 20px;
-      padding: 40px 80px;
+      background: linear-gradient(45deg, #fff, #ff9800);
+      padding: 30px 50px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #ff9800cc;
+      color: white;
+      font-size: 28px;
+      font-weight: 900;
+      text-align: center;
+      white-space: pre-line;
+      animation: oscilar 1.5s ease-in-out infinite alternate;
+      user-select: none;
       z-index: 9999;
-      font-size: 44px;
-      font-weight: 900;
-      color: white;
-      text-transform: uppercase;
-      animation: oscillateColor 2.5s ease-in-out infinite;
-      user-select: none;
-      text-shadow: 0 0 18px #ff9800, 0 0 28px #ffa726;
-      max-width: 90%;
-      text-align: center;
-      pointer-events: none;
-      line-height: 1.2;
+      max-width: 90vw;
+      line-height: 1.3;
     }
-    @keyframes oscillateColor {
-      0%, 100% { color: white; text-shadow: 0 0 18px #ff9800, 0 0 28px #ffa726; }
-      50% { color: #ff9800; text-shadow: 0 0 45px #ff5722, 0 0 65px #ff7043; }
-    }
-    /* Fatias com borda e sombra para destaque */
-    path {
-      stroke: #000;
-      stroke-width: 1;
-      filter: drop-shadow(0 0 3px white);
-      transition: filter 0.3s ease;
-    }
-    path:hover {
-      filter: drop-shadow(0 0 14px #fff176);
-    }
-    /* Texto da roleta */
-    text {
-      font-weight: bold;
-      fill: #fff;
-      font-size: 14px;
-      text-shadow: 2px 2px 6px rgba(0,0,0,0.9);
-      user-select: none;
-    }
-    /* Modal saída */
-    #modal-sair {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.8);
-      z-index: 10000;
-      color: white;
-      font-size: 26px;
-      font-weight: bold;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 40px 20px;
-      text-align: center;
-      user-select: none;
-    }
-    #modal-sair p {
-      margin-bottom: 30px;
-      line-height: 1.5;
-      max-width: 600px;
-    }
-    #modal-sair .btns {
-      display: flex;
-      gap: 30px;
-    }
-    #modal-sair button {
-      background: #25d366;
-      color: white;
-      border: none;
-      padding: 18px 45px;
-      border-radius: 10px;
-      font-size: 22px;
-      cursor: pointer;
-      font-weight: 900;
-      box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-      user-select: none;
-      transition: background-color 0.3s ease;
-    }
-    #modal-sair button:hover {
-      background: #1ebe57;
+    @keyframes oscilar {
+      0% { background: white; color: #ff9800; }
+      100% { background: #ff9800; color: white; }
     }
   </style>
 </head>
 <body>
-  <div class="top-bar" role="status" aria-live="polite">
+  <div class="top-bar">
     ⏳ Você tem <span id="min">02</span>:<span id="seg">00</span> para girar e garantir sua chance gratuita!
   </div>
   <h1>🎯 Tente a sua sorte! 🎯</h1>
-  <p>Clique no botão e gire a roleta para ganhar prêmios!</p>
+  <p id="msg-inicial" style="max-width: 900px; margin: 0 auto 20px auto; font-size: 18px; line-height: 1.5;">
+    Para começar, basta apertar o botão dourado escrito GIRAR!<br><br>
+    💡 Você tem 2 tentativas totalmente grátis!<br><br>
+    A roleta está cheia de prêmios esperando por você!
+  </p>
 
-  <div id="roleta-container" aria-label="Roleta de prêmios">
-    <div id="seta" aria-hidden="true"></div>
-    <svg viewBox="0 0 300 300" id="svg-roleta" role="img" aria-describedby="descricao-roleta">
+  <div id="roleta-container">
+    <div id="seta-indicadora"></div>
+    <svg viewBox="0 0 300 300" id="svg-roleta" aria-label="Roleta da sorte" role="img" tabindex="0">
       <circle cx="150" cy="150" r="145" fill="#ffc107" stroke="#333" stroke-width="4"/>
       <g id="fatias"></g>
       <circle cx="150" cy="150" r="40" fill="#ffc107" stroke="#333" stroke-width="2"/>
     </svg>
   </div>
 
-  <button class="btn-girar" id="girar" aria-label="Girar roleta">🎲 GIRAR</button>
+  <button class="btn-girar" id="girar" aria-label="Girar a roleta">🎲 GIRAR</button>
 
   <div class="contador" aria-live="polite" aria-atomic="true">
     <div><strong id="tempoMin">02</strong><br>Minutos</div>
     <div><strong id="tempoSeg">00</strong><br>Segundos</div>
   </div>
 
-  <div id="mensagem-final" role="status" aria-live="polite">
+  <div id="mensagem-final" role="region" aria-live="polite" aria-atomic="true">
     Para começar, basta apertar o botão dourado escrito GIRAR!<br><br>
     💡 Você tem 2 tentativas totalmente grátis!<br><br>
     A roleta está cheia de prêmios esperando por você!
   </div>
 
-  <div class="info-final" id="prêmios">
+  <div class="info-final" aria-label="Prêmios e instruções">
     <h2>🎁 Prêmios da Roleta da Sorte</h2>
     <ul>
-      <li>10 Meticais – Comece com sorte!</li>
-      <li>100 Meticais – Já dá pra comemorar!</li>
-      <li>500 Meticais – Subindo o nível!</li>
-      <li>1.000 Meticais – Agora sim!</li>
-      <li>5.000 Meticais – Sorte grande!</li>
-      <li>10.000 Meticais – O prêmio dos sonhos! 💸</li>
+      <li><span class="valor">10</span><span class="unidade">Meticais</span> – Comece com sorte!</li>
+      <li><span class="valor">100</span><span class="unidade">Meticais</span> – Já dá pra comemorar!</li>
+      <li><span class="valor">500</span><span class="unidade">Meticais</span> – Subindo o nível!</li>
+      <li><span class="valor">1.000</span><span class="unidade">Meticais</span> – Agora sim!</li>
+      <li><span class="valor">5.000</span><span class="unidade">Meticais</span> – Sorte grande!</li>
+      <li><span class="valor">10.000</span><span class="unidade">Meticais</span> – O prêmio dos sonhos! 💸</li>
     </ul>
-  </div>
-
-  <div class="info-final" id="giros-gratis">
-    <strong>🔁 GANHE MAIS GIROS GRÁTIS!</strong><br>
-    Compartilhe o site <strong>nova-roleta-de-ganhar-dinheiro.vercel.app</strong> com seus amigos e familiares.<br><br>
-
-    <strong>💬 Frase pronta para enviar:</strong><br><br>
-    🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: https://ganha-dinheiro-com-a-roleta-de-prem-wine.vercel.app/<br><br>
-
-    <div class="btns-compartilhar">
-      <button id="copiar" aria-label="Copiar mensagem para compartilhar">📋 Copiar mensagem</button>
-      <a href="https://wa.me/?text=🚀%20Acabei%20de%20girar%20uma%20roleta%20e%20ganhei%20um%20prêmio!%20Você%20também%20pode%20ganhar%20até%2010.000%20MT%20grátis.%20Entra%20aqui:%20https://ganha-dinheiro-com-a-roleta-de-prem-wine.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Compartilhar no WhatsApp">📲 Compartilhar no WhatsApp</a>
+    <strong>🔁 GANHE MAIS GIROS GRÁTIS!</strong>
+    <p>Compartilhe o site <strong>nova-roleta-de-ganhar-dinheiro.vercel.app</strong> com seus amigos e familiares.</p>
+    <p><strong>💬 Frase pronta para enviar:</strong></p>
+    <p>🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: <strong>https://nova-roleta-de-ganhar-dinheiro.vercel.app</strong></p>
+    <div class="btns-share">
+      <button id="copiar">📋 Copiar mensagem</button>
+      <a href="https://wa.me/?text=🚀%20Acabei%20de%20girar%20uma%20roleta%20e%20ganhei%20um%20prêmio!%20Você%20também%20pode%20ganhar%20até%2010.000%20MT%20grátis.%20Entra%20aqui:%20https://nova-roleta-de-ganhar-dinheiro.vercel.app" target="_blank" rel="noopener noreferrer">📲 Compartilhar no WhatsApp</a>
     </div>
-    <div class="copied-msg" id="copiado-msg" role="alert">✅ Mensagem copiada com sucesso!</div>
-
-    <br><br>
+    <div class="copied-msg" id="copiado-msg" role="alert" aria-live="assertive">✅ Mensagem copiada com sucesso!</div>
+    <br />
     <small>Termos de Uso e Direitos Reservados</small>
   </div>
 
-  <audio id="som-girar" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_740dc91a7f.mp3?filename=slot-machine-spin-1-179128.mp3" loop></audio>
+  <audio id="som-girar" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_740dc91a7f.mp3?filename=slot-machine-spin-1-179128.mp3"></audio>
   <audio id="som-premio" src="https://cdn.pixabay.com/download/audio/2021/11/25/audio_bfa4f55fb3.mp3?filename=correct-2-46134.mp3"></audio>
-  <audio id="som-clique" src="https://cdn.pixabay.com/download/audio/2021/12/10/audio_95272f2b43.mp3?filename=button-click-01.mp3"></audio>
 
-  <div id="modal-prize" role="alert" aria-live="assertive" aria-atomic="true"></div>
-
-  <div id="modal-sair" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-sair" aria-describedby="desc-modal-sair">
-    <h2 id="titulo-modal-sair">Espere!</h2>
-    <p id="desc-modal-sair">
-      Antes de sair, compartilhe o link para ganhar mais giros grátis!<br>
-      🚀 <strong>https://ganha-dinheiro-com-a-roleta-de-prem-wine.vercel.app/</strong>
-    </p>
-    <div class="btns">
-      <button id="btn-compartilhar">Compartilhar</button>
-      <button id="btn-fechar-modal">Continuar aqui</button>
-    </div>
-  </div>
+  <div id="modal-prize" role="alertdialog" aria-live="assertive" aria-modal="true"></div>
 
   <script>
     const premios = [
@@ -367,9 +288,6 @@
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
       path.setAttribute("d", `M150,150 L${x1},${y1} A145,145 0 0,1 ${x2},${y2} Z`);
       path.setAttribute("fill", cores[i % cores.length]);
-      path.setAttribute("stroke", "#000");
-      path.setAttribute("stroke-width", "1");
-      path.style.filter = "drop-shadow(0 0 3px white)";
 
       const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
       const angText = angIni + anguloPorSetor / 2;
@@ -458,36 +376,10 @@
     }
     timer();
 
-    // Controle do modal de saída
-    const modalSair = document.getElementById("modal-sair");
-    const btnCompartilhar = document.getElementById("btn-compartilhar");
-    const btnFecharModal = document.getElementById("btn-fechar-modal");
-
-    let saiuTentativa = false;
-
-    // Antes de sair da página
-    window.addEventListener('beforeunload', (event) => {
-      if (!saiuTentativa) {
-        event.preventDefault();
-        event.returnValue = '';
-        modalSair.style.display = 'flex';
-        saiuTentativa = true;
-        return '';
-      }
-    });
-
-    // Botão compartilhar no modal de saída
-    btnCompartilhar.addEventListener('click', () => {
-      navigator.clipboard.writeText("🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: https://ganha-dinheiro-com-a-roleta-de-prem-wine.vercel.app/");
-      alert('Link copiado! Agora compartilhe para ganhar mais giros grátis!');
-      modalSair.style.display = 'none';
-      saiuTentativa = false;
-    });
-
-    // Botão continuar na página
-    btnFecharModal.addEventListener('click', () => {
-      modalSair.style.display = 'none';
-      saiuTentativa = false;
+    // Removendo diálogo de compartilhar ao sair da página
+    window.addEventListener("beforeunload", (event) => {
+      // Nenhum diálogo mostrado, deixa sair tranquilo
+      // Se quiser impedir sair, pode usar event.preventDefault() e event.returnValue
     });
   </script>
 </body>

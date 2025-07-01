@@ -71,6 +71,36 @@
       margin-top: 15px;
       display: none;
     }
+
+    /* Aumenta botão compartilhar */
+    #copiar {
+      background: #25d366;
+      color: white;
+      padding: 14px 30px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 20px;
+      margin-right: 15px;
+    }
+    #copiar:hover {
+      background: #1da851;
+    }
+    a#whatsapp-share {
+      background: #128C7E;
+      color: white;
+      padding: 14px 30px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 20px;
+      display: inline-block;
+      line-height: normal;
+    }
+    a#whatsapp-share:hover {
+      background: #0f7b6b;
+    }
   </style>
 </head>
 <body>
@@ -121,15 +151,13 @@
       🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: <strong>https://nova-roleta-de-ganhar-dinheiro.vercel.app</strong>
     </p>
 
-    <button id="copiar" style="background: #25d366; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 18px; margin-right: 15px;">
-      📋 Copiar mensagem
-    </button>
+    <button id="copiar">📋 Copiar mensagem</button>
     <a href="https://wa.me/?text=🚀%20Acabei%20de%20girar%20uma%20roleta%20e%20ganhei%20um%20prêmio!%20Você%20também%20pode%20ganhar%20até%2010.000%20MT%20grátis.%20Entra%20aqui:%20https://nova-roleta-de-ganhar-dinheiro.vercel.app" 
        target="_blank" 
-       style="background: #128C7E; color: white; padding: 12px 24px; border-radius: 8px; font-weight: bold; text-decoration: none; font-size: 18px;">
+       id="whatsapp-share">
       📲 Compartilhar no WhatsApp
     </a>
-    <div class="copied-msg" id="copiado-msg" style="color: green; font-size: 16px; margin-top: 15px; display: none;">
+    <div class="copied-msg" id="copiado-msg">
       ✅ Mensagem copiada com sucesso!
     </div>
 
@@ -208,9 +236,8 @@
 
         document.getElementById("som-premio").play();
 
-        setTimeout(() => {
-          window.open("https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690", "_blank");
-        }, 2000);
+        // Abrir link imediatamente em nova aba
+        window.open("https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690", "_blank");
 
         girando = false;
       }, 3000);

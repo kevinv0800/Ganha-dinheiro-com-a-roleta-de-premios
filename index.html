@@ -1,154 +1,57 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <title>Roleta de Prêmios</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background: linear-gradient(to bottom, #0d1117, #1f2937);
-      color: white;
-      text-align: center;
-    }
-
-    h1 {
-      margin: 30px 0;
-      font-size: 2rem;
-    }
-
-    .roleta-container {
-      position: relative;
-      width: 300px;
-      height: 300px;
-      margin: 20px auto;
-    }
-
-    .roleta {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 10px solid #fff;
-      position: relative;
-      overflow: hidden;
-      transform: rotate(0deg);
-      transition: transform 5s ease-out;
-    }
-
-    .seta {
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
-      border-left: 15px solid transparent;
-      border-right: 15px solid transparent;
-      border-bottom: 25px solid gold;
-      z-index: 10;
-    }
-
-    .segmento {
-      width: 50%;
-      height: 50%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform-origin: 0% 0%;
-      background: #444;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      font-size: 12px;
-      font-weight: bold;
-      padding: 5px;
-    }
-
-    .girar-btn {
-      margin-top: 30px;
-      padding: 15px 30px;
-      font-size: 18px;
-      font-weight: bold;
-      background: gold;
-      color: #000;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .girar-btn:hover {
-      background: orange;
-    }
-
-    #resultado {
-      margin-top: 20px;
-      font-size: 20px;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>Roleta da Sorte</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
-  <h1>GIRE A ROLETA</h1>
-  <div class="roleta-container">
-    <div class="seta"></div>
-    <div class="roleta" id="roleta"></div>
-  </div>
-  <button class="girar-btn" onclick="girar()">GIRAR</button>
-  <div id="resultado"></div>
+  <div class="topo-msg">Tens 2 tentativas grátis para girar a roleta. Não custa nada, clique no botão girar!</div>
 
-  <script>
-    const premios = [
-      "10 MT", "20 MT", "100 MT", "BOA SORTE",
-      "200 MT", "Tente novamente", "10.000 MT", "500 MT", "Boa sorte"
-    ];
+  <main>
+    <h1>🎯 Tente a sua sorte! 🎯</h1>
+    <p>Clique no botão e gire a roleta para ganhar prêmios!</p>
 
-    const cores = [
-      "#f44336", "#e91e63", "#9c27b0", "#3f51b5",
-      "#2196f3", "#4caf50", "#ff9800", "#795548", "#ffeb3b"
-    ];
+    <div class="roleta-container">
+      <canvas id="roleta" width="300" height="300"></canvas>
+      <div class="ponteiro"></div>
+    </div>
 
-    const roleta = document.getElementById("roleta");
+    <button id="girar">🎲 GIRAR</button>
+    <div id="resultado"></div>
 
-    // Criar segmentos
-    for (let i = 0; i < premios.length; i++) {
-      const segmento = document.createElement("div");
-      const angulo = i * (360 / premios.length);
+    <div class="timer">
+      ⏳ Você tem <span id="minutos">02</span>:<span id="segundos">00</span> para girar e garantir sua chance gratuita!
+    </div>
 
-      segmento.className = "segmento";
-      segmento.style.transform = `rotate(${angulo}deg) skewY(-60deg)`;
-      segmento.style.background = cores[i % cores.length];
-      segmento.innerText = premios[i];
+    <section class="info">
+      <h2>Chegou sua vez de ganhar!</h2>
+      <ul>
+        <li>✨ Para começar, basta apertar o botão dourado escrito <strong>GIRAR</strong>!</li>
+        <li>💡 Você tem <strong>2 tentativas totalmente grátis!</strong></li>
+        <li>🎯 A roleta está cheia de prêmios esperando por você!</li>
+      </ul>
+    </section><section class="premios">
+      <h2>🎁 Prêmios da Roleta da Sorte</h2>
+      <ul>
+        <li>✅ 10 Meticais – Comece com sorte!</li>
+        <li>✅ 100 Meticais – Já dá pra comemorar!</li>
+        <li>✅ 500 Meticais – Subindo o nível!</li>
+        <li>✅ 1.000 Meticais – Agora sim!</li>
+        <li>✅ 5.000 Meticais – Sorte grande!</li>
+        <li>✅ 10.000 Meticais – O prêmio dos sonhos! 💸</li>
+      </ul>
+    </section>
 
-      roleta.appendChild(segmento);
-    }
+    <section class="compartilhar">
+      <h2>🔁 GANHE MAIS GIROS GRÁTIS!</h2>
+      <p>
+        Compartilhe o site <a href="#">nova-roleta-de-ganhar-dinheiro.vercel.app</a> com seus amigos e familiares por WhatsApp, SMS, Telegram, ou redes sociais e ganhe <strong>+1 giro grátis</strong> a cada pessoa!
+      </p>
+    </section>
+  </main>
 
-    let anguloAtual = 0;
-
-    function girar() {
-      const resultado = document.getElementById("resultado");
-      const extra = Math.floor(Math.random() * 360);
-      const voltas = 5 * 360;
-      anguloAtual += voltas + extra;
-
-      roleta.style.transform = `rotate(${anguloAtual}deg)`;
-
-      setTimeout(() => {
-        const anguloFinal = anguloAtual % 360;
-        const index = Math.floor((360 - anguloFinal + (360 / premios.length) / 2) % 360 / (360 / premios.length));
-        const premio = premios[index];
-
-        resultado.innerText = `🎁 ${premio}`;
-
-        if (premio !== "Tente novamente") {
-          setTimeout(() => {
-            window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
-          }, 2500);
-        }
-      }, 5200);
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

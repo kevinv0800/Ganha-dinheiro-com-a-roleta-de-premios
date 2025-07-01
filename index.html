@@ -1,38 +1,203 @@
-const angulo = giroTotal * (1 - Math.pow(1 - progresso, 3));
-        anguloAtual = (angulo * Math.PI / 180) % (2 * Math.PI);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Roleta de Prêmios</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #222;
+      color: #eee;
+      margin: 0;
+      padding: 20px;
+      user-select: none;
+    }
+    #canvas {
+      background: #333;
+      border-radius: 50%;
+      margin: 20px auto;
+      display: block;
+      box-shadow: 0 0 15px #0008;
+    }
+    #girar {
+      background: #3498db;
+      border: none;
+      padding: 15px 40px;
+      color: white;
+      font-size: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 15px auto;
+      display: block;
+      transition: background 0.3s ease;
+    }
+    #girar:hover:not(:disabled) {
+      background: #2980b9;
+    }
+    #girar:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+    #resultado {
+      margin-top: 25px;
+      font-size: 24px;
+      min-height: 30px;
+      font-weight: bold;
+      color: #f1c40f;
+    }
+    #timer {
+      font-size: 22px;
+      margin-top: 10px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Roleta de Prêmios</h1>
+
+  <canvas id="canvas" width="400" height="400"></canvas>
+
+  <button id="girar">Girar</button>
+
+  <div id="resultado"></div>
+
+  <div id="timer">
+    Tempo restante: <span id="minutos">02</span>:<span id="segundos">00</span>
+  </div>
+
+  <script>
+    // Variáveis globais
+    let girando = false;
+    let anguloAtual = 0;
+
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Prêmios da roleta - personalize aqui!
+    const premios = [
+      'R$10',
+      'R$20',
+      'R$50',
+      'R$100',
+      'Brinde',
+      'Surpresa',
+    ];
+
+    const numPremios = premios.length;
+    const anguloPorPremio = (2 * Math.PI) / numPremios;
+
+    // Função para desenhar a roleta
+    function desenharRoleta() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const centroX = canvas.width / 2;
+      const centroY = canvas.height / 2;
+      const raio = centroX;
+
+      for (let i = 0; i < numPremios; i++) {
+        const angInicio = i * anguloPorPremio + anguloAtual;
+        const angFim = angInicio + anguloPorPremio;
+
+        // Cores alternadas para cada setor
+        ctx.fillStyle = i % 2 === 0 ? '#3498db' : '#9b59b6';
+
+        ctx.beginPath();
+        ctx.moveTo(centroX, centroY);
+        ctx.arc(centroX, centroY, raio, angInicio, angFim);
+        ctx.closePath();
+        ctx.fill();
+
+        // Texto do prêmio
+        ctx.save();
+        ctx.translate(centroX, centroY);
+        ctx.rotate(angInicio + anguloPorPremio / 2);
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#fff';
+        ctx.font = '18px Arial';
+        ctx.fillText(premios[i], raio - 20, 8);
+        ctx.restore();
+      }
+
+      // Desenha o ponteiro da roleta (no topo)
+      ctx.fillStyle = '#e74c3c';
+      ctx.beginPath();
+      ctx.moveTo(centroX, centroY - raio - 10);
+      ctx.lineTo(centroX - 20, centroY - raio + 30);
+      ctx.lineTo(centroX + 20, centroY - raio + 30);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // Função para girar a roleta
+    function girarRoleta() {
+      if (girando) return;
+      girando = true;
+
+      document.getElementById('resultado').innerText = '';
+      document.getElementById('girar').disabled = true;
+
+      const girosCompletos = 5;
+      const giroAleatorio = Math.floor(Math.random() * 360);
+      const giroTotalGraus = 360 * girosCompletos + giroAleatorio;
+      const duracao = 4000;
+      const inicio = Date.now();
+
+      function animar() {
+        const agora = Date.now();
+        const tempoDecorrido = agora - inicio;
+        const progresso = Math.min(tempoDecorrido / duracao, 1);
+
+        const anguloGraus = giroTotalGraus * (1 - Math.pow(1 - progresso, 3));
+        anguloAtual = (anguloGraus * Math.PI / 180) % (2 * Math.PI);
+
         desenharRoleta();
 
         if (progresso < 1) {
           requestAnimationFrame(animar);
         } else {
-          const indexPremio = Math.floor(numPremios - (anguloAtual / anguloPorPremio)) % numPremios;
+          let indexPremio = Math.floor(numPremios - (anguloAtual / anguloPorPremio)) % numPremios;
+          if (indexPremio < 0) indexPremio += numPremios;
+
           document.getElementById('resultado').innerText = `🎉 Você ganhou: ${premios[indexPremio]}!`;
           girando = false;
+          document.getElementById('girar').disabled = false;
+
+          setTimeout(() => {
+            window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
+          }, 2000);
         }
       }
 
       animar();
     }
 
-    document.getElementById('girar').addEventListener('click', girarRoleta);
-
-    // Timer
+    // Timer regressivo
     let minutos = 2;
     let segundos = 0;
 
     function atualizarTimer() {
       if (minutos === 0 && segundos === 0) return;
+
       if (segundos === 0) {
         minutos--;
         segundos = 59;
       } else {
         segundos--;
       }
+
       document.getElementById('minutos').innerText = minutos.toString().padStart(2, '0');
-      document.getElementById('segundos').innerText = segundos.toString().padStart(2, '0');setTimeout(atualizarTimer, 1000);
+      document.getElementById('segundos').innerText = segundos.toString().padStart(2, '0');
+
+      setTimeout(atualizarTimer, 1000);
     }
 
+    // Evento do botão girar
+    document.getElementById('girar').addEventListener('click', girarRoleta);
+
+    // Inicializações
     desenharRoleta();
     atualizarTimer();
   </script>

@@ -3,26 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <title>Roleta de Prêmios</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: #fff;
       margin: 0;
-      padding: 0;
+      font-family: sans-serif;
+      background: linear-gradient(to bottom, #0d1117, #1f2937);
+      color: white;
+      text-align: center;
     }
 
     h1 {
-      margin-top: 50px;
-      font-size: 32px;
+      margin: 30px 0;
+      font-size: 2rem;
     }
 
-    #roleta {
+    .roleta-container {
+      position: relative;
       width: 300px;
       height: 300px;
+      margin: 20px auto;
+    }
+
+    .roleta {
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
-      border: 10px solid #333;
-      margin: 30px auto;
+      border: 10px solid #fff;
       position: relative;
       overflow: hidden;
       transform: rotate(0deg);
@@ -30,83 +37,115 @@
     }
 
     .seta {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
       width: 0;
       height: 0;
       border-left: 15px solid transparent;
       border-right: 15px solid transparent;
-      border-bottom: 20px solid orange;
-      margin: 0 auto;
-      position: relative;
-      top: -20px;
+      border-bottom: 25px solid gold;
+      z-index: 10;
     }
 
     .segmento {
       width: 50%;
       height: 50%;
       position: absolute;
-      transform-origin: 100% 100%;
-      background: red;
-      color: white;
+      top: 50%;
+      left: 50%;
+      transform-origin: 0% 0%;
+      background: #444;
+      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
+      text-align: center;
+      font-size: 12px;
       font-weight: bold;
+      padding: 5px;
     }
 
-    button {
-      padding: 10px 25px;
+    .girar-btn {
+      margin-top: 30px;
+      padding: 15px 30px;
       font-size: 18px;
+      font-weight: bold;
+      background: gold;
+      color: #000;
+      border: none;
+      border-radius: 10px;
       cursor: pointer;
-      margin-top: 10px;
+      transition: 0.3s;
+    }
+
+    .girar-btn:hover {
+      background: orange;
     }
 
     #resultado {
-      font-size: 20px;
       margin-top: 20px;
+      font-size: 20px;
     }
   </style>
 </head>
 <body>
   <h1>GIRE A ROLETA</h1>
-  <div class="seta"></div>
-  <div id="roleta">
-    <div class="segmento" style="background: #f44336; transform: rotate(0deg);">20</div>
-    <div class="segmento" style="background: #e91e63; transform: rotate(45deg);">15</div>
-    <div class="segmento" style="background: #9c27b0; transform: rotate(90deg);">Perde Tudo</div>
-    <div class="segmento" style="background: #2196f3; transform: rotate(135deg);">30</div>
-    <div class="segmento" style="background: #4caf50; transform: rotate(180deg);">5</div>
-    <div class="segmento" style="background: #ffeb3b; transform: rotate(225deg);">10</div>
-    <div class="segmento" style="background: #ff9800; transform: rotate(270deg);">Perde Tudo</div>
-    <div class="segmento" style="background: #f44336; transform: rotate(315deg);">20</div>
+  <div class="roleta-container">
+    <div class="seta"></div>
+    <div class="roleta" id="roleta"></div>
   </div>
-  <button onclick="girar()">GIRAR</button>
+  <button class="girar-btn" onclick="girar()">GIRAR</button>
   <div id="resultado"></div>
 
   <script>
+    const premios = [
+      "10 MT", "20 MT", "100 MT", "BOA SORTE",
+      "200 MT", "Tente novamente", "10.000 MT", "500 MT", "Boa sorte"
+    ];
+
+    const cores = [
+      "#f44336", "#e91e63", "#9c27b0", "#3f51b5",
+      "#2196f3", "#4caf50", "#ff9800", "#795548", "#ffeb3b"
+    ];
+
+    const roleta = document.getElementById("roleta");
+
+    // Criar segmentos
+    for (let i = 0; i < premios.length; i++) {
+      const segmento = document.createElement("div");
+      const angulo = i * (360 / premios.length);
+
+      segmento.className = "segmento";
+      segmento.style.transform = `rotate(${angulo}deg) skewY(-60deg)`;
+      segmento.style.background = cores[i % cores.length];
+      segmento.innerText = premios[i];
+
+      roleta.appendChild(segmento);
+    }
+
     let anguloAtual = 0;
 
     function girar() {
-      const roleta = document.getElementById("roleta");
       const resultado = document.getElementById("resultado");
-      const anguloExtra = Math.floor(Math.random() * 360);
+      const extra = Math.floor(Math.random() * 360);
       const voltas = 5 * 360;
-      anguloAtual += voltas + anguloExtra;
+      anguloAtual += voltas + extra;
 
       roleta.style.transform = `rotate(${anguloAtual}deg)`;
 
       setTimeout(() => {
         const anguloFinal = anguloAtual % 360;
-        const premioIndex = Math.floor((360 - anguloFinal + 22.5) % 360 / 45) % 8;
-        const premios = ["20", "15", "Perde Tudo", "30", "5", "10", "Perde Tudo", "20"];
-        const premio = premios[premioIndex];
+        const index = Math.floor((360 - anguloFinal + (360 / premios.length) / 2) % 360 / (360 / premios.length));
+        const premio = premios[index];
 
-        if (premio === "Perde Tudo") {
-          resultado.innerText = "😔 Tente novamente.";
-        } else {
-          resultado.innerText = `🎉 Ganhou ${premio}!`;
+        resultado.innerText = `🎁 ${premio}`;
+
+        if (premio !== "Tente novamente") {
           setTimeout(() => {
             window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
-          }, 2000);
+          }, 2500);
         }
       }, 5200);
     }

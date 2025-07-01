@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Roleta de Prêmios</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: sans-serif;
+      margin-top: 100px;
+    }
+    #resultado {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gire a Roleta!</h1>
+  <button onclick="girar()">Girar</button>
+  <div id="resultado"></div>
+
+  <script>
+    function girar() {
+      const resultado = Math.random();
+      const div = document.getElementById("resultado");
+
+      if (resultado > 0.5) {
+        div.innerText = "🎉 Ganhou!";
+        setTimeout(() => {
+          window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
+        }, 2000);
+      } else {
+        div.innerText = "😔 Tente novamente.";
+      }
+    }
+  </script>
+</body>
+</html>

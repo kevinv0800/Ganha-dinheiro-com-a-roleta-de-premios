@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Tente a sua sorte!</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -19,8 +19,8 @@
     h1 { font-size: 24px; margin: 20px 0; }
     #roleta-container {
       margin: 0 auto;
-      width: 360px;
-      height: 360px;
+      width: 480px;   /* Aumentado */
+      height: 480px;  /* Aumentado */
       position: relative;
     }
     #svg-roleta {
@@ -31,8 +31,8 @@
     }
     .btn-girar {
       margin-top: 15px;
-      padding: 15px 30px;
-      font-size: 18px;
+      padding: 20px 50px;  /* Aumentado */
+      font-size: 24px;     /* Aumentado */
       background-color: #ffc107;
       border: none;
       border-radius: 12px;
@@ -157,6 +157,7 @@
     const anguloPorSetor = 360 / numPremios;
     const grupo = document.getElementById("fatias");
 
+    // Cria as fatias e textos da roleta
     for (let i = 0; i < numPremios; i++) {
       const angIni = i * anguloPorSetor;
       const angFim = angIni + anguloPorSetor;
@@ -215,6 +216,7 @@
         document.getElementById("som-premio").play();
 
         setTimeout(() => {
+          // Redireciona para o link ao ganhar
           window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
         }, 2000);
 

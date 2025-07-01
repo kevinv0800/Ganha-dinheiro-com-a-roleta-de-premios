@@ -101,6 +101,33 @@
     a#whatsapp-share:hover {
       background: #0f7b6b;
     }
+
+    /* Modal estilo */
+    #modal-prize {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0,0,0,0.75);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+    #modal-content {
+      background: #fff3cd;
+      padding: 30px 40px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 26px;
+      font-weight: bold;
+      color: #856404;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      max-width: 90%;
+      animation: fadeInScale 0.5s ease forwards;
+    }
+    @keyframes fadeInScale {
+      0% {opacity: 0; transform: scale(0.8);}
+      100% {opacity: 1; transform: scale(1);}
+    }
   </style>
 </head>
 <body>
@@ -165,6 +192,11 @@
     <small style="color: #777;">Termos de Uso e Direitos Reservados</small>
   </div>
 
+  <!-- Modal do prêmio -->
+  <div id="modal-prize">
+    <div id="modal-content"></div>
+  </div>
+
   <audio id="som-girar" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_740dc91a7f.mp3?filename=slot-machine-spin-1-179128.mp3"></audio>
   <audio id="som-premio" src="https://cdn.pixabay.com/download/audio/2021/11/25/audio_bfa4f55fb3.mp3?filename=correct-2-46134.mp3"></audio>
 
@@ -210,6 +242,9 @@
     let anguloTotal = 0;
     let girando = false;
 
+    const modal = document.getElementById("modal-prize");
+    const modalContent = document.getElementById("modal-content");
+
     document.getElementById("girar").addEventListener("click", () => {
       if (girando) return;
       girando = true;
@@ -236,8 +271,14 @@
 
         document.getElementById("som-premio").play();
 
-        // Abrir link imediatamente em nova aba
-        window.open("https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690", "_blank");
+        // Mostrar modal
+        modalContent.textContent = `🎉 Parabéns! Você ganhou: ${premio}`;
+        modal.style.display = "flex";
+
+        // Redirecionar automaticamente após 3 segundos
+        setTimeout(() => {
+          window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
+        }, 3000);
 
         girando = false;
       }, 3000);

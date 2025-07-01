@@ -1,43 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt">
 <head>
   <meta charset="UTF-8">
   <title>Roleta de Prêmios</title>
   <style>
     body {
+      font-family: Arial, sans-serif;
       text-align: center;
-      font-family: sans-serif;
-      margin-top: 100px;
+      background: #fff;
+      margin: 0;
+      padding: 0;
     }
-    #resultado {
-      margin-top: 20px;
-      font-size: 20px;
+
+    h1 {
+      margin-top: 50px;
+      font-size: 32px;
     }
+
+    #roleta {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      border: 10px solid #333;
+      margin: 30px auto;
+      position: relative;
+      overflow: hidden;
+      transform: rotate(0deg);
+      transition: transform 5s ease-out;
+    }
+
+    .seta {
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-bottom: 20px solid orange;
+      margin: 0 auto;
+      position: relative;
+      top: -20px;
+    }
+
+    .segmento {
+      width: 50%;
+      height: 50%;
+      position: absolute;
+      transform-origin: 100% 100%;
+      background: red;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+    }
+
     button {
-      padding: 10px 20px;
+      padding: 10px 25px;
       font-size: 18px;
       cursor: pointer;
+      margin-top: 10px;
+    }
+
+    #resultado {
+      font-size: 20px;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>Gire a Roleta!</h1>
-  <button onclick="girar()">Girar</button>
+  <h1>GIRE A ROLETA</h1>
+  <div class="seta"></div>
+  <div id="roleta">
+    <div class="segmento" style="background: #f44336; transform: rotate(0deg);">20</div>
+    <div class="segmento" style="background: #e91e63; transform: rotate(45deg);">15</div>
+    <div class="segmento" style="background: #9c27b0; transform: rotate(90deg);">Perde Tudo</div>
+    <div class="segmento" style="background: #2196f3; transform: rotate(135deg);">30</div>
+    <div class="segmento" style="background: #4caf50; transform: rotate(180deg);">5</div>
+    <div class="segmento" style="background: #ffeb3b; transform: rotate(225deg);">10</div>
+    <div class="segmento" style="background: #ff9800; transform: rotate(270deg);">Perde Tudo</div>
+    <div class="segmento" style="background: #f44336; transform: rotate(315deg);">20</div>
+  </div>
+  <button onclick="girar()">GIRAR</button>
   <div id="resultado"></div>
 
   <script>
-    function girar() {
-      const resultado = Math.random();
-      const div = document.getElementById("resultado");
+    let anguloAtual = 0;
 
-      if (resultado > 0.5) {
-        div.innerText = "🎉 Ganhou!";
-        setTimeout(() => {
-          window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
-        }, 2000);
-      } else {
-        div.innerText = "😔 Tente novamente.";
-      }
+    function girar() {
+      const roleta = document.getElementById("roleta");
+      const resultado = document.getElementById("resultado");
+      const anguloExtra = Math.floor(Math.random() * 360);
+      const voltas = 5 * 360;
+      anguloAtual += voltas + anguloExtra;
+
+      roleta.style.transform = `rotate(${anguloAtual}deg)`;
+
+      setTimeout(() => {
+        const anguloFinal = anguloAtual % 360;
+        const premioIndex = Math.floor((360 - anguloFinal + 22.5) % 360 / 45) % 8;
+        const premios = ["20", "15", "Perde Tudo", "30", "5", "10", "Perde Tudo", "20"];
+        const premio = premios[premioIndex];
+
+        if (premio === "Perde Tudo") {
+          resultado.innerText = "😔 Tente novamente.";
+        } else {
+          resultado.innerText = `🎉 Ganhou ${premio}!`;
+          setTimeout(() => {
+            window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
+          }, 2000);
+        }
+      }, 5200);
     }
   </script>
 </body>

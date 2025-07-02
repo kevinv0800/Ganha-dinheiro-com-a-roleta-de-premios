@@ -4,16 +4,26 @@
   <meta charset="UTF-8" />
   <title>Roleta da Sorte</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
     body {
       font-family: Arial, sans-serif;
       background-color: #ffffff;
       text-align: center;
+      color: #fff;
+      background: linear-gradient(135deg, #fefcea 0%, #f1da36 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 20px;
     }
     h1 {
-      font-size: 32px;
+      font-size: 28px;
       margin: 20px 0 10px;
+      color: #333;
+      user-select: none;
     }
     #roleta-container {
       margin: 0 auto 20px auto;
@@ -23,6 +33,7 @@
       background: radial-gradient(circle at center, #fff3cd 60%, #ffc107 95%);
       border-radius: 50%;
       box-shadow: 0 0 40px 10px #ffc10799;
+      user-select: none;
     }
     #svg-roleta {
       width: 100%;
@@ -30,7 +41,6 @@
       transform: rotate(0deg);
       transition: transform 3s cubic-bezier(0.33, 1, 0.68, 1);
       border-radius: 50%;
-      user-select: none;
       cursor: pointer;
     }
     #seta-indicadora {
@@ -46,27 +56,24 @@
       filter: drop-shadow(0 0 5px #ff9800cc);
       z-index: 10;
       pointer-events: none;
+      user-select: none;
     }
     .btn-girar {
       margin-top: 35px;
-      padding: 26px 65px;
-      font-size: 30px;
+      padding: 24px 60px;
+      font-size: 26px;
       background-color: #ffc107;
       border: none;
       border-radius: 14px;
       cursor: pointer;
       font-weight: bold;
       box-shadow: 0 5px 10px #d49c00;
-      position: relative;
-      animation: brilho 2s infinite alternate;
+      user-select: none;
+      transition: background-color 0.3s ease;
+      color: #333;
     }
     .btn-girar:hover {
       background-color: #e6ac00;
-      animation-play-state: paused;
-    }
-    @keyframes brilho {
-      0% { box-shadow: 0 5px 10px #d49c00; }
-      100% { box-shadow: 0 0 30px #ffdc73; }
     }
     #modal-prize {
       display: none;
@@ -79,111 +86,90 @@
       border-radius: 18px;
       box-shadow: 0 0 30px #ff9800cc;
       color: white;
-      font-size: 34px;
+      font-size: 30px;
       font-weight: 900;
       text-align: center;
       animation: oscilar 1.5s ease-in-out infinite alternate;
       z-index: 9999;
+      user-select: none;
     }
     @keyframes oscilar {
       0% { background: white; color: #ff9800; }
       100% { background: #ff9800; color: white; }
     }
     .contador-animado {
-      font-size: 26px;
+      font-size: 24px;
       margin-top: 15px;
       font-weight: bold;
+      color: #333;
+      user-select: none;
     }
     .actions {
       margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
     }
     .actions button, .actions a {
-      margin: 10px;
-      padding: 14px 24px;
-      font-size: 16px;
+      padding: 14px 28px;
+      font-size: 18px;
       font-weight: bold;
       border: none;
       border-radius: 10px;
       color: #fff;
       cursor: pointer;
       text-decoration: none;
+      user-select: none;
+      transition: background-color 0.3s ease;
     }
-    .btn-copy { background-color: #007bff; }
-    .btn-share { background-color: #25d366; }
+    .btn-copy {
+      background-color: #007bff;
+    }
+    .btn-copy:hover {
+      background-color: #0056b3;
+    }
+    .btn-share {
+      background-color: #25d366;
+    }
+    .btn-share:hover {
+      background-color: #128c3e;
+    }
     .copied-msg {
       color: green;
       font-size: 14px;
       margin-top: 10px;
       display: none;
+      user-select: none;
     }
-    .info-abaixo {
-      margin: 40px auto;
-      max-width: 600px;
+    /* Texto abaixo do botão girar com fundo preto brilhante */
+    #info-text {
+      margin-top: 35px;
+      background: rgba(0, 0, 0, 0.85);
+      padding: 25px 30px;
+      max-width: 480px;
+      border-radius: 14px;
+      box-shadow: 0 0 20px 5px #ffc107aa;
+      color: #fff;
       font-size: 18px;
-      line-height: 1.8;
+      line-height: 1.5;
       text-align: left;
+      user-select: none;
     }
-    .info-abaixo strong {
+    #info-text strong {
       display: block;
-      margin-top: 20px;
+      margin-top: 15px;
       font-size: 20px;
+      color: #ffc107;
     }
-
-    /* Confetti container */
-    #confetti-container {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      overflow: visible;
-      z-index: 10000;
+    #info-text ul {
+      margin-top: 15px;
+      list-style: none;
+      padding-left: 0;
     }
-    .confetti {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background-color: #ff9800;
-      opacity: 0.9;
-      animation-name: confetti-fall;
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
+    #info-text ul li {
+      margin-bottom: 8px;
+      font-weight: 600;
     }
-    @keyframes confetti-fall {
-      0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(600px) rotate(360deg);
-        opacity: 0;
-      }
-    }
-
-    /* Responsive */
-    @media (max-width: 500px) {
-      #roleta-container {
-        width: 320px;
-        height: 320px;
-      }
-      .btn-girar {
-        font-size: 22px;
-        padding: 18px 40px;
-      }
-      #modal-prize {
-        font-size: 24px;
-        padding: 30px 40px;
-      }
-      .contador-animado {
-        font-size: 20px;
-      }
-      .info-abaixo {
-        font-size: 16px;
-        max-width: 100%;
-        padding: 0 10px;
-      }
-    }
-
   </style>
 </head>
 <body>
@@ -191,45 +177,45 @@
   <div class="contador-animado">
     ⏳ Tempo restante para girar: <span id="min">02</span>:<span id="seg">00</span>
   </div>
+
   <div id="roleta-container">
     <div id="seta-indicadora"></div>
-    <svg viewBox="0 0 300 300" id="svg-roleta" aria-label="Roleta da Sorte" role="img">
+    <svg viewBox="0 0 300 300" id="svg-roleta" aria-label="Roleta da sorte">
       <circle cx="150" cy="150" r="145" fill="#ffc107" stroke="#333" stroke-width="4"/>
       <g id="fatias"></g>
       <circle cx="150" cy="150" r="40" fill="#ffc107" stroke="#333" stroke-width="2"/>
     </svg>
   </div>
-  <button class="btn-girar" id="girar">🎲 GIRAR</button>
+
+  <button class="btn-girar" id="girar" aria-label="Girar a roleta">🎲 GIRAR</button>
+
   <div id="modal-prize" role="alert" aria-live="assertive"></div>
 
-  <div class="actions">
-    <button class="btn-copy" id="copiar">📋 Copiar mensagem</button>
-    <a class="btn-share" href="https://wa.me/?text=🚀%20Acabei%20de%20girar%20uma%20roleta%20e%20ganhei%20um%20prêmio!%20Você%20também%20pode%20ganhar%20até%2010.000%20MT%20grátis.%20Entra%20aqui:%20https://ganha-dinheiro-com-a-roleta-de-prem-wine.vercel.app/" target="_blank" rel="noopener noreferrer">📲 Compartilhar no WhatsApp</a>
+  <div id="info-text" aria-live="polite" aria-atomic="true">
+    <p>Para começar, basta apertar o botão dourado escrito <strong>GIRAR!</strong></p>
+    <p>💡 Você tem <strong>2 tentativas totalmente grátis!</strong></p>
+    <p>A roleta está cheia de prêmios esperando por você!</p>
+    <strong>🎁 Prêmios da Roleta da Sorte</strong>
+    <ul>
+      <li>10 Meticais – Comece com sorte!</li>
+      <li>100 Meticais – Já dá pra comemorar!</li>
+      <li>500 Meticais – Subindo o nível!</li>
+      <li>1.000 Meticais – Agora sim!</li>
+      <li>5.000 Meticais – Sorte grande!</li>
+      <li>10.000 Meticais – O prêmio dos sonhos! 💸</li>
+    </ul>
+    <strong>🔁 GANHE MAIS GIROS GRÁTIS!</strong>
+    <p>Compartilhe o site</p>
+  </div>
+
+  <div class="actions" role="region" aria-label="Ações de compartilhamento">
+    <button class="btn-copy" id="copiar" aria-label="Copiar mensagem para compartilhar">📋 Copiar mensagem</button>
+    <a class="btn-share" href="https://wa.me/?text=🚀%20Acabei%20de%20girar%20uma%20roleta%20e%20ganhei%20um%20prêmio!%20Você%20também%20pode%20ganhar%20até%2010.000%20MT%20grátis.%20Entra%20aqui:%20https://ganha-dinheiro-com-a-roleta-de-prem-wine.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Compartilhar no WhatsApp">📲 Compartilhar no WhatsApp</a>
     <div class="copied-msg" id="copiado-msg">✅ Mensagem copiada com sucesso!</div>
   </div>
 
-  <div class="info-abaixo" aria-label="Informações sobre a roleta e prêmios">
-    Para começar, basta apertar o botão dourado escrito GIRAR!<br><br>
-    💡 Você tem 2 tentativas totalmente grátis!<br><br>
-    A roleta está cheia de prêmios esperando por você!<br><br>
-
-    <strong>🎁 Prêmios da Roleta da Sorte</strong><br>
-    10 Meticais – Comece com sorte!<br>
-    100 Meticais – Já dá pra comemorar!<br>
-    500 Meticais – Subindo o nível!<br>
-    1.000 Meticais – Agora sim!<br>
-    5.000 Meticais – Sorte grande!<br>
-    10.000 Meticais – O prêmio dos sonhos! 💸<br><br>
-
-    <strong>🔁 GANHE MAIS GIROS GRÁTIS!</strong><br>
-    Compartilhe o site com seus amigos e familiares!
-  </div>
-
-  <div id="confetti-container" aria-hidden="true"></div>
-
   <audio id="som-girar" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_740dc91a7f.mp3?filename=slot-machine-spin-1-179128.mp3"></audio>
   <audio id="som-premio" src="https://cdn.pixabay.com/download/audio/2021/11/25/audio_bfa4f55fb3.mp3?filename=correct-2-46134.mp3"></audio>
-  <audio id="som-premio-top" src="https://cdn.pixabay.com/download/audio/2021/12/15/audio_d744c68e54.mp3?filename=winning-sound.mp3"></audio>
 
   <script>
     const premios = [
@@ -242,6 +228,7 @@
     const anguloPorSetor = 360 / numPremios;
     const grupo = document.getElementById("fatias");
 
+    // Desenha as fatias e textos da roleta
     for (let i = 0; i < numPremios; i++) {
       const angIni = i * anguloPorSetor;
       const angFim = angIni + anguloPorSetor;
@@ -273,47 +260,9 @@
     let anguloTotal = 0;
     let girando = false;
     const modal = document.getElementById("modal-prize");
-    const confettiContainer = document.getElementById("confetti-container");
-    let tentativasRestantes = 2;
-
-    // Contador visual das tentativas
-    const contadorTentativas = document.createElement("div");
-    contadorTentativas.style.fontSize = "20px";
-    contadorTentativas.style.marginTop = "15px";
-    contadorTentativas.style.fontWeight = "bold";
-    contadorTentativas.style.color = "#333";
-    contadorTentativas.innerText = `Tentativas restantes: ${tentativasRestantes}`;
-    document.body.insertBefore(contadorTentativas, document.getElementById("roleta-container"));
-
-    function criarConfetti() {
-      const confetti = document.createElement("div");
-      confetti.classList.add("confetti");
-      confetti.style.left = Math.random() * window.innerWidth + "px";
-      confetti.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 60%)`;
-      confetti.style.animationDuration = 3 + Math.random() * 2 + "s";
-      confetti.style.width = 6 + Math.random() * 8 + "px";
-      confetti.style.height = confetti.style.width;
-      confettiContainer.appendChild(confetti);
-
-      setTimeout(() => {
-        confetti.remove();
-      }, 5000);
-    }
-
-    function soltarConfetti() {
-      for(let i = 0; i < 100; i++) {
-        setTimeout(criarConfetti, i * 20);
-      }
-    }
 
     document.getElementById("girar").addEventListener("click", () => {
       if (girando) return;
-      if (tentativasRestantes <= 0) {
-        alert("Você não tem mais tentativas grátis!");
-        return;
-      }
-      tentativasRestantes--;
-      contadorTentativas.innerText = `Tentativas restantes: ${tentativasRestantes}`;
       girando = true;
 
       document.getElementById("som-girar").currentTime = 0;
@@ -334,19 +283,10 @@
         modal.innerText = `🎉 PARABÉNS GANHAS: ${premio} 🚀`;
         modal.style.display = "block";
 
-        // Som especial para prêmios altos
-        if (premio.includes("10.000")) {
-          document.getElementById("som-premio-top").currentTime = 0;
-          document.getElementById("som-premio-top").play();
-        } else {
-          document.getElementById("som-premio").currentTime = 0;
-          document.getElementById("som-premio").play();
-        }
-
-        soltarConfetti();
+        document.getElementById("som-premio").currentTime = 0;
+        document.getElementById("som-premio").play();
 
         setTimeout(() => {
-          modal.style.display = "none";
           window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
         }, 2600);
 
@@ -355,9 +295,12 @@
     });
 
     document.getElementById("copiar").addEventListener("click", () => {
-      navigator.clipboard.writeText("🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: https://ganha-dinheiro-com-a-roleta-de-prem-wine.vercel.app/");
-      document.getElementById("copiado-msg").style.display = "block";
-      setTimeout(() => document.getElementById("copiado-msg").style.display = "none", 3000);
+      navigator.clipboard.writeText(
+        "🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: https://ganha-dinheiro-com-a-roleta-de-prem-wine.vercel.app/"
+      );
+      const msg = document.getElementById("copiado-msg");
+      msg.style.display = "block";
+      setTimeout(() => (msg.style.display = "none"), 3000);
     });
 
     let min = 2;
@@ -370,12 +313,11 @@
       } else {
         seg--;
       }
-      document.getElementById("min").innerText = min.toString().padStart(2, '0');
-      document.getElementById("seg").innerText = seg.toString().padStart(2, '0');
+      document.getElementById("min").innerText = min.toString().padStart(2, "0");
+      document.getElementById("seg").innerText = seg.toString().padStart(2, "0");
       setTimeout(timer, 1000);
     }
     timer();
-
   </script>
 </body>
 </html>

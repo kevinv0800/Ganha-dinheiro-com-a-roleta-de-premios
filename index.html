@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8" />
-  <title>Tente a sua sorte!</title>
+  <meta charset="UTF-8">
+  <title>Roleta da Sorte</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -10,21 +10,18 @@
       background-color: #ffffff;
       text-align: center;
     }
-    .top-bar {
-      background-color: #000;
-      color: #fff;
-      padding: 10px;
-      font-size: 14px;
+    h1 {
+      font-size: 28px;
+      margin: 20px 0 10px;
     }
-    h1 { font-size: 24px; margin: 20px 0; }
     #roleta-container {
-      margin: 10px auto 0 auto; /* subiu a roleta */
-      width: 420px;
-      height: 420px;
+      margin: 0 auto 20px auto;
+      width: 460px;
+      height: 460px;
       position: relative;
       background: radial-gradient(circle at center, #fff3cd 60%, #ffc107 95%);
       border-radius: 50%;
-      box-shadow: 0 0 30px 10px #ffc107aa;
+      box-shadow: 0 0 40px 10px #ffc10799;
     }
     #svg-roleta {
       width: 100%;
@@ -35,150 +32,34 @@
       user-select: none;
       cursor: pointer;
     }
+    #seta-indicadora {
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 25px solid transparent;
+      border-right: 25px solid transparent;
+      border-bottom: 40px solid #ff9800;
+      filter: drop-shadow(0 0 5px #ff9800cc);
+      z-index: 10;
+      pointer-events: none;
+    }
     .btn-girar {
-      margin-top: 30px; /* mais espaçamento para não ficar colado */
-      padding: 22px 50px;
-      font-size: 24px;
+      margin-top: 35px;
+      padding: 24px 60px;
+      font-size: 26px;
       background-color: #ffc107;
       border: none;
       border-radius: 14px;
       cursor: pointer;
       font-weight: bold;
       box-shadow: 0 5px 10px #d49c00;
-      transition: background-color 0.3s ease;
     }
     .btn-girar:hover {
       background-color: #e6ac00;
     }
-    .contador {
-      margin: 20px auto;
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-    }
-    .contador div { font-size: 24px; }
-    #mensagem-final {
-      background: #fff3cd;
-      padding: 20px 50px;
-      margin-top: 20px;
-      font-size: 18px;
-      border-top: 2px solid #ffc107;
-      animation: none;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #ffc107aa;
-    }
-    .animate-prize {
-      animation: blink 1s ease-in-out 4;
-    }
-    @keyframes blink {
-      0%, 100% { background-color: #fff3cd; }
-      50% { background-color: #ffe57f; }
-    }
-    .info-final {
-      background: #f8f9fa;
-      padding: 30px 40px;
-      text-align: left;
-      margin: 30px auto;
-      max-width: 900px;
-      font-size: 18px;
-      line-height: 1.8;
-      border-top: 2px solid #ccc;
-      border-radius: 10px;
-      box-shadow: 0 0 12px #ccc;
-    }
-    .info-final ul {
-      list-style: none;
-      padding-left: 0;
-      max-width: 300px;
-      margin-bottom: 20px;
-    }
-    .info-final ul li {
-      margin-bottom: 15px;
-      font-weight: bold;
-    }
-    .info-final ul li span.valor {
-      display: block;
-      font-size: 32px;
-      color: #ff9800;
-      line-height: 1;
-    }
-    .info-final ul li span.unidade {
-      font-size: 18px;
-      color: #666;
-      margin-top: 3px;
-    }
-    .info-final strong {
-      display: block;
-      margin-top: 30px;
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
-    .info-final p {
-      margin-bottom: 15px;
-    }
-    .btns-share {
-      display: flex;
-      gap: 15px;
-      max-width: 500px;
-      margin-top: 10px;
-      margin-bottom: 30px;
-    }
-    .btns-share button, .btns-share a {
-      flex: 1;
-      padding: 15px 20px;
-      font-size: 18px;
-      font-weight: bold;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
-      color: #fff;
-      user-select: none;
-      transition: background-color 0.3s ease;
-    }
-    .btns-share button {
-      background-color: #25d366;
-      box-shadow: 0 4px 8px #1da851aa;
-    }
-    .btns-share button:hover {
-      background-color: #1da851;
-    }
-    .btns-share a {
-      background-color: #128c7e;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 4px 8px #0d6b5caa;
-    }
-    .btns-share a:hover {
-      background-color: #0d6b5c;
-    }
-    .copied-msg {
-      color: green;
-      font-size: 14px;
-      margin-top: 5px;
-      display: none;
-      user-select: none;
-    }
-    #seta-indicadora {
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0; 
-      height: 0; 
-      border-left: 20px solid transparent;
-      border-right: 20px solid transparent;
-      border-bottom: 30px solid #ff9800;
-      filter: drop-shadow(0 0 5px #ff9800cc);
-      z-index: 10;
-      pointer-events: none;
-      user-select: none;
-    }
-    /* Modal de premiação */
     #modal-prize {
       display: none;
       position: fixed;
@@ -186,92 +67,48 @@
       left: 50%;
       transform: translate(-50%, -50%);
       background: linear-gradient(45deg, #fff, #ff9800);
-      padding: 30px 50px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px #ff9800cc;
+      padding: 40px 60px;
+      border-radius: 18px;
+      box-shadow: 0 0 30px #ff9800cc;
       color: white;
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 900;
       text-align: center;
-      white-space: pre-line;
       animation: oscilar 1.5s ease-in-out infinite alternate;
-      user-select: none;
       z-index: 9999;
-      max-width: 90vw;
-      line-height: 1.3;
     }
     @keyframes oscilar {
       0% { background: white; color: #ff9800; }
       100% { background: #ff9800; color: white; }
     }
+    .contador-animado {
+      font-size: 22px;
+      margin-top: 15px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
-  <div class="top-bar">
-    ⏳ Você tem <span id="min">02</span>:<span id="seg">00</span> para girar e garantir sua chance gratuita!
-  </div>
   <h1>🎯 Tente a sua sorte! 🎯</h1>
-  <p id="msg-inicial" style="max-width: 900px; margin: 0 auto 20px auto; font-size: 18px; line-height: 1.5;">
-    Para começar, basta apertar o botão dourado escrito GIRAR!<br><br>
-    💡 Você tem 2 tentativas totalmente grátis!<br><br>
-    A roleta está cheia de prêmios esperando por você!
-  </p>
-
+  <div class="contador-animado">
+    ⏳ Tempo restante para girar: <span id="min">02</span>:<span id="seg">00</span>
+  </div>
   <div id="roleta-container">
     <div id="seta-indicadora"></div>
-    <svg viewBox="0 0 300 300" id="svg-roleta" aria-label="Roleta da sorte" role="img" tabindex="0">
+    <svg viewBox="0 0 300 300" id="svg-roleta">
       <circle cx="150" cy="150" r="145" fill="#ffc107" stroke="#333" stroke-width="4"/>
       <g id="fatias"></g>
       <circle cx="150" cy="150" r="40" fill="#ffc107" stroke="#333" stroke-width="2"/>
     </svg>
   </div>
-
-  <button class="btn-girar" id="girar" aria-label="Girar a roleta">🎲 GIRAR</button>
-
-  <div class="contador" aria-live="polite" aria-atomic="true">
-    <div><strong id="tempoMin">02</strong><br>Minutos</div>
-    <div><strong id="tempoSeg">00</strong><br>Segundos</div>
-  </div>
-
-  <div id="mensagem-final" role="region" aria-live="polite" aria-atomic="true">
-    Para começar, basta apertar o botão dourado escrito GIRAR!<br><br>
-    💡 Você tem 2 tentativas totalmente grátis!<br><br>
-    A roleta está cheia de prêmios esperando por você!
-  </div>
-
-  <div class="info-final" aria-label="Prêmios e instruções">
-    <h2>🎁 Prêmios da Roleta da Sorte</h2>
-    <ul>
-      <li><span class="valor">10</span><span class="unidade">Meticais</span> – Comece com sorte!</li>
-      <li><span class="valor">100</span><span class="unidade">Meticais</span> – Já dá pra comemorar!</li>
-      <li><span class="valor">500</span><span class="unidade">Meticais</span> – Subindo o nível!</li>
-      <li><span class="valor">1.000</span><span class="unidade">Meticais</span> – Agora sim!</li>
-      <li><span class="valor">5.000</span><span class="unidade">Meticais</span> – Sorte grande!</li>
-      <li><span class="valor">10.000</span><span class="unidade">Meticais</span> – O prêmio dos sonhos! 💸</li>
-    </ul>
-    <strong>🔁 GANHE MAIS GIROS GRÁTIS!</strong>
-    <p>Compartilhe o site <strong>nova-roleta-de-ganhar-dinheiro.vercel.app</strong> com seus amigos e familiares.</p>
-    <p><strong>💬 Frase pronta para enviar:</strong></p>
-    <p>🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: <strong>https://nova-roleta-de-ganhar-dinheiro.vercel.app</strong></p>
-    <div class="btns-share">
-      <button id="copiar">📋 Copiar mensagem</button>
-      <a href="https://wa.me/?text=🚀%20Acabei%20de%20girar%20uma%20roleta%20e%20ganhei%20um%20prêmio!%20Você%20também%20pode%20ganhar%20até%2010.000%20MT%20grátis.%20Entra%20aqui:%20https://nova-roleta-de-ganhar-dinheiro.vercel.app" target="_blank" rel="noopener noreferrer">📲 Compartilhar no WhatsApp</a>
-    </div>
-    <div class="copied-msg" id="copiado-msg" role="alert" aria-live="assertive">✅ Mensagem copiada com sucesso!</div>
-    <br />
-    <small>Termos de Uso e Direitos Reservados</small>
-  </div>
-
-  <audio id="som-girar" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_740dc91a7f.mp3?filename=slot-machine-spin-1-179128.mp3"></audio>
-  <audio id="som-premio" src="https://cdn.pixabay.com/download/audio/2021/11/25/audio_bfa4f55fb3.mp3?filename=correct-2-46134.mp3"></audio>
-
-  <div id="modal-prize" role="alertdialog" aria-live="assertive" aria-modal="true"></div>
+  <button class="btn-girar" id="girar">🎲 GIRAR</button>
+  <div id="modal-prize"></div>
 
   <script>
     const premios = [
-      "100 METICAIS", "10 METICAIS", "1.000 METICAIS", "BOA SORTE", "5.000 METICAIS",
-      "BOA SORTE", "10.000 METICAIS", "500 METICAIS", "500 METICAIS", "BOA SORTE",
-      "10.000 METICAIS", "5.000 METICAIS"
+      "100\nMeticais", "10\nMeticais", "1.000\nMeticais", "BOA\nSORTE", "5.000\nMeticais",
+      "BOA\nSORTE", "10.000\nMeticais", "500\nMeticais", "500\nMeticais", "BOA\nSORTE",
+      "10.000\nMeticais", "5.000\nMeticais"
     ];
     const cores = ["#f44336", "#2196f3", "#4caf50", "#e91e63", "#ff9800", "#9c27b0", "#00bcd4", "#3f51b5", "#8bc34a", "#9c27b0", "#ff5722", "#03a9f4"];
     const numPremios = premios.length;
@@ -297,12 +134,9 @@
       text.setAttribute("y", ty);
       text.setAttribute("text-anchor", "middle");
       text.setAttribute("dominant-baseline", "middle");
-      text.setAttribute("font-size", "14");
+      text.setAttribute("font-size", "12");
       text.setAttribute("fill", "#fff");
       text.setAttribute("transform", `rotate(${angText}, ${tx}, ${ty})`);
-      text.style.fontWeight = "bold";
-      text.style.textShadow = "2px 2px 6px rgba(0,0,0,0.9)";
-      text.style.userSelect = "none";
       text.textContent = premios[i];
 
       grupo.appendChild(path);
@@ -311,16 +145,11 @@
 
     let anguloTotal = 0;
     let girando = false;
-
     const modal = document.getElementById("modal-prize");
 
     document.getElementById("girar").addEventListener("click", () => {
       if (girando) return;
       girando = true;
-
-      const somGirar = document.getElementById("som-girar");
-      somGirar.currentTime = 0;
-      somGirar.play();
 
       const giros = 5;
       const anguloRandom = Math.floor(Math.random() * 360);
@@ -333,31 +162,18 @@
         let index = Math.floor((360 - angFinal) / anguloPorSetor) % numPremios;
         if (index < 0) index += numPremios;
 
-        const premio = premios[index];
-        modal.innerText = `🎉PARABÉNS GANHAS:\n${premio} 🚀`;
+        const premio = premios[index].replace(/\\n/g, \" \");
+        modal.innerText = `🎉 PARABÉNS GANHAS: ${premio} 🚀`;
         modal.style.display = "block";
 
-        const somPremio = document.getElementById("som-premio");
-        somPremio.currentTime = 0;
-        somPremio.play();
-
         setTimeout(() => {
-          modal.style.display = "none";
           window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
-        }, 2600);
+        }, 2000);
 
         girando = false;
       }, 3000);
     });
 
-    document.getElementById("copiar").addEventListener("click", () => {
-      navigator.clipboard.writeText("🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: https://ganha-dinheiro-com-a-roleta-de-prem-wine.vercel.app/");
-      const msg = document.getElementById("copiado-msg");
-      msg.style.display = "block";
-      setTimeout(() => { msg.style.display = "none"; }, 3000);
-    });
-
-    // Timer de contagem regressiva
     let min = 2;
     let seg = 0;
     function timer() {
@@ -370,17 +186,9 @@
       }
       document.getElementById("min").innerText = min.toString().padStart(2, '0');
       document.getElementById("seg").innerText = seg.toString().padStart(2, '0');
-      document.getElementById("tempoMin").innerText = min.toString().padStart(2, '0');
-      document.getElementById("tempoSeg").innerText = seg.toString().padStart(2, '0');
       setTimeout(timer, 1000);
     }
     timer();
-
-    // Removendo diálogo de compartilhar ao sair da página
-    window.addEventListener("beforeunload", (event) => {
-      // Nenhum diálogo mostrado, deixa sair tranquilo
-      // Se quiser impedir sair, pode usar event.preventDefault() e event.returnValue
-    });
   </script>
 </body>
 </html>

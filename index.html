@@ -13,24 +13,16 @@
       padding: 20px;
     }
     h1 {
-      font-size: 34px;
-      margin-bottom: 10px;
-      animation: oscilate 1.5s infinite;
-    }
-    @keyframes oscilate {
-      0% { color: black; }
-      50% { color: silver; }
-      100% { color: black; }
-    }
-    .timer {
-      font-size: 20px;
+      font-size: 40px;
       margin-bottom: 20px;
+      color: #d17b00;
+      text-shadow: 1px 1px 2px #fff;
     }
     .roleta-wrapper {
       position: relative;
       margin: 0 auto;
-      width: 320px;
-      height: 320px;
+      width: 400px;
+      height: 400px;
       background: radial-gradient(circle, #fffde7, #ffc107);
       border-radius: 50%;
       box-shadow: 0 0 25px #ffca28;
@@ -54,9 +46,9 @@
       transform: rotate(0deg);
     }
     #girar {
-      margin-top: 30px;
-      padding: 18px 50px;
-      font-size: 20px;
+      margin-top: 40px;
+      padding: 20px 60px;
+      font-size: 22px;
       font-weight: bold;
       color: white;
       background-color: #ff9800;
@@ -66,40 +58,16 @@
       box-shadow: 0 6px 18px #ffb300;
     }
     #resultado {
-      margin-top: 25px;
-      font-size: 24px;
+      margin-top: 30px;
+      font-size: 26px;
       color: #d84315;
       font-weight: bold;
-    }
-    .premios-info {
-      background: #000;
-      color: white;
-      padding: 20px;
-      margin-top: 30px;
-      border-radius: 10px;
-      text-align: left;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .premios-info h2 {
-      color: #ffc107;
-      margin-bottom: 10px;
-    }
-    .premios-info ul {
-      list-style-type: none;
-      padding-left: 0;
-    }
-    .premios-info li {
-      margin: 6px 0;
-      font-size: 16px;
     }
     .compartilhar {
       margin-top: 30px;
       display: flex;
       justify-content: center;
       gap: 20px;
-      flex-wrap: wrap;
     }
     .compartilhar button, .compartilhar a {
       padding: 12px 18px;
@@ -117,31 +85,53 @@
       background-color: #25d366;
       color: white;
     }
+    .premios-box {
+      background-color: #000;
+      color: #fff;
+      padding: 20px;
+      margin-top: 40px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.8;
+    }
+    .giros-box {
+      background-color: #fefefe;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
 
 <h1>🎯 Tente a Sua Sorte! 🎯</h1>
-<div class="timer">⏳ Você tem <span id="min">02</span>:<span id="seg">00</span> para girar e garantir sua chance gratuita!</div>
-
 <div class="roleta-wrapper">
   <div id="seta"></div>
-  <canvas id="roleta" width="320" height="320"></canvas>
+  <canvas id="roleta" width="400" height="400"></canvas>
 </div>
 
 <button id="girar">🎲 GIRAR</button>
 <div id="resultado"></div>
 
-<div class="premios-info">
+<div class="premios-box">
   <h2>🎁 Prêmios da Roleta da Sorte</h2>
-  <ul>
-    <li>10 Meticais – Comece com sorte!</li>
-    <li>100 Meticais – Já dá pra comemorar!</li>
-    <li>500 Meticais – Subindo o nível!</li>
-    <li>1.000 Meticais – Agora sim!</li>
-    <li>5.000 Meticais – Sorte grande!</li>
-    <li>10.000 Meticais – O prêmio dos sonhos! 💸</li>
-  </ul>
+  <p>10 Meticais – Comece com sorte!</p>
+  <p>100 Meticais – Já dá pra comemorar!</p>
+  <p>500 Meticais – Subindo o nível!</p>
+  <p>1.000 Meticais – Agora sim!</p>
+  <p>5.000 Meticais – Sorte grande!</p>
+  <p>10.000 Meticais – O prêmio dos sonhos! 💸</p>
+</div>
+
+<div class="giros-box">
+  🔁 GANHE MAIS GIROS GRÁTIS!<br>
+  Compartilhe o site com seus amigos para receber novas chances de jogar.
 </div>
 
 <div class="compartilhar">
@@ -162,7 +152,6 @@
   const numSetores = premios.length;
   const anguloPorSetor = (2 * Math.PI) / numSetores;
   let anguloAtual = 0;
-  let girado = false;
 
   function desenharRoleta() {
     for (let i = 0; i < numSetores; i++) {
@@ -170,19 +159,19 @@
       const fim = inicio + anguloPorSetor;
 
       ctx.beginPath();
-      ctx.moveTo(160, 160);
-      ctx.arc(160, 160, 160, inicio, fim);
+      ctx.moveTo(200, 200);
+      ctx.arc(200, 200, 200, inicio, fim);
       ctx.fillStyle = cores[i % cores.length];
       ctx.fill();
       ctx.stroke();
 
       ctx.save();
-      ctx.translate(160, 160);
+      ctx.translate(200, 200);
       ctx.rotate(inicio + anguloPorSetor / 2);
       ctx.fillStyle = "#fff";
       ctx.font = "bold 14px Arial";
       ctx.textAlign = "right";
-      ctx.fillText(premios[i], 140, 10);
+      ctx.fillText(premios[i], 180, 10);
       ctx.restore();
     }
   }
@@ -190,9 +179,6 @@
   desenharRoleta();
 
   document.getElementById("girar").addEventListener("click", () => {
-    if (girado) return;
-    girado = true;
-
     const roleta = document.getElementById("roleta");
     const sorteio = Math.floor(Math.random() * numSetores);
     const anguloGanho = 360 / numSetores * sorteio;
@@ -204,7 +190,7 @@
       document.getElementById("resultado").innerText = `🎉 Você ganhou: ${premios[sorteio]}!`;
       setTimeout(() => {
         window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
-      }, 1500);
+      }, 2000);
     }, 4000);
   });
 
@@ -212,23 +198,6 @@
     navigator.clipboard.writeText("🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: https://ganha-dinheiro-com-a-roleta-de-prem-delta.vercel.app/");
     alert("✅ Mensagem copiada!");
   }
-
-  // Temporizador animado
-  let min = 2;
-  let seg = 0;
-  function atualizarTemporizador() {
-    if (min === 0 && seg === 0) return;
-    if (seg === 0) {
-      min--;
-      seg = 59;
-    } else {
-      seg--;
-    }
-    document.getElementById("min").innerText = String(min).padStart(2, '0');
-    document.getElementById("seg").innerText = String(seg).padStart(2, '0');
-    setTimeout(atualizarTemporizador, 1000);
-  }
-  atualizarTemporizador();
 </script>
 
 </body>

@@ -152,6 +152,7 @@
   const numSetores = premios.length;
   const anguloPorSetor = (2 * Math.PI) / numSetores;
   let anguloAtual = 0;
+  let girando = false; // 🔒 controle de rotação ativa
 
   function desenharRoleta() {
     for (let i = 0; i < numSetores; i++) {
@@ -179,11 +180,19 @@
   desenharRoleta();
 
   document.getElementById("girar").addEventListener("click", () => {
+    if (girando) return; // impede clicar novamente
+    girando = true;
+
     const roleta = document.getElementById("roleta");
     const sorteio = Math.floor(Math.random() * numSetores);
-    const anguloGanho = 360 / numSetores * sorteio;
-    const rotacaoExtra = 360 * 5;
-    anguloAtual += rotacaoExtra - anguloGanho;
+    const grausPorSetor = 360 / numSetores;
+    const anguloPremio = sorteio * grausPorSetor + grausPorSetor / 2;
+    const rotacaoExtra = 360 * 5; // rotação para dar voltas completas
+
+    anguloAtual = anguloAtual % 360; // normaliza rotação
+    const novaRotacao = rotacaoExtra + (360 - anguloPremio);
+
+    anguloAtual += novaRotacao;
     roleta.style.transform = `rotate(${anguloAtual}deg)`;
 
     setTimeout(() => {
@@ -191,6 +200,7 @@
       setTimeout(() => {
         window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
       }, 2000);
+      girando = false;
     }, 4000);
   });
 

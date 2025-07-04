@@ -14,43 +14,38 @@
     }
     h1 {
       font-size: 28px;
-      margin-bottom: 10px;
-      animation: oscilacaoCores 2s infinite;
+      margin-bottom: 20px;
+      animation: oscilando 2s infinite;
     }
-    @keyframes oscilacaoCores {
-      0% { color: #000; }
+    @keyframes oscilando {
+      0%, 100% { color: #000; }
       50% { color: #c0c0c0; }
-      100% { color: #000; }
     }
-    .contador {
-      margin-top: 10px;
-      font-size: 20px;
+    .temporizador {
+      font-size: 22px;
       font-weight: bold;
-      background: #fff3cd;
-      padding: 10px;
-      border-radius: 10px;
-      display: inline-block;
-      box-shadow: 0 0 8px #ffca28;
+      color: #ff5722;
+      margin-bottom: 10px;
     }
     .roleta-wrapper {
       position: relative;
-      margin: 20px auto;
-      width: 320px;
-      height: 320px;
+      margin: 0 auto;
+      width: 300px;
+      height: 300px;
       background: radial-gradient(circle, #fffde7, #ffc107);
       border-radius: 50%;
       box-shadow: 0 0 25px #ffca28;
     }
     #seta {
       position: absolute;
-      top: -35px;
+      top: -30px;
       left: 50%;
       transform: translateX(-50%);
       width: 0;
       height: 0;
-      border-left: 25px solid transparent;
-      border-right: 25px solid transparent;
-      border-bottom: 45px solid #ff6f00;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 40px solid #ff6f00;
       z-index: 2;
     }
     #roleta {
@@ -60,7 +55,7 @@
       transform: rotate(0deg);
     }
     #girar {
-      margin-top: 30px;
+      margin-top: 40px;
       padding: 18px 50px;
       font-size: 20px;
       font-weight: bold;
@@ -77,95 +72,69 @@
       color: #d84315;
       font-weight: bold;
     }
-    .info-final {
-      margin-top: 40px;
-      background-color: #000;
-      color: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px #ff9800;
-      font-size: 16px;
-    }
-    .info-final h2 {
-      font-size: 22px;
-      margin-bottom: 15px;
-    }
-    .info-final ul {
-      list-style: none;
-      padding: 0;
-      margin-bottom: 20px;
-    }
-    .info-final ul li {
-      margin: 10px 0;
-    }
-    .mais-giros {
-      background-color: #fefefe;
-      color: #000;
+    .premios-texto {
+      background-color: #fffaf0;
       padding: 25px;
-      border-radius: 10px;
       margin-top: 30px;
-      font-size: 15px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      font-size: 18px;
+    }
+    .compartilhar {
+      margin-top: 20px;
     }
     .botoes-compartilhar {
-      margin-top: 20px;
       display: flex;
       justify-content: center;
       gap: 15px;
+      margin-top: 15px;
     }
     .botoes-compartilhar button, .botoes-compartilhar a {
-      padding: 12px 16px;
-      font-size: 15px;
-      font-weight: bold;
+      padding: 12px 18px;
+      font-size: 16px;
       border-radius: 8px;
+      font-weight: bold;
       text-decoration: none;
-      color: white;
     }
     .botoes-compartilhar button {
       background-color: #4CAF50;
+      color: white;
       border: none;
     }
     .botoes-compartilhar a {
       background-color: #25d366;
+      color: white;
     }
   </style>
 </head>
 <body>
 
+<div class="temporizador">⏳ Você tem <span id="min">02</span>:<span id="seg">00</span> para girar!</div>
 <h1>🎯 Tente a Sua Sorte! 🎯</h1>
-<div class="contador">
-  ⏳ Tempo restante: <span id="tempo">02:00</span>
-</div>
-
 <div class="roleta-wrapper">
   <div id="seta"></div>
-  <canvas id="roleta" width="320" height="320"></canvas>
+  <canvas id="roleta" width="300" height="300"></canvas>
 </div>
 
 <button id="girar">🎲 GIRAR</button>
 <div id="resultado"></div>
 
-<div class="botoes-compartilhar">
-  <button onclick="copiarTexto()">📋 Copiar</button>
-  <a href="https://wa.me/?text=🚀%20Acabei%20de%20girar%20uma%20roleta%20e%20ganhei%20um%20prêmio!%20Você%20também%20pode%20ganhar%20até%2010.000%20MT%20grátis.%20Entra%20aqui:%20https://ganha-dinheiro-com-a-roleta-de-prem-delta.vercel.app/" target="_blank">📲 WhatsApp</a>
-</div>
-
-<div class="info-final">
-  <h2>🎁 Prêmios da Roleta da Sorte</h2>
-  <ul>
-    <li>10 Meticais – Comece com sorte!</li>
-    <li>100 Meticais – Já dá pra comemorar!</li>
-    <li>500 Meticais – Subindo o nível!</li>
-    <li>1.000 Meticais – Agora sim!</li>
-    <li>5.000 Meticais – Sorte grande!</li>
-    <li>10.000 Meticais – O prêmio dos sonhos! 💸</li>
-  </ul>
-</div>
-
-<div class="mais-giros">
+<div class="premios-texto">
+  <strong>🎁 Prêmios da Roleta da Sorte</strong><br><br>
+  10 Meticais – Comece com sorte!<br>
+  100 Meticais – Já dá pra comemorar!<br>
+  500 Meticais – Subindo o nível!<br>
+  1.000 Meticais – Agora sim!<br>
+  5.000 Meticais – Sorte grande!<br>
+  10.000 Meticais – O prêmio dos sonhos! 💸<br><br>
   <strong>🔁 GANHE MAIS GIROS GRÁTIS!</strong><br>
-  Compartilhe o site com seus amigos e familiares e aumente suas chances de ganhar!<br><br>
-  🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: <strong>https://ganha-dinheiro-com-a-roleta-de-prem-delta.vercel.app/</strong>
+  Compartilhe o site <strong>https://ganha-dinheiro-com-a-roleta-de-prem-delta.vercel.app/</strong>
+</div>
+
+<div class="compartilhar">
+  <div class="botoes-compartilhar">
+    <button onclick="copiarTexto()">📋 Copiar</button>
+    <a href="https://wa.me/?text=🚀%20Acabei%20de%20girar%20uma%20roleta%20e%20ganhei%20um%20prêmio!%20Você%20também%20pode%20ganhar%20até%2010.000%20MT%20grátis.%20Entra%20aqui:%20https://ganha-dinheiro-com-a-roleta-de-prem-delta.vercel.app/" target="_blank">📲 WhatsApp</a>
+  </div>
 </div>
 
 <script>
@@ -174,40 +143,46 @@
     "1.000 Meticais", "5.000 Meticais", "10.000 Meticais",
     "Boa Sorte", "Tente Novamente"
   ];
+
   const cores = ["#ff7043", "#66bb6a", "#42a5f5", "#ab47bc", "#ffa726", "#26c6da", "#ef5350", "#9ccc65"];
   const canvas = document.getElementById("roleta");
   const ctx = canvas.getContext("2d");
   const numSetores = premios.length;
   const anguloPorSetor = (2 * Math.PI) / numSetores;
   let anguloAtual = 0;
-  let jaGirou = false;
 
   function desenharRoleta() {
     for (let i = 0; i < numSetores; i++) {
       const inicio = i * anguloPorSetor;
       const fim = inicio + anguloPorSetor;
+
       ctx.beginPath();
-      ctx.moveTo(160, 160);
-      ctx.arc(160, 160, 160, inicio, fim);
+      ctx.moveTo(150, 150);
+      ctx.arc(150, 150, 150, inicio, fim);
       ctx.fillStyle = cores[i % cores.length];
+      ctx.shadowColor = "#ffd700";
+      ctx.shadowBlur = 10;
       ctx.fill();
       ctx.stroke();
+
       ctx.save();
-      ctx.translate(160, 160);
+      ctx.translate(150, 150);
       ctx.rotate(inicio + anguloPorSetor / 2);
       ctx.fillStyle = "#fff";
-      ctx.font = "bold 12px Arial";
+      ctx.font = "bold 14px Arial";
       ctx.textAlign = "right";
-      ctx.fillText(premios[i], 150, 10);
+      ctx.fillText(premios[i], 130, 10);
       ctx.restore();
     }
   }
 
   desenharRoleta();
 
+  let girado = false;
   document.getElementById("girar").addEventListener("click", () => {
-    if (jaGirou) return;
-    jaGirou = true;
+    if (girado) return;
+    girado = true;
+
     const roleta = document.getElementById("roleta");
     const sorteio = Math.floor(Math.random() * numSetores);
     const anguloGanho = 360 / numSetores * sorteio;
@@ -219,7 +194,7 @@
       document.getElementById("resultado").innerText = `🎉 Você ganhou: ${premios[sorteio]}!`;
       setTimeout(() => {
         window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
-      }, 2000);
+      }, 1500);
     }, 4000);
   });
 
@@ -228,9 +203,10 @@
     alert("✅ Mensagem copiada!");
   }
 
+  // Temporizador
   let min = 2;
   let seg = 0;
-  function atualizarTimer() {
+  function atualizarTemporizador() {
     if (min === 0 && seg === 0) return;
     if (seg === 0) {
       min--;
@@ -238,10 +214,11 @@
     } else {
       seg--;
     }
-    document.getElementById("tempo").innerText = `${min.toString().padStart(2, '0')}:${seg.toString().padStart(2, '0')}`;
-    setTimeout(atualizarTimer, 1000);
+    document.getElementById("min").innerText = min.toString().padStart(2, '0');
+    document.getElementById("seg").innerText = seg.toString().padStart(2, '0');
+    setTimeout(atualizarTemporizador, 1000);
   }
-  atualizarTimer();
+  atualizarTemporizador();
 </script>
 
 </body>

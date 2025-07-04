@@ -13,19 +13,18 @@
       padding: 20px;
     }
     h1 {
-      font-size: 28px;
-      margin-bottom: 20px;
-      animation: oscilando 2s infinite;
+      font-size: 32px;
+      margin-bottom: 10px;
+      animation: brilho 2s infinite alternate;
     }
-    @keyframes oscilando {
-      0%, 100% { color: #000; }
-      50% { color: #c0c0c0; }
+    @keyframes brilho {
+      0% { color: #fff; }
+      100% { color: #c0c0c0; }
     }
     .temporizador {
       font-size: 22px;
-      font-weight: bold;
       color: #ff5722;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
     .roleta-wrapper {
       position: relative;
@@ -38,14 +37,14 @@
     }
     #seta {
       position: absolute;
-      top: -30px;
+      top: -35px;
       left: 50%;
       transform: translateX(-50%);
       width: 0;
       height: 0;
-      border-left: 20px solid transparent;
-      border-right: 20px solid transparent;
-      border-bottom: 40px solid #ff6f00;
+      border-left: 25px solid transparent;
+      border-right: 25px solid transparent;
+      border-bottom: 45px solid #ff6f00;
       z-index: 2;
     }
     #roleta {
@@ -55,7 +54,7 @@
       transform: rotate(0deg);
     }
     #girar {
-      margin-top: 40px;
+      margin-top: 30px;
       padding: 18px 50px;
       font-size: 20px;
       font-weight: bold;
@@ -67,40 +66,45 @@
       box-shadow: 0 6px 18px #ffb300;
     }
     #resultado {
-      margin-top: 30px;
-      font-size: 26px;
+      margin-top: 25px;
+      font-size: 24px;
       color: #d84315;
       font-weight: bold;
     }
-    .premios-texto {
-      background-color: #fffaf0;
-      padding: 25px;
-      margin-top: 30px;
+    .info-texto {
+      background-color: #000000cc;
+      color: white;
+      margin: 30px auto 10px;
+      padding: 20px;
+      max-width: 600px;
       border-radius: 10px;
       font-size: 18px;
     }
-    .compartilhar {
+    .compartilhar-area {
+      background-color: #fefefe;
+      padding: 25px;
       margin-top: 20px;
+      border-radius: 10px;
     }
-    .botoes-compartilhar {
+    .compartilhar-botoes {
+      margin-top: 20px;
       display: flex;
       justify-content: center;
-      gap: 15px;
-      margin-top: 15px;
+      gap: 20px;
     }
-    .botoes-compartilhar button, .botoes-compartilhar a {
-      padding: 12px 18px;
+    .compartilhar-botoes button, .compartilhar-botoes a {
+      padding: 12px 20px;
       font-size: 16px;
       border-radius: 8px;
       font-weight: bold;
       text-decoration: none;
     }
-    .botoes-compartilhar button {
+    .compartilhar-botoes button {
       background-color: #4CAF50;
       color: white;
       border: none;
     }
-    .botoes-compartilhar a {
+    .compartilhar-botoes a {
       background-color: #25d366;
       color: white;
     }
@@ -108,8 +112,9 @@
 </head>
 <body>
 
-<div class="temporizador">⏳ Você tem <span id="min">02</span>:<span id="seg">00</span> para girar!</div>
 <h1>🎯 Tente a Sua Sorte! 🎯</h1>
+<div class="temporizador" id="temporizador">⏳ Você tem 02:00 para girar!</div>
+
 <div class="roleta-wrapper">
   <div id="seta"></div>
   <canvas id="roleta" width="300" height="300"></canvas>
@@ -118,20 +123,25 @@
 <button id="girar">🎲 GIRAR</button>
 <div id="resultado"></div>
 
-<div class="premios-texto">
-  <strong>🎁 Prêmios da Roleta da Sorte</strong><br><br>
-  10 Meticais – Comece com sorte!<br>
+<div class="info-texto">
+  Para começar, basta apertar o botão dourado escrito GIRAR!<br><br>
+  💡 Você tem 2 tentativas totalmente grátis!<br><br>
+  A roleta está cheia de prêmios esperando por você!
+</div>
+
+<div class="compartilhar-area">
+  <strong style="font-size: 20px;">🎁 Prêmios da Roleta da Sorte</strong>
+  <p>10 Meticais – Comece com sorte!<br>
   100 Meticais – Já dá pra comemorar!<br>
   500 Meticais – Subindo o nível!<br>
   1.000 Meticais – Agora sim!<br>
   5.000 Meticais – Sorte grande!<br>
-  10.000 Meticais – O prêmio dos sonhos! 💸<br><br>
-  <strong>🔁 GANHE MAIS GIROS GRÁTIS!</strong><br>
-  Compartilhe o site <strong>https://ganha-dinheiro-com-a-roleta-de-prem-delta.vercel.app/</strong>
-</div>
+  10.000 Meticais – O prêmio dos sonhos! 💸</p>
 
-<div class="compartilhar">
-  <div class="botoes-compartilhar">
+  <strong style="font-size: 20px;">🔁 GANHE MAIS GIROS GRÁTIS!</strong>
+  <p>Compartilhe o site com seus amigos e familiares:</p>
+
+  <div class="compartilhar-botoes">
     <button onclick="copiarTexto()">📋 Copiar</button>
     <a href="https://wa.me/?text=🚀%20Acabei%20de%20girar%20uma%20roleta%20e%20ganhei%20um%20prêmio!%20Você%20também%20pode%20ganhar%20até%2010.000%20MT%20grátis.%20Entra%20aqui:%20https://ganha-dinheiro-com-a-roleta-de-prem-delta.vercel.app/" target="_blank">📲 WhatsApp</a>
   </div>
@@ -150,6 +160,7 @@
   const numSetores = premios.length;
   const anguloPorSetor = (2 * Math.PI) / numSetores;
   let anguloAtual = 0;
+  let jaGirou = false;
 
   function desenharRoleta() {
     for (let i = 0; i < numSetores; i++) {
@@ -160,8 +171,6 @@
       ctx.moveTo(150, 150);
       ctx.arc(150, 150, 150, inicio, fim);
       ctx.fillStyle = cores[i % cores.length];
-      ctx.shadowColor = "#ffd700";
-      ctx.shadowBlur = 10;
       ctx.fill();
       ctx.stroke();
 
@@ -171,17 +180,15 @@
       ctx.fillStyle = "#fff";
       ctx.font = "bold 14px Arial";
       ctx.textAlign = "right";
-      ctx.fillText(premios[i], 130, 10);
+      ctx.fillText(premios[i], 140, 10);
       ctx.restore();
     }
   }
-
   desenharRoleta();
 
-  let girado = false;
   document.getElementById("girar").addEventListener("click", () => {
-    if (girado) return;
-    girado = true;
+    if (jaGirou) return;
+    jaGirou = true;
 
     const roleta = document.getElementById("roleta");
     const sorteio = Math.floor(Math.random() * numSetores);
@@ -203,20 +210,16 @@
     alert("✅ Mensagem copiada!");
   }
 
-  // Temporizador
-  let min = 2;
-  let seg = 0;
+  let tempo = 120;
   function atualizarTemporizador() {
-    if (min === 0 && seg === 0) return;
-    if (seg === 0) {
-      min--;
-      seg = 59;
-    } else {
-      seg--;
+    const t = document.getElementById("temporizador");
+    const minutos = Math.floor(tempo / 60);
+    const segundos = tempo % 60;
+    t.innerText = `⏳ Você tem ${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')} para girar!`;
+    if (tempo > 0) {
+      tempo--;
+      setTimeout(atualizarTemporizador, 1000);
     }
-    document.getElementById("min").innerText = min.toString().padStart(2, '0');
-    document.getElementById("seg").innerText = seg.toString().padStart(2, '0');
-    setTimeout(atualizarTemporizador, 1000);
   }
   atualizarTemporizador();
 </script>

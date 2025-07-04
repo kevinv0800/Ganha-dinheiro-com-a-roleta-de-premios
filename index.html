@@ -8,19 +8,28 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: Arial, sans-serif;
-      background: radial-gradient(circle, #fffde7, #ffe082);
+      background: linear-gradient(135deg, #fffbe6, #ffe082);
       text-align: center;
       padding: 20px;
     }
     h1 {
-      font-size: 40px;
+      font-size: 48px;
       margin-bottom: 20px;
-      color: #e65100;
-      text-shadow: 2px 2px 3px #fff;
+      font-weight: bold;
+      background: linear-gradient(45deg, white, orange);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: brilho 3s ease infinite;
+    }
+    @keyframes brilho {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
     .roleta-wrapper {
       position: relative;
-      margin: 20px auto;
+      margin: 0 auto;
       width: 400px;
       height: 400px;
       background: radial-gradient(circle, #fffde7, #ffc107);
@@ -29,14 +38,14 @@
     }
     #seta {
       position: absolute;
-      top: -40px;
+      top: -35px;
       left: 50%;
       transform: translateX(-50%);
       width: 0;
       height: 0;
-      border-left: 30px solid transparent;
-      border-right: 30px solid transparent;
-      border-bottom: 50px solid #ff6f00;
+      border-left: 25px solid transparent;
+      border-right: 25px solid transparent;
+      border-bottom: 45px solid #ff6f00;
       z-index: 2;
     }
     #roleta {
@@ -53,57 +62,35 @@
       color: white;
       background-color: #ff9800;
       border: none;
-      border-radius: 12px;
+      border-radius: 10px;
       cursor: pointer;
       box-shadow: 0 6px 18px #ffb300;
     }
     #resultado {
       margin-top: 30px;
       font-size: 26px;
-      color: #bf360c;
+      color: #d84315;
       font-weight: bold;
     }
-    .info-box {
-      margin-top: 40px;
-      padding: 25px;
-      background-color: #000;
-      color: #fff;
-      border-radius: 12px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-      font-size: 18px;
-    }
-    .info-box h2 {
-      font-size: 24px;
-      margin-bottom: 15px;
-    }
-    .info-box ul {
-      text-align: left;
-      list-style: none;
-      padding: 0;
-    }
-    .info-box li::before {
-      content: '🎁 ';
-    }
     .compartilhar {
-      margin-top: 20px;
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
     }
     .compartilhar button, .compartilhar a {
-      padding: 12px 20px;
+      padding: 12px 18px;
       font-size: 16px;
-      margin: 5px;
-      border: none;
       border-radius: 8px;
-      cursor: pointer;
       font-weight: bold;
       text-decoration: none;
     }
-    .copiar {
-      background-color: #1976d2;
+    .compartilhar button {
+      background-color: #4CAF50;
       color: white;
+      border: none;
     }
-    .whatsapp {
+    .compartilhar a {
       background-color: #25d366;
       color: white;
     }
@@ -120,22 +107,9 @@
 <button id="girar">🎲 GIRAR</button>
 <div id="resultado"></div>
 
-<div class="info-box">
-  <h2>🎁 Prêmios da Roleta da Sorte</h2>
-  <ul>
-    <li>10 Meticais – Comece com sorte!</li>
-    <li>100 Meticais – Já dá pra comemorar!</li>
-    <li>500 Meticais – Subindo o nível!</li>
-    <li>1.000 Meticais – Agora sim!</li>
-    <li>5.000 Meticais – Sorte grande!</li>
-    <li>10.000 Meticais – O prêmio dos sonhos! 💸</li>
-  </ul>
-  <p><strong>🔁 GANHE MAIS GIROS GRÁTIS!</strong><br>
-  Compartilhe o site <strong>https://ganha-dinheiro-com-a-roleta-de-prem-wine.vercel.app/</strong> com seus amigos e familiares.</p>
-  <div class="compartilhar">
-    <button class="copiar" onclick="copiarTexto()">📋 Copiar mensagem</button>
-    <a class="whatsapp" href="https://wa.me/?text=🚀%20Acabei%20de%20girar%20uma%20roleta%20e%20ganhei%20um%20prêmio!%20Você%20também%20pode%20ganhar%20até%2010.000%20MT%20grátis.%20Entra%20aqui:%20https://ganha-dinheiro-com-a-roleta-de-prem-wine.vercel.app/" target="_blank">📲 Compartilhar no WhatsApp</a>
-  </div>
+<div class="compartilhar">
+  <button onclick="copiarTexto()">📋 Copiar</button>
+  <a href="https://wa.me/?text=🚀%20Acabei%20de%20girar%20uma%20roleta%20e%20ganhei%20um%20prêmio!%20Você%20também%20pode%20ganhar%20até%2010.000%20MT%20grátis.%20Entra%20aqui:%20https://ganha-dinheiro-com-a-roleta-de-prem-delta.vercel.app/" target="_blank">📲 WhatsApp</a>
 </div>
 
 <script>
@@ -145,7 +119,7 @@
     "Boa Sorte", "Tente Novamente"
   ];
 
-  const cores = ["#f44336", "#4caf50", "#2196f3", "#ff9800", "#9c27b0", "#00bcd4", "#8bc34a", "#e91e63"];
+  const cores = ["#ff7043", "#66bb6a", "#42a5f5", "#ab47bc", "#ffa726", "#26c6da", "#ef5350", "#9ccc65"];
   const canvas = document.getElementById("roleta");
   const ctx = canvas.getContext("2d");
   const numSetores = premios.length;
@@ -181,7 +155,7 @@
     const roleta = document.getElementById("roleta");
     const sorteio = Math.floor(Math.random() * numSetores);
     const anguloGanho = 360 / numSetores * sorteio;
-    const rotacaoExtra = 360 * 6;
+    const rotacaoExtra = 360 * 5;
     anguloAtual += rotacaoExtra - anguloGanho;
     roleta.style.transform = `rotate(${anguloAtual}deg)`;
 
@@ -194,8 +168,8 @@
   });
 
   function copiarTexto() {
-    navigator.clipboard.writeText("🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: https://ganha-dinheiro-com-a-roleta-de-prem-wine.vercel.app/");
-    alert("✅ Mensagem copiada com sucesso!");
+    navigator.clipboard.writeText("🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: https://ganha-dinheiro-com-a-roleta-de-prem-delta.vercel.app/");
+    alert("✅ Mensagem copiada!");
   }
 </script>
 

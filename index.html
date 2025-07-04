@@ -23,6 +23,18 @@
       animation: oscilar 2s infinite;
       text-shadow: 1px 1px 2px #fff;
     }
+    .contador {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px auto;
+      font-size: 22px;
+      gap: 10px;
+    }
+    .contador span {
+      font-weight: bold;
+      color: #d84315;
+    }
     .roleta-wrapper {
       position: relative;
       margin: 0 auto;
@@ -68,6 +80,17 @@
       color: #d84315;
       font-weight: bold;
     }
+    .info-box {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: black;
+      color: white;
+      border-radius: 12px;
+      font-size: 18px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
     .compartilhar {
       margin-top: 30px;
       display: flex;
@@ -75,8 +98,8 @@
       gap: 20px;
     }
     .compartilhar button, .compartilhar a {
-      padding: 12px 18px;
-      font-size: 16px;
+      padding: 14px 20px;
+      font-size: 18px;
       border-radius: 8px;
       font-weight: bold;
       text-decoration: none;
@@ -95,6 +118,11 @@
 <body>
 
 <h1>🎯 Tente a Sua Sorte! 🎯</h1>
+
+<div class="contador">
+  ⏳ Tempo Restante: <span id="min">02</span>:<span id="seg">00</span>
+</div>
+
 <div class="roleta-wrapper">
   <div id="seta"></div>
   <canvas id="roleta" width="280" height="280"></canvas>
@@ -102,6 +130,23 @@
 
 <button id="girar">🎲 GIRAR</button>
 <div id="resultado"></div>
+
+<div class="info-box">
+  <p><strong>Para começar, basta apertar o botão dourado escrito GIRAR!</strong></p>
+  <p>💡 Você tem 2 tentativas totalmente grátis!</p>
+  <p>A roleta está cheia de prêmios esperando por você!</p>
+  <p><strong>🎁 Prêmios da Roleta da Sorte</strong></p>
+  <ul style="list-style: none; padding-left: 0;">
+    <li>10 Meticais – Comece com sorte!</li>
+    <li>100 Meticais – Já dá pra comemorar!</li>
+    <li>500 Meticais – Subindo o nível!</li>
+    <li>1.000 Meticais – Agora sim!</li>
+    <li>5.000 Meticais – Sorte grande!</li>
+    <li>10.000 Meticais – O prêmio dos sonhos! 💸</li>
+  </ul>
+  <p><strong>🔁 GANHE MAIS GIROS GRÁTIS!</strong><br>
+  Compartilhe o site <strong>https://ganha-dinheiro-com-a-roleta-de-prem-delta.vercel.app/</strong></p>
+</div>
 
 <div class="compartilhar">
   <button onclick="copiarTexto()">📋 Copiar</button>
@@ -167,6 +212,25 @@
     navigator.clipboard.writeText("🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: https://ganha-dinheiro-com-a-roleta-de-prem-delta.vercel.app/");
     alert("✅ Mensagem copiada!");
   }
+
+  let min = 2;
+  let seg = 0;
+  function iniciarContador() {
+    const elMin = document.getElementById("min");
+    const elSeg = document.getElementById("seg");
+    const intervalo = setInterval(() => {
+      if (min === 0 && seg === 0) return clearInterval(intervalo);
+      if (seg === 0) {
+        min--;
+        seg = 59;
+      } else {
+        seg--;
+      }
+      elMin.textContent = String(min).padStart(2, '0');
+      elSeg.textContent = String(seg).padStart(2, '0');
+    }, 1000);
+  }
+  iniciarContador();
 </script>
 
 </body>

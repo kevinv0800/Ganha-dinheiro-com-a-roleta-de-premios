@@ -13,8 +13,8 @@
       padding: 20px;
     }
     h1 {
-      font-size: 36px;
-      margin-bottom: 20px;
+      font-size: 28px;
+      margin-bottom: 10px;
       animation: oscilacaoCores 2s infinite;
     }
     @keyframes oscilacaoCores {
@@ -22,9 +22,19 @@
       50% { color: #c0c0c0; }
       100% { color: #000; }
     }
+    .contador {
+      margin-top: 10px;
+      font-size: 20px;
+      font-weight: bold;
+      background: #fff3cd;
+      padding: 10px;
+      border-radius: 10px;
+      display: inline-block;
+      box-shadow: 0 0 8px #ffca28;
+    }
     .roleta-wrapper {
       position: relative;
-      margin: 0 auto;
+      margin: 20px auto;
       width: 320px;
       height: 320px;
       background: radial-gradient(circle, #fffde7, #ffc107);
@@ -50,7 +60,7 @@
       transform: rotate(0deg);
     }
     #girar {
-      margin-top: 40px;
+      margin-top: 30px;
       padding: 18px 50px;
       font-size: 20px;
       font-weight: bold;
@@ -97,11 +107,36 @@
       font-size: 15px;
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
+    .botoes-compartilhar {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+    .botoes-compartilhar button, .botoes-compartilhar a {
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 8px;
+      text-decoration: none;
+      color: white;
+    }
+    .botoes-compartilhar button {
+      background-color: #4CAF50;
+      border: none;
+    }
+    .botoes-compartilhar a {
+      background-color: #25d366;
+    }
   </style>
 </head>
 <body>
 
 <h1>🎯 Tente a Sua Sorte! 🎯</h1>
+<div class="contador">
+  ⏳ Tempo restante: <span id="tempo">02:00</span>
+</div>
+
 <div class="roleta-wrapper">
   <div id="seta"></div>
   <canvas id="roleta" width="320" height="320"></canvas>
@@ -109,6 +144,11 @@
 
 <button id="girar">🎲 GIRAR</button>
 <div id="resultado"></div>
+
+<div class="botoes-compartilhar">
+  <button onclick="copiarTexto()">📋 Copiar</button>
+  <a href="https://wa.me/?text=🚀%20Acabei%20de%20girar%20uma%20roleta%20e%20ganhei%20um%20prêmio!%20Você%20também%20pode%20ganhar%20até%2010.000%20MT%20grátis.%20Entra%20aqui:%20https://ganha-dinheiro-com-a-roleta-de-prem-delta.vercel.app/" target="_blank">📲 WhatsApp</a>
+</div>
 
 <div class="info-final">
   <h2>🎁 Prêmios da Roleta da Sorte</h2>
@@ -182,6 +222,26 @@
       }, 2000);
     }, 4000);
   });
+
+  function copiarTexto() {
+    navigator.clipboard.writeText("🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: https://ganha-dinheiro-com-a-roleta-de-prem-delta.vercel.app/");
+    alert("✅ Mensagem copiada!");
+  }
+
+  let min = 2;
+  let seg = 0;
+  function atualizarTimer() {
+    if (min === 0 && seg === 0) return;
+    if (seg === 0) {
+      min--;
+      seg = 59;
+    } else {
+      seg--;
+    }
+    document.getElementById("tempo").innerText = `${min.toString().padStart(2, '0')}:${seg.toString().padStart(2, '0')}`;
+    setTimeout(atualizarTimer, 1000);
+  }
+  atualizarTimer();
 </script>
 
 </body>

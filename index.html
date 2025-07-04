@@ -12,7 +12,7 @@
       text-align: center;
       padding: 20px;
     }
-    @keyframes piscar-cor {
+    @keyframes oscilar {
       0% { color: black; }
       50% { color: silver; }
       100% { color: black; }
@@ -20,7 +20,8 @@
     h1 {
       font-size: 28px;
       margin-bottom: 20px;
-      animation: piscar-cor 2s infinite;
+      animation: oscilar 2s infinite;
+      text-shadow: 1px 1px 2px #fff;
     }
     .roleta-wrapper {
       position: relative;
@@ -33,14 +34,14 @@
     }
     #seta {
       position: absolute;
-      top: -30px;
+      top: -35px;
       left: 50%;
       transform: translateX(-50%);
       width: 0;
       height: 0;
-      border-left: 20px solid transparent;
-      border-right: 20px solid transparent;
-      border-bottom: 40px solid #ff6f00;
+      border-left: 25px solid transparent;
+      border-right: 25px solid transparent;
+      border-bottom: 45px solid #ff6f00;
       z-index: 2;
     }
     #roleta {
@@ -50,9 +51,9 @@
       transform: rotate(0deg);
     }
     #girar {
-      margin-top: 30px;
-      padding: 18px 50px;
-      font-size: 20px;
+      margin-top: 40px;
+      padding: 20px 60px;
+      font-size: 22px;
       font-weight: bold;
       color: white;
       background-color: #ff9800;
@@ -96,7 +97,7 @@
 <h1>🎯 Tente a Sua Sorte! 🎯</h1>
 <div class="roleta-wrapper">
   <div id="seta"></div>
-  <canvas id="roleta" width="400" height="400"></canvas>
+  <canvas id="roleta" width="280" height="280"></canvas>
 </div>
 
 <button id="girar">🎲 GIRAR</button>
@@ -127,19 +128,19 @@
       const fim = inicio + anguloPorSetor;
 
       ctx.beginPath();
-      ctx.moveTo(200, 200);
-      ctx.arc(200, 200, 200, inicio, fim);
+      ctx.moveTo(140, 140);
+      ctx.arc(140, 140, 140, inicio, fim);
       ctx.fillStyle = cores[i % cores.length];
       ctx.fill();
       ctx.stroke();
 
       ctx.save();
-      ctx.translate(200, 200);
+      ctx.translate(140, 140);
       ctx.rotate(inicio + anguloPorSetor / 2);
       ctx.fillStyle = "#fff";
-      ctx.font = "bold 14px Arial";
+      ctx.font = "bold 12px Arial";
       ctx.textAlign = "right";
-      ctx.fillText(premios[i], 180, 10);
+      ctx.fillText(premios[i], 120, 10);
       ctx.restore();
     }
   }

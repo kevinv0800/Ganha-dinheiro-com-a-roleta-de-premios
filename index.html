@@ -12,62 +12,35 @@
       text-align: center;
       padding: 20px;
     }
+    @keyframes piscar-cor {
+      0% { color: black; }
+      50% { color: silver; }
+      100% { color: black; }
+    }
     h1 {
-      font-size: 42px;
+      font-size: 28px;
       margin-bottom: 20px;
-      color: #ff6f00;
-      animation: oscilarCores 1s infinite alternate;
-    }
-    @keyframes oscilarCores {
-      from { color: #fff; }
-      to { color: #ff6f00; }
-    }
-    .aviso-topo {
-      background-color: #000;
-      color: white;
-      padding: 10px;
-      font-size: 16px;
-    }
-    .contador {
-      background-color: #000;
-      color: white;
-      font-size: 16px;
-      margin: 20px 0;
-    }
-    .contador span {
-      font-weight: bold;
-    }
-    .caixa-tempo {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-    .caixa-tempo div {
-      background: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      font-size: 26px;
+      animation: piscar-cor 2s infinite;
     }
     .roleta-wrapper {
       position: relative;
       margin: 0 auto;
-      width: 400px;
-      height: 400px;
+      width: 280px;
+      height: 280px;
       background: radial-gradient(circle, #fffde7, #ffc107);
       border-radius: 50%;
       box-shadow: 0 0 25px #ffca28;
     }
     #seta {
       position: absolute;
-      top: -35px;
+      top: -30px;
       left: 50%;
       transform: translateX(-50%);
       width: 0;
       height: 0;
-      border-left: 25px solid transparent;
-      border-right: 25px solid transparent;
-      border-bottom: 45px solid #ff6f00;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 40px solid #ff6f00;
       z-index: 2;
     }
     #roleta {
@@ -77,9 +50,9 @@
       transform: rotate(0deg);
     }
     #girar {
-      margin-top: 40px;
-      padding: 20px 60px;
-      font-size: 22px;
+      margin-top: 30px;
+      padding: 18px 50px;
+      font-size: 20px;
       font-weight: bold;
       color: white;
       background-color: #ff9800;
@@ -116,32 +89,11 @@
       background-color: #25d366;
       color: white;
     }
-    .info-rodape {
-      background-color: #000;
-      color: white;
-      padding: 20px;
-      margin-top: 40px;
-    }
-    .info-rodape h2 {
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-    .info-rodape ul {
-      text-align: left;
-      display: inline-block;
-      margin-top: 10px;
-    }
-    .info-rodape li {
-      margin-bottom: 8px;
-      list-style: none;
-    }
   </style>
 </head>
 <body>
 
-<div class="aviso-topo">Tens 2 tentativas grátis para girar a roleta. Não custa nada, clique no botão girar!</div>
-<h1>🎯 Tente a sua sorte! 🎯</h1>
-<p>Clique no botão e gire a roleta para ganhar prêmios!</p>
+<h1>🎯 Tente a Sua Sorte! 🎯</h1>
 <div class="roleta-wrapper">
   <div id="seta"></div>
   <canvas id="roleta" width="400" height="400"></canvas>
@@ -150,107 +102,70 @@
 <button id="girar">🎲 GIRAR</button>
 <div id="resultado"></div>
 
-<div class="contador">⏳ Você tem <span id="min">02</span>:<span id="seg">00</span> para girar e garantir sua chance gratuita!</div>
-<div class="caixa-tempo">
-  <div><span id="minutos">02</span><br>Minutos</div>
-  <div><span id="segundos">00</span><br>Segundos</div>
-</div>
-
-<div class="info-rodape">
-  <h2>🎁 Prêmios da Roleta da Sorte</h2>
-  <ul>
-    <li>✅ 10 Meticais – Comece com sorte!</li>
-    <li>✅ 100 Meticais – Já dá pra comemorar!</li>
-    <li>✅ 500 Meticais – Subindo o nível!</li>
-    <li>✅ 1.000 Meticais – Agora sim!</li>
-    <li>✅ 5.000 Meticais – Sorte grande!</li>
-    <li>✅ 10.000 Meticais – O prêmio dos sonhos! 💸</li>
-  </ul>
-</div>
-
-<div class="info-rodape" style="background-color: #fff8e1; color: #e65100;">
-  <h2>🔄 GANHE MAIS GIROS GRÁTIS!</h2>
-  <p>Compartilhe o site <a href="https://nova-roleta-de-ganhar-dinheiro.vercel.app" target="_blank">nova-roleta-de-ganhar-dinheiro.vercel.app</a> com seus amigos e familiares.</p>
-  <p>📢 Frase pronta para enviar:</p>
-  <input type="text" id="mensagem" value="🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: https://nova-roleta-de-ganhar-dinheiro.vercel.app" style="width: 90%; padding: 10px; margin: 10px 0;">
-  <div class="compartilhar">
-    <button onclick="copiarTexto()">📋 Copiar mensagem</button>
-    <a href="https://wa.me/?text=🚀%20Acabei%20de%20girar%20uma%20roleta%20e%20ganhei%20um%20prêmio!%20Você%20também%20pode%20ganhar%20até%2010.000%20MT%20grátis.%20Entra%20aqui:%20https://nova-roleta-de-ganhar-dinheiro.vercel.app" target="_blank">📲 Compartilhar no WhatsApp</a>
-  </div>
+<div class="compartilhar">
+  <button onclick="copiarTexto()">📋 Copiar</button>
+  <a href="https://wa.me/?text=🚀%20Acabei%20de%20girar%20uma%20roleta%20e%20ganhei%20um%20prêmio!%20Você%20também%20pode%20ganhar%20até%2010.000%20MT%20grátis.%20Entra%20aqui:%20https://ganha-dinheiro-com-a-roleta-de-prem-delta.vercel.app/" target="_blank">📲 WhatsApp</a>
 </div>
 
 <script>
-let minutos = 1;
-let segundos = 59;
-const spanMin = document.getElementById("minutos");
-const spanSeg = document.getElementById("segundos");
+  const premios = [
+    "10 Meticais", "100 Meticais", "500 Meticais",
+    "1.000 Meticais", "5.000 Meticais", "10.000 Meticais",
+    "Boa Sorte", "Tente Novamente"
+  ];
 
-setInterval(() => {
-  if (segundos === 0) {
-    if (minutos === 0) return;
-    minutos--;
-    segundos = 59;
-  } else {
-    segundos--;
+  const cores = ["#ff7043", "#66bb6a", "#42a5f5", "#ab47bc", "#ffa726", "#26c6da", "#ef5350", "#9ccc65"];
+  const canvas = document.getElementById("roleta");
+  const ctx = canvas.getContext("2d");
+  const numSetores = premios.length;
+  const anguloPorSetor = (2 * Math.PI) / numSetores;
+  let anguloAtual = 0;
+
+  function desenharRoleta() {
+    for (let i = 0; i < numSetores; i++) {
+      const inicio = i * anguloPorSetor;
+      const fim = inicio + anguloPorSetor;
+
+      ctx.beginPath();
+      ctx.moveTo(200, 200);
+      ctx.arc(200, 200, 200, inicio, fim);
+      ctx.fillStyle = cores[i % cores.length];
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.save();
+      ctx.translate(200, 200);
+      ctx.rotate(inicio + anguloPorSetor / 2);
+      ctx.fillStyle = "#fff";
+      ctx.font = "bold 14px Arial";
+      ctx.textAlign = "right";
+      ctx.fillText(premios[i], 180, 10);
+      ctx.restore();
+    }
   }
-  spanMin.textContent = minutos.toString().padStart(2, '0');
-  spanSeg.textContent = segundos.toString().padStart(2, '0');
-}, 1000);
 
-const premios = ["10 Meticais", "100 Meticais", "500 Meticais", "1.000 Meticais", "5.000 Meticais", "10.000 Meticais", "Boa Sorte", "Tente Novamente"];
-const cores = ["#ff7043", "#66bb6a", "#42a5f5", "#ab47bc", "#ffa726", "#26c6da", "#ef5350", "#9ccc65"];
-const canvas = document.getElementById("roleta");
-const ctx = canvas.getContext("2d");
-const numSetores = premios.length;
-const anguloPorSetor = (2 * Math.PI) / numSetores;
-let anguloAtual = 0;
+  desenharRoleta();
 
-function desenharRoleta() {
-  for (let i = 0; i < numSetores; i++) {
-    const inicio = i * anguloPorSetor;
-    const fim = inicio + anguloPorSetor;
+  document.getElementById("girar").addEventListener("click", () => {
+    const roleta = document.getElementById("roleta");
+    const sorteio = Math.floor(Math.random() * numSetores);
+    const anguloGanho = 360 / numSetores * sorteio;
+    const rotacaoExtra = 360 * 5;
+    anguloAtual += rotacaoExtra - anguloGanho;
+    roleta.style.transform = `rotate(${anguloAtual}deg)`;
 
-    ctx.beginPath();
-    ctx.moveTo(200, 200);
-    ctx.arc(200, 200, 200, inicio, fim);
-    ctx.fillStyle = cores[i % cores.length];
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.save();
-    ctx.translate(200, 200);
-    ctx.rotate(inicio + anguloPorSetor / 2);
-    ctx.fillStyle = "#fff";
-    ctx.font = "bold 14px Arial";
-    ctx.textAlign = "right";
-    ctx.fillText(premios[i], 180, 10);
-    ctx.restore();
-  }
-}
-
-desenharRoleta();
-
-document.getElementById("girar").addEventListener("click", () => {
-  const roleta = document.getElementById("roleta");
-  const sorteio = Math.floor(Math.random() * numSetores);
-  const anguloGanho = 360 / numSetores * sorteio;
-  const rotacaoExtra = 360 * 5;
-  anguloAtual += rotacaoExtra - anguloGanho;
-  roleta.style.transform = `rotate(${anguloAtual}deg)`;
-
-  setTimeout(() => {
-    document.getElementById("resultado").innerText = `🎉 Você ganhou: ${premios[sorteio]}!`;
     setTimeout(() => {
-      window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
-    }, 2000);
-  }, 4000);
-});
+      document.getElementById("resultado").innerText = `🎉 Você ganhou: ${premios[sorteio]}!`;
+      setTimeout(() => {
+        window.location.href = "https://media1.placard.co.mz/redirect.aspx?pid=5427&bid=1690";
+      }, 2000);
+    }, 4000);
+  });
 
-function copiarTexto() {
-  const mensagem = document.getElementById("mensagem").value;
-  navigator.clipboard.writeText(mensagem);
-  alert("✅ Mensagem copiada!");
-}
+  function copiarTexto() {
+    navigator.clipboard.writeText("🚀 Acabei de girar uma roleta e ganhei um prêmio! Você também pode ganhar até 10.000 MT grátis. Entra aqui: https://ganha-dinheiro-com-a-roleta-de-prem-delta.vercel.app/");
+    alert("✅ Mensagem copiada!");
+  }
 </script>
 
 </body>

@@ -5,49 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Roleta da Sorte</title>
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #fffbe6, #ffe082);
       text-align: center;
       padding: 20px;
     }
-
     h1 {
       font-size: 40px;
       margin-bottom: 20px;
       color: #d17b00;
       text-shadow: 1px 1px 2px #fff;
     }
-
-    #roleta {
+    .roleta-wrapper {
+      position: relative;
+      margin: 0 auto;
       width: 400px;
       height: 400px;
-      border-radius: 50%;
-      border: 10px solid #ffca28;
-      margin: 0 auto;
-      position: relative;
-      transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
     }
-
     #seta {
       position: absolute;
-      top: -20px;
+      top: -35px;
       left: 50%;
       transform: translateX(-50%);
       width: 0;
       height: 0;
-      border-left: 20px solid transparent;
-      border-right: 20px solid transparent;
-      border-bottom: 40px solid #d84315;
+      border-left: 25px solid transparent;
+      border-right: 25px solid transparent;
+      border-bottom: 45px solid #333;
       z-index: 10;
     }
-
+    #roleta {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 10px solid #ffca28;
+      transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
+    }
     canvas {
       width: 100%;
       height: 100%;
     }
-
     #btnGirar {
+      position: absolute;
+      top: 170px;
+      left: 50%;
+      transform: translateX(-50%);
       padding: 15px 30px;
       font-size: 18px;
       background-color: #ff9800;
@@ -55,63 +59,57 @@
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      margin-top: 20px;
-    }
-
-    #timer {
-      font-size: 18px;
-      margin-top: 15px;
-      color: #d84315;
+      z-index: 5;
     }
   </style>
 </head>
 <body>
+
   <h1>🎉 Roleta da Sorte 🎉</h1>
-  <div id="seta"></div>
-  <div id="roleta">
-    <canvas id="canvas" width="400" height="400"></canvas>
+
+  <div class="roleta-wrapper">
+    <div id="seta"></div>
+    <div id="roleta">
+      <canvas id="canvas" width="400" height="400"></canvas>
+      <button id="btnGirar">🎯 Girar</button>
+    </div>
   </div>
-  <button id="btnGirar">🎯 Girar</button>
-  <div id="timer">⏳ Tempo para novo giro: 60s</div>
 
   <script>
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
     const btn = document.getElementById("btnGirar");
+
     const premios = [
-      "10 Meticais",
-      "100 Meticais",
-      "500 Meticais",
-      "1.000 Meticais",
-      "5.000 Meticais",
-      "10.000 Meticais",
+      "10 MZN",
+      "100 MZN",
+      "500 MZN",
+      "1.000 MZN",
+      "5.000 MZN",
+      "10.000 MZN"
     ];
+
     let anguloAtual = 0;
     let girando = false;
 
     function desenharRoleta() {
       const total = premios.length;
-      const anguloPorSetor = (2 * Math.PI) / total;
+      const angulo = 2 * Math.PI / total;
 
       for (let i = 0; i < total; i++) {
         ctx.beginPath();
         ctx.moveTo(200, 200);
-        ctx.fillStyle = i % 2 === 0 ? "#ffb300" : "#ffe082";
-        ctx.arc(
-          200,
-          200,
-          200,
-          anguloPorSetor * i,
-          anguloPorSetor * (i + 1)
-        );
+        ctx.fillStyle = i % 2 === 0 ? "#ffd54f" : "#ffca28";
+        ctx.arc(200, 200, 200, angulo * i, angulo * (i + 1));
         ctx.fill();
+
         ctx.save();
         ctx.translate(200, 200);
-        ctx.rotate(anguloPorSetor * (i + 0.5));
+        ctx.rotate(angulo * i + angulo / 2);
         ctx.fillStyle = "#000";
-        ctx.font = "16px Arial";
+        ctx.font = "bold 16px Arial";
         ctx.textAlign = "right";
-        ctx.fillText(premios[i], 180, 5);
+        ctx.fillText(premios[i], 180, 10);
         ctx.restore();
       }
     }
@@ -122,8 +120,9 @@
       if (girando) return;
       girando = true;
 
-      const sorteado = Math.floor(Math.random() * premios.length);
-      const anguloPorSetor = 360 / premios.length;
+      const total = premios.length;
+      const sorteado = Math.floor(Math.random() * total);
+      const anguloPorSetor = 360 / total;
       const rotacoes = 5;
       const anguloFinal = 360 * rotacoes + (360 - sorteado * anguloPorSetor - anguloPorSetor / 2);
 
@@ -131,23 +130,12 @@
       anguloAtual += anguloFinal;
 
       setTimeout(() => {
-        alert(`🎉 Você ganhou: ${premios[sorteado]}!`);
+        const premio = premios[sorteado];
+        alert(`🎉 Parabéns! Você ganhou ${premio}!`);
         window.location.href = "https://tracking.888africa.com/visit/?bta=39474&brand=bacelabet";
       }, 5200);
     });
-
-    // Timer
-    let tempo = 60;
-    const timerEl = document.getElementById("timer");
-    const intervalo = setInterval(() => {
-      if (tempo > 0) {
-        tempo--;
-        timerEl.innerText = `⏳ Tempo para novo giro: ${tempo}s`;
-      } else {
-        timerEl.innerText = "✅ Pronto para girar novamente!";
-        clearInterval(intervalo);
-      }
-    }, 1000);
   </script>
+
 </body>
 </html>

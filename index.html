@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Roleta da Sorte</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,109 +33,170 @@
       height: 0;
       border-left: 25px solid transparent;
       border-right: 25px solid transparent;
-      border-bottom: 45px solid #333;
-      z-index: 10;
+      border-bottom: 45px solid #ff6f00;
+      z-index: 2;
     }
     #roleta {
       width: 100%;
       height: 100%;
-      border-radius: 50%;
-      border: 10px solid #ffca28;
-      transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
+      transition: transform 4s ease-out;
+      transform: rotate(0deg);
     }
-    canvas {
-      width: 100%;
-      height: 100%;
-    }
-    #btnGirar {
-      position: absolute;
-      top: 170px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 15px 30px;
-      font-size: 18px;
+    #girar {
+      margin-top: 20px;
+      padding: 15px 50px;
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
       background-color: #ff9800;
-      color: #fff;
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      z-index: 5;
+      box-shadow: 0 6px 18px #ffb300;
     }
+    #resultado {
+      margin-top: 30px;
+      font-size: 26px;
+      color: #d84315;
+      font-weight: bold;
+    }
+    .premios, .compartilhar {
+      margin-top: 30px;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .premios {
+      background: #000;
+      color: #fff;
+    }
+    .premios h2 { margin-bottom: 10px; }
+    .premios ul { list-style: none; text-align: left; }
+    .premios li { margin: 5px 0; }
+    .compartilhar {
+      background: #fff3e0;
+    }
+    .btn-copy, .btn-whatsapp {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+      display: inline-block;
+    }
+    .btn-copy { background-color: #ffa000; }
+    .btn-whatsapp { background-color: #4caf50; text-decoration: none; }
+    #timer { margin-top: 10px; color: #d84315; }
   </style>
 </head>
 <body>
 
-  <h1>🎉 Roleta da Sorte 🎉</h1>
+<h1>🎯 Tente a Sua Sorte! 🎯</h1>
+<div class="roleta-wrapper">
+  <div id="seta"></div>
+  <canvas id="roleta" width="400" height="400"></canvas>
+</div>
+<button id="girar">🎲 GIRAR</button>
+<div id="resultado"></div>
 
-  <div class="roleta-wrapper">
-    <div id="seta"></div>
-    <div id="roleta">
-      <canvas id="canvas" width="400" height="400"></canvas>
-      <button id="btnGirar">🎯 Girar</button>
-    </div>
-  </div>
+<div class="premios">
+  <h2>🎁 Prêmios da Roleta da Sorte</h2>
+  <ul>
+    <li>✅ 10 Meticais – Comece com sorte!</li>
+    <li>✅ 100 Meticais – Já dá pra comemorar!</li>
+    <li>✅ 500 Meticais – Subindo o nível!</li>
+    <li>✅ 1.000 Meticais – Agora sim!</li>
+    <li>✅ 5.000 Meticais – Sorte grande!</li>
+    <li>✅ 10.000 Meticais – O prêmio dos sonhos! 💸</li>
+  </ul>
+</div>
 
-  <script>
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
-    const btn = document.getElementById("btnGirar");
+<div class="compartilhar">
+  <div id="timer">⏳ Esperando tempo...</div>
+  <h3>🔁 GANHE MAIS GIROS GRÁTIS!</h3>
+  <p>
+    Compartilhe o site <strong>ganha-dinheiro-com-a-roleta-de-prem.vercel.app</strong><br>
+    com amigos via WhatsApp, SMS, Telegram ou redes sociais.
+  </p>
+  <div class="msg-box">🚀 Acabei de girar uma roleta e ganhei um prêmio incrível! Confere aqui: https://ganha-dinheiro-com-a-roleta-de-prem.vercel.app</div>
+  <button class="btn-copy" onclick="copiar()">📋 Copiar mensagem</button><br>
+  <a class="btn-whatsapp" href="https://api.whatsapp.com/send?text=🚀 Acabei de girar uma roleta e ganhei um prêmio incrível! Confere aqui: https://ganha-dinheiro-com-a-roleta-de-prem.vercel.app" target="_blank">📲 Compartilhar no WhatsApp</a>
+</div>
 
-    const premios = [
-      "10 MZN",
-      "100 MZN",
-      "500 MZN",
-      "1.000 MZN",
-      "5.000 MZN",
-      "10.000 MZN"
-    ];
+<script>
+  const premios = [
+    "10 Meticais", "100 Meticais", "500 Meticais",
+    "1.000 Meticais", "5.000 Meticais", "10.000 Meticais",
+    "Boa Sorte", "Tente Novamente"
+  ];
+  const cores = ["#ff7043", "#66bb6a", "#42a5f5", "#ab47bc", "#ffa726", "#26c6da", "#ef5350", "#9ccc65"];
+  const canvas = document.getElementById("roleta");
+  const ctx = canvas.getContext("2d");
+  const numSetores = premios.length;
+  const anguloPorSetor = (2 * Math.PI) / numSetores;
+  let anguloAtual = 0;
 
-    let anguloAtual = 0;
-    let girando = false;
+  function desenharRoleta() {
+    for (let i = 0; i < numSetores; i++) {
+      const inicio = i * anguloPorSetor;
+      const fim = inicio + anguloPorSetor;
 
-    function desenharRoleta() {
-      const total = premios.length;
-      const angulo = 2 * Math.PI / total;
+      ctx.beginPath();
+      ctx.moveTo(200, 200);
+      ctx.arc(200, 200, 200, inicio, fim);
+      ctx.fillStyle = cores[i % cores.length];
+      ctx.fill();
+      ctx.stroke();
 
-      for (let i = 0; i < total; i++) {
-        ctx.beginPath();
-        ctx.moveTo(200, 200);
-        ctx.fillStyle = i % 2 === 0 ? "#ffd54f" : "#ffca28";
-        ctx.arc(200, 200, 200, angulo * i, angulo * (i + 1));
-        ctx.fill();
-
-        ctx.save();
-        ctx.translate(200, 200);
-        ctx.rotate(angulo * i + angulo / 2);
-        ctx.fillStyle = "#000";
-        ctx.font = "bold 16px Arial";
-        ctx.textAlign = "right";
-        ctx.fillText(premios[i], 180, 10);
-        ctx.restore();
-      }
+      ctx.save();
+      ctx.translate(200, 200);
+      ctx.rotate(inicio + anguloPorSetor / 2);
+      ctx.fillStyle = "#fff";
+      ctx.font = "bold 14px Arial";
+      ctx.textAlign = "right";
+      ctx.fillText(premios[i], 180, 10);
+      ctx.restore();
     }
+  }
 
-    desenharRoleta();
+  desenharRoleta();
 
-    btn.addEventListener("click", () => {
-      if (girando) return;
-      girando = true;
+  document.getElementById("girar").addEventListener("click", () => {
+    const roleta = document.getElementById("roleta");
+    const sorteio = Math.floor(Math.random() * numSetores);
+    const anguloGanho = 360 / numSetores * sorteio;
+    const rotacaoExtra = 360 * 5;
+    anguloAtual += rotacaoExtra - anguloGanho;
+    roleta.style.transform = `rotate(${anguloAtual}deg)`;
 
-      const total = premios.length;
-      const sorteado = Math.floor(Math.random() * total);
-      const anguloPorSetor = 360 / total;
-      const rotacoes = 5;
-      const anguloFinal = 360 * rotacoes + (360 - sorteado * anguloPorSetor - anguloPorSetor / 2);
+    setTimeout(() => {
+      alert(`🎉 Você ganhou: ${premios[sorteio]}!`);
+      window.location.href = "https://tracking.888africa.com/visit/?bta=39474&brand=bacelabet";
+    }, 4000);
+  });
 
-      canvas.style.transform = `rotate(${anguloFinal + anguloAtual}deg)`;
-      anguloAtual += anguloFinal;
-
-      setTimeout(() => {
-        const premio = premios[sorteado];
-        alert(`🎉 Parabéns! Você ganhou ${premio}!`);
-        window.location.href = "https://tracking.888africa.com/visit/?bta=39474&brand=bacelabet";
-      }, 5200);
+  function copiar() {
+    const texto = "🚀 Acabei de girar uma roleta e ganhei um prêmio incrível! Confere aqui: https://ganha-dinheiro-com-a-roleta-de-prem.vercel.app";
+    navigator.clipboard.writeText(texto).then(() => {
+      alert("Mensagem copiada com sucesso!");
     });
-  </script>
+  }
+
+  let tempo = 60;
+  const timerEl = document.getElementById("timer");
+  const intervalo = setInterval(() => {
+    if (tempo > 0) {
+      tempo--;
+      timerEl.innerText = `⏳ Tempo para novo giro: ${tempo}s`;
+    } else {
+      timerEl.innerText = "✅ Pronto para girar novamente!";
+      clearInterval(intervalo);
+    }
+  }, 1000);
+</script>
 
 </body>
 </html>

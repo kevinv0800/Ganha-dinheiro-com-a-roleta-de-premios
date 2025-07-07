@@ -35,7 +35,8 @@
       width: 0;
       height: 0;
       border-left: 25px solid transparent;
-      border-right: 25px solid transparent;border-bottom: 45px solid #333;
+      border-right: 25px solid transparent;
+      border-bottom: 45px solid #333;
     }
     .premios {
       background: #000;
@@ -100,7 +101,8 @@
     }
     #timer {
       font-size: 18px;
-      margin-bottom: 10px;color: #d84315;
+      margin-bottom: 10px;
+      color: #d84315;
     }
   </style>
 </head>
@@ -133,11 +135,12 @@
       Compartilhe o site <a class="link" href="https://ganha-dinheiro-com-a-roleta-de-prem.vercel.app/" target="_blank">ganha-dinheiro-com-a-roleta-de-prem.vercel.app</a>
       com amigos por WhatsApp, SMS, Telegram ou redes sociais e ganhe <strong>+1 giro grátis</strong> a cada pessoa!
     </p>
-    <div class="msg-box">🚀 Acabei de girar uma roleta e ganhei um prêmio incrível! Confere aqui: ganha-dinheiro-com-a-roleta-de-prem.vercel.app
-    </div>
+    <div class="msg-box">🚀 Acabei de girar uma roleta e ganhei um prêmio incrível! Confere aqui: ganha-dinheiro-com-a-roleta-de-prem.vercel.app</div>
     <button class="btn-copy" onclick="copiar()">📋 Copiar mensagem</button><br>
     <a class="btn-whatsapp" href="https://api.whatsapp.com/send?text=🚀 Acabei de girar uma roleta e ganhei um prêmio incrível! Confere aqui: ganha-dinheiro-com-a-roleta-de-prem.vercel.app" target="_blank">📲 Compartilhar no WhatsApp</a>
-  </div><script>
+  </div>
+
+  <script>
     function copiar() {
       const texto = "🚀 Acabei de girar uma roleta e ganhei um prêmio incrível! Confere aqui: ganha-dinheiro-com-a-roleta-de-prem.vercel.app";
       navigator.clipboard.writeText(texto).then(() => {
@@ -151,12 +154,24 @@
     const intervalo = setInterval(() => {
       if (tempo > 0) {
         tempo--;
-        timerEl.innerText = ⏳ Tempo para novo giro: ${tempo}s;
+        timerEl.innerText = `⏳ Tempo para novo giro: ${tempo}s`;
       } else {
         timerEl.innerText = "✅ Pronto para girar novamente!";
         clearInterval(intervalo);
       }
     }, 1000);
+
+    // Redirecionamento para nova casa de apostas
+    function redirecionarParaCasaDeAposta() {
+      window.location.href = "https://tracking.888africa.com/visit/?bta=39474&brand=bacelabet";
+    }
+
+    // Simulação do giro da roleta (substitua por seu próprio mecanismo de giro)
+    // Exemplo para demonstrar redirecionamento após 5 segundos
+    setTimeout(() => {
+      alert("🎉 Você ganhou: 500 Meticais!");
+      redirecionarParaCasaDeAposta();
+    }, 5000);
   </script>
 
 </body>

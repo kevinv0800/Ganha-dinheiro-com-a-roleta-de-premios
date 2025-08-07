@@ -1,39 +1,63 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aviator Oficial</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header class="top-banner">
-    <h1>Aviator</h1>
-    <p>APROVEITE AO MÁXIMO! Chegou a casa do melhor aviator!</p>
-    <a href="#" class="btn">CADASTRE-SE</a>
-  </header>
+<section class="mini-trader">
+  <div class="chart">
+    <div class="bar" style="height: 60%;"></div>
+    <div class="bar" style="height: 80%;"></div>
+    <div class="bar" style="height: 50%;"></div>
+    <div class="bar" style="height: 90%;"></div>
+    <div class="bar" style="height: 70%;"></div>
+  </div>
+  <div class="info">
+    <h3>Trader do Placar</h3>
+    <p>Gráfico de desempenho em tempo real</p>
+  </div>
+</section>
 
-  <section class="trader-image">
-    <img src="assets/trading-bg.jpg" alt="Trader Trading Background" />
-  </section>
+<style>
+.mini-trader {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  background: #222;
+  padding: 15px 20px;
+  border-radius: 8px;
+  color: #0f0;
+  font-family: monospace;
+  max-width: 320px;
+  margin: 20px auto;
+  box-shadow: 0 0 10px #0f0a;
+}
 
-  <section class="scroll-down">
-    <p>DESLIZE A TELA PARA BAIXO E DESBLOQUEIE A SUA CHANCE</p>
-    <div class="arrow">⬇</div>
-  </section>
+.chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 100px;
+  width: 150px;
+  border-left: 2px solid #0f0;
+  border-bottom: 2px solid #0f0;
+  padding-left: 5px;
+}
 
-  <section class="promo-image">
-    <img src="assets/aviator-banner.jpg" alt="Imagem Aviator">
-  </section>
+.bar {
+  width: 18px;
+  background: linear-gradient(180deg, #0f0, #004400);
+  border-radius: 3px 3px 0 0;
+  transition: background 0.3s;
+}
 
-  <section class="bonus-section">
-    <h2><span class="highlight">REGISTE-SE</span> E DEPOSITE PARA JOGAR COM <span class="red">500% DE BÔNUS</span></h2>
-    <a href="#" class="btn">CADASTRE-SE AGORA</a>
-  </section>
+.bar:hover {
+  background: linear-gradient(180deg, #4fff4f, #007700);
+}
 
-  <section class="description">
-    <p>Ganhe um bônus incrível! Registre-se agora, faça um depósito e comece a jogar Aviator sem limites! Os melhores odds de futebol estão aqui!</p>
-    <a href="#" class="btn">QUERO COMEÇAR</a>
-  </section>
-</body>
-</html>
+.info h3 {
+  margin: 0 0 6px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.info p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+</style>

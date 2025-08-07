@@ -1,12 +1,3 @@
-.trader-image img {
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 0;
-  border: none;
-}
-
 .top-banner {
   background: none; /* Remove o gradiente anterior */
   padding: 20px;
@@ -14,4 +5,66 @@
 
 body {
   background-color: #080808;
+  color: #eee;
+  font-family: Arial, sans-serif;
+}
+
+/* Estilo para a seção scroll-down e foguete animado */
+
+.scroll-down {
+  text-align: center;
+  margin: 40px 0;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.1rem;
+  position: relative;
+}
+
+.scroll-down .rocket {
+  font-size: 3rem;
+  margin-top: 15px;
+  animation: rocket-move 2.5s ease-in-out infinite;
+  user-select: none;
+}
+
+@keyframes rocket-move {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(20px) rotate(15deg);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* Opcional: estilizar seus botões e destaques, se quiser */
+
+.btn {
+  display: inline-block;
+  background-color: #00ff99;
+  color: #080808;
+  padding: 12px 25px;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #00cc77;
+}
+
+.highlight {
+  color: #00ff99;
+  font-weight: bold;
+}
+
+.red {
+  color: #ff3333;
+  font-weight: bold;
 }

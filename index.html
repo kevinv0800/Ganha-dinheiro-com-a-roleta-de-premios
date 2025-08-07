@@ -1,63 +1,145 @@
-<section class="mini-trader">
-  <div class="chart">
-    <div class="bar" style="height: 60%;"></div>
-    <div class="bar" style="height: 80%;"></div>
-    <div class="bar" style="height: 50%;"></div>
-    <div class="bar" style="height: 90%;"></div>
-    <div class="bar" style="height: 70%;"></div>
-  </div>
-  <div class="info">
-    <h3>Trader do Placar</h3>
-    <p>Gráfico de desempenho em tempo real</p>
-  </div>
-</section>
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aviator Oficial</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Estilos básicos que você pode adicionar para o foguete animado */
+    .scroll-down {
+      text-align: center;
+      margin: 40px 0;
+      color: #fff;
+      font-weight: bold;
+      font-size: 1.1rem;
+      position: relative;
+    }
 
-<style>
-.mini-trader {
-  display: flex;
-  align-items: flex-end;
-  gap: 20px;
-  background: #222;
-  padding: 15px 20px;
-  border-radius: 8px;
-  color: #0f0;
-  font-family: monospace;
-  max-width: 320px;
-  margin: 20px auto;
-  box-shadow: 0 0 10px #0f0a;
-}
+    .scroll-down .rocket {
+      font-size: 3rem;
+      margin-top: 15px;
+      animation: rocket-move 2.5s ease-in-out infinite;
+      user-select: none;
+    }
 
-.chart {
-  display: flex;
-  align-items: flex-end;
-  gap: 6px;
-  height: 100px;
-  width: 150px;
-  border-left: 2px solid #0f0;
-  border-bottom: 2px solid #0f0;
-  padding-left: 5px;
-}
+    @keyframes rocket-move {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      50% {
+        transform: translateY(20px) rotate(15deg);
+        opacity: 0.7;
+      }
+      100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+    }
 
-.bar {
-  width: 18px;
-  background: linear-gradient(180deg, #0f0, #004400);
-  border-radius: 3px 3px 0 0;
-  transition: background 0.3s;
-}
+    /* Exemplo para seu botão e header, só pra manter visual bacana */
+    body {
+      background: #121212;
+      font-family: Arial, sans-serif;
+      color: #eee;
+      margin: 0;
+      padding: 0;
+    }
 
-.bar:hover {
-  background: linear-gradient(180deg, #4fff4f, #007700);
-}
+    .top-banner {
+      background-color: #1a1a1a;
+      padding: 30px;
+      text-align: center;
+    }
 
-.info h3 {
-  margin: 0 0 6px;
-  font-size: 1.2rem;
-  font-weight: bold;
-}
+    .top-banner h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      color: #00ff99;
+    }
 
-.info p {
-  margin: 0;
-  font-size: 0.9rem;
-  opacity: 0.7;
-}
-</style>
+    .top-banner p {
+      margin: 10px 0 20px;
+      font-size: 1.1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #00ff99;
+      color: #121212;
+      padding: 12px 25px;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #00cc77;
+    }
+
+    /* Outras seções simples para manter estrutura visual */
+    .trader-image img,
+    .promo-image img {
+      width: 100%;
+      max-width: 1000px;
+      display: block;
+      margin: 0 auto;
+      border-radius: 10px;
+    }
+
+    .bonus-section,
+    .description {
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    .highlight {
+      color: #00ff99;
+      font-weight: bold;
+    }
+
+    .red {
+      color: #ff3333;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header class="top-banner">
+    <h1>Aviator</h1>
+    <p>APROVEITE AO MÁXIMO! Chegou a casa do melhor aviator!</p>
+    <a href="#" class="btn">CADASTRE-SE</a>
+  </header>
+
+  <section class="trader-image">
+    <img src="assets/trading-bg.jpg" alt="Trader Trading Background" />
+  </section>
+
+  <section class="scroll-down">
+    <p>DESLIZE A TELA PARA BAIXO E DESBLOQUEIE A SUA CHANCE</p>
+    <div class="rocket">🚀</div>
+  </section>
+
+  <section class="promo-image">
+    <img src="assets/aviator-banner.jpg" alt="Imagem Aviator" />
+  </section>
+
+  <section class="bonus-section">
+    <h2>
+      <span class="highlight">REGISTE-SE</span> E DEPOSITE PARA JOGAR COM
+      <span class="red">500% DE BÔNUS</span>
+    </h2>
+    <a href="#" class="btn">CADASTRE-SE AGORA</a>
+  </section>
+
+  <section class="description">
+    <p>
+      Ganhe um bônus incrível! Registre-se agora, faça um depósito e comece a
+      jogar Aviator sem limites! Os melhores odds de futebol estão aqui!
+    </p>
+    <a href="#" class="btn">QUERO COMEÇAR</a>
+  </section>
+</body>
+</html>

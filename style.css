@@ -1,4 +1,4 @@
-/* ===== ESTILOS GERAIS ===== */
+/* ===== GERAL ===== */
 body {
   background-color: #080808;
   color: #eee;
@@ -42,39 +42,55 @@ body {
   background-color: #b3e600;
 }
 
-/* ===== FOGUETE ANIMADO NO LUGAR DA IMAGEM ===== */
+/* ===== MOLDURA BRANCA COM FOGUETE ===== */
 .trader-image {
-  text-align: center;
-  padding: 40px 0;
+  background-color: #fff;
+  margin: 20px auto;
+  max-width: 350px;
+  height: 200px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .trader-image .rocket {
-  font-size: 6rem;
+  font-size: 4rem;
   animation: rocket-move 2.5s ease-in-out infinite;
-  user-select: none;
 }
 
 @keyframes rocket-move {
-  0% {
-    transform: translateY(0) rotate(0deg);
-    opacity: 1;
-  }
-  50% {
-    transform: translateY(20px) rotate(15deg);
-    opacity: 0.7;
-  }
-  100% {
-    transform: translateY(0) rotate(0deg);
-    opacity: 1;
-  }
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  50% { transform: translateY(20px) rotate(15deg); opacity: 0.7; }
+  100% { transform: translateY(0) rotate(0deg); opacity: 1; }
 }
 
-/* ===== SETA OU ÍCONE DE DESCER ===== */
+/* ===== TEXTO DE DESCER ===== */
 .scroll-down {
   text-align: center;
   margin: 20px 0;
   color: #fff;
+}
+
+.scroll-down p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.scroll-down .arrow {
   font-size: 2rem;
+  animation: arrow-bounce 1.2s infinite;
+}
+
+@keyframes arrow-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+/* ===== IMAGEM PROMOÇÃO ===== */
+.promo-image img {
+  width: 100%;
+  display: block;
 }
 
 /* ===== SEÇÃO DE BÔNUS ===== */
@@ -95,7 +111,7 @@ body {
   font-weight: bold;
 }
 
-/* ===== DESCRIÇÃO FINAL ===== */
+/* ===== DESCRIÇÃO ===== */
 .description {
   text-align: center;
   padding: 30px 20px;

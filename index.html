@@ -3,38 +3,166 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aviator Oficial</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Mini Site – Cashout</title>
+  <style>
+    /* Mesmos estilos anteriores, sem mudanças */
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1a1a1a, #333);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #ffcc00;
+      color: #000;
+      font-weight: bold;
+      transition: transform 0.2s, background 0.3s;
+    }
+    button:hover {
+      transform: scale(1.05);
+      background: #ffdb4d;
+    }
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-content {
+      background: #222;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .timer {
+      font-size: 2rem;
+      margin: 15px 0;
+      color: #ffcc00;
+    }
+    .modal button {
+      margin: 8px;
+      width: 40%;
+    }
+    @media (max-width: 480px) {
+      .modal-content {
+        padding: 15px;
+      }
+      .modal button {
+        width: 100%;
+        margin: 8px 0;
+      }
+    }
+  </style>
 </head>
 <body>
-  <header class="top-banner">
-    <h1>Aviator</h1>
-    <p>APROVEITE AO MÁXIMO! Chegou a casa do melhor aviator!</p>
-    <a href="#" class="btn">CADASTRE-SE</a>
-  </header>
 
-  <!-- Moldura branca com foguete animado -->
-  <section class="trader-image">
-    <div class="rocket">🚀</div>
-  </section>
+  <button id="cashoutBtn">Cashout</button>
 
-  <section class="scroll-down">
-    <p>DESLIZE A TELA PARA BAIXO E DESBLOQUEIE A SUA CHANCE</p>
-    <div class="arrow">⬇</div>
-  </section>
+  <!-- Modal de Cashout -->
+  <div class="modal" id="modalCashout">
+    <div class="modal-content">
+      <h2>Cashout</h2>
+      <div class="timer" id="timer">02:00</div>
+      <button id="registerBtn">Registrar-se</button>
+      <button id="redeemBtn">Resgatar</button>
+    </div>
+  </div>
 
-  <section class="promo-image">
-    <img src="assets/aviator-banner.jpg" alt="Imagem Aviator">
-  </section>
+  <!-- Modal de Registro -->
+  <div class="modal" id="modalRegister">
+    <div class="modal-content">
+      <h2>Registrar-se</h2>
+      <p>Para continuar, é necessário se registrar e fazer um depósito mínimo de <strong>50 MZN</strong>.</p>
+      <button id="goToBetvivo">Ir para a Casa de Apostas</button>
+    </div>
+  </div>
 
-  <section class="bonus-section">
-    <h2><span class="highlight">REGISTE-SE</span> E DEPOSITE PARA JOGAR COM <span class="red">500% DE BÔNUS</span></h2>
-    <a href="#" class="btn">CADASTRE-SE AGORA</a>
-  </section>
+  <script>
+    const cashoutBtn = document.getElementById('cashoutBtn');
+    const modalCashout = document.getElementById('modalCashout');
+    const modalRegister = document.getElementById('modalRegister');
+    const registerBtn = document.getElementById('registerBtn');
+    const redeemBtn = document.getElementById('redeemBtn');
+    const timerEl = document.getElementById('timer');
+    const goToBetvivo = document.getElementById('goToBetvivo');
 
-  <section class="description">
-    <p>Ganhe um bônus incrível! Registre-se agora, faça um depósito e comece a jogar Aviator sem limites! Os melhores odds de futebol estão aqui!</p>
-    <a href="#" class="btn">QUERO COMEÇAR</a>
-  </section>
+    let countdown;
+    let timeLeft = 120;
+
+    function startTimer() {
+      clearInterval(countdown);
+      timeLeft = 120;
+      updateDisplay();
+      countdown = setInterval(() => {
+        timeLeft--;
+        updateDisplay();
+        if (timeLeft <= 0) {
+          clearInterval(countdown);
+          timerEl.textContent = "Expirado";
+        }
+      }, 1000);
+    }
+
+    function updateDisplay() {
+      const minutes = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+      const seconds = String(timeLeft % 60).padStart(2, '0');
+      timerEl.textContent = `${minutes}:${seconds}`;
+    }
+
+    cashoutBtn.addEventListener('click', () => {
+      modalCashout.classList.add('active');
+      startTimer();
+    });
+
+    registerBtn.addEventListener('click', () => {
+      modalCashout.classList.remove('active');
+      modalRegister.classList.add('active');
+    });
+
+    redeemBtn.addEventListener('click', () => {
+      alert("Resgate solicitado!");
+      modalCashout.classList.remove('active');
+    });
+
+    goToBetvivo.addEventListener('click', () => {
+      window.open('https://go.aff.betvivo.partners/wydkfw29', '_blank');
+    });
+
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', e => {
+        if (e.target === modal) {
+          modal.classList.remove('active');
+          clearInterval(countdown);
+        }
+      });
+    });
+  </script>
+
 </body>
 </html>

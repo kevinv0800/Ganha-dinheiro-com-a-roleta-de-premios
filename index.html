@@ -56,148 +56,156 @@
 </div>
 
 <script>
-  let balance = 100;
-  let multiplier = 1.0;
-  let flying = false;
-  let players = [];
-  let blocked = false;
-  const blockDuration = 10 * 60 * 1000; // 10 minutos
+let balance = 100;
+let multiplier = 1.0;
+let flying = false;
+let players = [];
+let blocked = false;
+const blockDuration = 10 * 60 * 1000; // 10 minutos
 
-  const welcome = document.getElementById('welcome');
-  const game = document.getElementById('game');
-  const balanceEl = document.getElementById('balance');
-  const currentXEl = document.getElementById('current-x');
-  const betValueInput = document.getElementById('bet-value');
-  const cashoutBtn = document.getElementById('cashout');
-  const cashoutModal = document.getElementById('cashout-modal');
-  const wonAmountEl = document.getElementById('won-amount');
-  const registerButton = document.getElementById('register-button');
-  const playersDiv = document.getElementById('players');
-  const enterBtn = document.getElementById('enter');
+const welcome = document.getElementById('welcome');
+const game = document.getElementById('game');
+const balanceEl = document.getElementById('balance');
+const currentXEl = document.getElementById('current-x');
+const betValueInput = document.getElementById('bet-value');
+const cashoutBtn = document.getElementById('cashout');
+const cashoutModal = document.getElementById('cashout-modal');
+const wonAmountEl = document.getElementById('won-amount');
+const registerButton = document.getElementById('register-button');
+const playersDiv = document.getElementById('players');
+const enterBtn = document.getElementById('enter');
 
-  const canvas = document.getElementById('trader-canvas');
-  const ctx = canvas.getContext('2d');
+const canvas = document.getElementById('trader-canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = canvas.offsetWidth;
+canvas.height = canvas.offsetHeight;
 
-  canvas.width = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
+let points = [];
+const maxPoints = 100;
 
-  let points = [];
-  const maxPoints = 100;
-
-  enterBtn.addEventListener('click', () => {
-    const name = document.getElementById('username').value;
-    const phone = document.getElementById('phone').value;
-    if(name && phone){
-      welcome.style.display = 'none';
-      game.style.display = 'block';
-      startFlight();
-      generatePlayers();
-    } else {
-      alert('Preencha nome e celular.');
-    }
-  });
-
-  function startFlight(){
-    if(blocked) return;
-    flying = true;
-    multiplier = 1.0;
-    points = [];
-    const startTime = Date.now();
-    const crashPoint = Math.random()*3+1.5;
-
-    function animate(){
-      if(!flying) return;
-      const elapsed = Date.now()-startTime;
-      multiplier = 1 + elapsed/2000 + Math.sin(elapsed/500)*0.3;
-      if(multiplier >= crashPoint){
-        crash();
-        return;
-      }
-      currentXEl.textContent = multiplier.toFixed(2);
-      points.push(multiplier);
-      if(points.length>maxPoints) points.shift();
-      drawGraph();
-      requestAnimationFrame(animate);
-    }
-    animate();
+// Entrar na tela do trader
+enterBtn.addEventListener('click', () => {
+  const name = document.getElementById('username').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  if(name && phone){
+    welcome.style.display = 'none';
+    game.style.display = 'flex';
+    startFlight();
+    generatePlayers();
+  } else {
+    alert('Preencha nome e celular.');
   }
+});
 
-  function drawGraph(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.beginPath();
-    ctx.moveTo(0,canvas.height);
-    for(let i=0;i<points.length;i++){
-      const x = i*(canvas.width/maxPoints);
-      const y = canvas.height - (points[i]/Math.max(...points))*canvas.height*0.6;
-      ctx.lineTo(x,y);
-    }
-    ctx.strokeStyle = '#0f0';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  }
+// Função principal do voo do trader
+function startFlight(){
+  if(blocked) return;
+  flying = true;
+  multiplier = 1.0;
+  points = [];
+  const startTime = Date.now();
+  const crashPoint = Math.random()*3+1.5;
 
-  function crash(){
-    flying=false;
-    multiplier=1.0;
-    currentXEl.textContent = multiplier.toFixed(2);
-    points=[];
-    drawGraph();
-    setTimeout(startFlight, 30000); // 30s até próximo voo
-  }
-
-  cashoutBtn.addEventListener('click', () => {
-    if(blocked) return;
-    const bet = parseFloat(betValueInput.value);
-    if(isNaN(bet) || bet<8 || bet>balance){
-      alert('Valor inválido.');
+  function animate(){
+    if(!flying) return;
+    const elapsed = Date.now()-startTime;
+    multiplier = 1 + elapsed/2000 + Math.sin(elapsed/500)*0.3;
+    if(multiplier >= crashPoint){
+      crash();
       return;
     }
-    flying=false;
-    const winAmount = bet*multiplier;
-    balance += winAmount - bet;
-    balanceEl.textContent = balance.toFixed(2);
-    wonAmountEl.textContent = winAmount.toFixed(2);
-    cashoutModal.classList.add('active');
-    addPlayerWin(winAmount, multiplier);
-
-    blocked = true;
-    setTimeout(()=>{
-      blocked = false;
-      startFlight();
-    }, blockDuration);
-  });
-
-  registerButton.addEventListener('click', () => {
-    window.location.href = 'https://go.aff.betvivo.partners/wydkfw29';
-  });
-
-  function generatePlayers(){
-    for(let i=0;i<50;i++){
-      const p = {
-        name: 'Jogador'+(i+1),
-        bet: Math.floor(Math.random()*50+8),
-        x: (Math.random()*5+1).toFixed(2)
-      };
-      players.push(p);
-      const div = document.createElement('div');
-      div.className='player';
-      div.innerHTML=`<span>${p.name}</span><span>Aposta: ${p.bet} MT</span><span>X: ${p.x}</span>`;
-      playersDiv.appendChild(div);
-    }
+    currentXEl.textContent = multiplier.toFixed(2);
+    points.push(multiplier);
+    if(points.length>maxPoints) points.shift();
+    drawGraph();
+    requestAnimationFrame(animate);
   }
+  animate();
+}
 
-  function addPlayerWin(amount, x){
+// Desenhar gráfico do trader
+function drawGraph(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.beginPath();
+  ctx.moveTo(0,canvas.height);
+  for(let i=0;i<points.length;i++){
+    const x = i*(canvas.width/maxPoints);
+    const y = canvas.height - (points[i]/Math.max(...points))*canvas.height*0.6;
+    ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle = '#0f0';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+// Evento de crash do voo
+function crash(){
+  flying=false;
+  multiplier=1.0;
+  currentXEl.textContent = multiplier.toFixed(2);
+  points=[];
+  drawGraph();
+  setTimeout(startFlight, 30000); // espera 30s para próximo voo
+}
+
+// Evento de saque
+cashoutBtn.addEventListener('click', () => {
+  if(blocked) return;
+  const bet = parseFloat(betValueInput.value);
+  if(isNaN(bet) || bet<8 || bet>balance){
+    alert('Valor inválido.');
+    return;
+  }
+  flying=false;
+  const winAmount = bet*multiplier;
+  balance += winAmount - bet;
+  balanceEl.textContent = balance.toFixed(2);
+  wonAmountEl.textContent = winAmount.toFixed(2);
+  cashoutModal.classList.add('active');
+  addPlayerWin(winAmount, multiplier);
+
+  blocked = true; // Bloqueia trader por 10 minutos
+  setTimeout(()=>{
+    blocked = false;
+    startFlight();
+  }, blockDuration);
+});
+
+// Botão de registro
+registerButton.addEventListener('click', () => {
+  window.location.href = 'https://go.aff.betvivo.partners/wydkfw29';
+});
+
+// Geração de jogadores online
+function generatePlayers(){
+  for(let i=0;i<50;i++){
+    const p = {
+      name: 'Jogador'+(i+1),
+      bet: Math.floor(Math.random()*50+8),
+      x: (Math.random()*5+1).toFixed(2)
+    };
+    players.push(p);
     const div = document.createElement('div');
     div.className='player';
-    div.innerHTML=`<span>Você</span><span>Aposta: ${betValueInput.value} MT</span><span>X: ${x.toFixed(2)}</span>`;
-    playersDiv.prepend(div);
+    div.innerHTML=`<span>${p.name}</span><span>Aposta: ${p.bet} MT</span><span>X: ${p.x}</span>`;
+    playersDiv.appendChild(div);
   }
+}
 
-  cashoutModal.addEventListener('click', (e)=>{
-    if(e.target===cashoutModal){
-      cashoutModal.classList.remove('active');
-    }
-  });
+// Adiciona o jogador atual após saque
+function addPlayerWin(amount, x){
+  const div = document.createElement('div');
+  div.className='player';
+  div.innerHTML=`<span>Você</span><span>Aposta: ${betValueInput.value} MT</span><span>X: ${x.toFixed(2)}</span>`;
+  playersDiv.prepend(div);
+}
+
+// Fecha modal ao clicar fora
+cashoutModal.addEventListener('click', (e)=>{
+  if(e.target===cashoutModal){
+    cashoutModal.classList.remove('active');
+  }
+});
 </script>
 
 </body>

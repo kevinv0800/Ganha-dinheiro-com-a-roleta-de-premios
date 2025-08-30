@@ -24,16 +24,26 @@
       text-shadow: 0 0 8px rgba(255, 204, 0, 0.4);
     }
 
-    .multiplier-box {
-      font-size: 3rem;
-      font-weight: bold;
-      background: #222;
-      padding: 30px;
+    #chartContainer {
+      width: 300px;
+      height: 200px;
+      background: #111;
       border-radius: 15px;
-      box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
-      margin-bottom: 15px;
-      min-width: 220px;
-      text-align: center;
+      margin-bottom: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(255,204,0,0.3);
+    }
+
+    canvas {
+      display: block;
+    }
+
+    .multiplier-box {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #ffcc00;
+      text-shadow: 0 0 10px rgba(255,204,0,0.6);
     }
 
     .timer {
@@ -124,15 +134,19 @@
 
     @media(max-width: 480px){
       h1 { font-size: 1.4rem; }
-      .multiplier-box { font-size: 2.2rem; padding: 20px; }
+      .multiplier-box { font-size: 2rem; }
       #cashoutBtn { width: 80%; font-size: 1rem; }
+      #chartContainer { width: 90%; height: 150px; }
     }
   </style>
 </head>
 <body>
   <h1>Mini Trader ao Vivo</h1>
+  <div id="chartContainer">
+    <canvas id="chart" width="300" height="200"></canvas>
+  </div>
   <div class="multiplier-box" id="multiplier">1.00x</div>
-  <div class="timer">Tempo restante: <span id="timer">10</span>s</div>
+  <div class="timer">Tempo restante: <span id="timer">120</span>s</div>
   <button id="cashoutBtn">Cashout</button>
 
   <!-- Modal Cashout -->
@@ -163,21 +177,45 @@
   </div>
 
   <script>
-    // --- Multiplicador e Timer ---
+    // --- Multiplicador e gráfico ---
     const multiplierEl = document.getElementById("multiplier");
     const timerEl = document.getElementById("timer");
+    const canvas = document.getElementById("chart");
+    const ctx = canvas.getContext("2d");
     let multiplier = 1.00;
     let running = true;
-    let timeLeft = 10; // segundos
+    let timeLeft = 120;
+    let oscillation = 0;
+    const dataPoints = [];
+    const maxPoints = canvas.width;
 
-    function updateMultiplier(){
+    function updateChart(){
       if(running){
-        multiplier += 0.02 + Math.random()*0.03;
+        // Atualiza multiplicador com oscilação
+        oscillation += 0.05;
+        multiplier += 0.02 * Math.sin(oscillation) + 0.01;
         multiplierEl.textContent = multiplier.toFixed(2) + "x";
+
+        // Adiciona ponto no gráfico
+        dataPoints.push(multiplier);
+        if(dataPoints.length > maxPoints){
+          dataPoints.shift();
+        }
+
+        // Desenha gráfico
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height - dataPoints[0]*20);
+        for(let i=1;i<dataPoints.length;i++){
+          ctx.lineTo(i, canvas.height - dataPoints[i]*20);
+        }
+        ctx.strokeStyle = "#ffcc00";
+        ctx.lineWidth = 2;
+        ctx.stroke();
       }
-      requestAnimationFrame(updateMultiplier);
+      requestAnimationFrame(updateChart);
     }
-    updateMultiplier();
+    updateChart();
 
     // Timer regressivo
     const countdown = setInterval(()=>{
@@ -205,7 +243,7 @@
     cashoutBtn.addEventListener("click", ()=>{
       if(!running) return;
       running = false;
-      winAmount = (multiplier * 10).toFixed(2); // Base de 10 MZN
+      winAmount = (multiplier * 10).toFixed(2);
       winValueEl.textContent = winAmount;
       modalCashout.classList.add("active");
       clearInterval(countdown);

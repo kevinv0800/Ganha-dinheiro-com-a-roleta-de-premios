@@ -3,215 +3,223 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mini Trader Aviator</title>
+<title>Mini Trader</title>
 <style>
-body{margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:#111;color:#fff;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden;}
-#loginScreen{position:fixed;top:0;left:0;width:100%;height:100%;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2000;}
-#loginScreen input{margin:8px 0;padding:10px;width:250px;border-radius:8px;border:none;text-align:center;}
-#loginScreen button{margin-top:10px;padding:12px 25px;border:none;border-radius:10px;background:#ffcc00;color:#000;font-weight:bold;cursor:pointer;transition:0.3s;}
-#loginScreen button:hover{opacity:0.8;}
-
-.top-bar{width:90%;max-width:400px;background:#222;padding:10px 15px;border-radius:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;font-weight:bold;font-size:1.1rem;}
-
-#chartContainer{width:90%;max-width:400px;height:220px;background:#222;border-radius:15px;margin-bottom:10px;overflow:hidden;position:relative;box-shadow:0 0 25px rgba(255,204,0,0.4);}
-canvas{display:block;}
-#multiplier{position:absolute;top:10px;left:50%;transform:translateX(-50%);font-size:2.2rem;font-weight:bold;color:#ffcc00;text-shadow:0 0 15px rgba(255,204,0,0.8);}
-#cashLine{position:absolute;bottom:0;left:0;height:2px;width:0;background:#0f0;transition:width 0.1s;}
-
-.bet-bar{width:90%;max-width:400px;display:flex;justify-content:space-between;align-items:center;background:#222;padding:10px;border-radius:12px;margin-bottom:10px;}
-.bet-bar input[type=number]{flex:1;padding:6px;border-radius:8px;border:none;text-align:center;}
-.bet-bar button{margin-left:6px;padding:6px 10px;border:none;border-radius:8px;background:#ffcc00;color:#000;font-weight:bold;cursor:pointer;transition:0.3s;}
-.bet-bar button:hover{opacity:0.8;}
-
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity 0.3s ease;z-index:1000;}
-.modal.active{opacity:1;visibility:visible;}
-.modal-content{background:#2a2a2a;padding:25px;border-radius:15px;max-width:400px;width:90%;text-align:center;animation:slideUp 0.4s ease;box-shadow:0 8px 25px rgba(0,0,0,0.6);}
-@keyframes slideUp{from{transform:translateY(50px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-.modal-content h2{margin-bottom:15px;color:#ffcc00;}
-.modal-content p{margin-bottom:20px;line-height:1.5;}
-.modal-content button{margin:10px;padding:12px 20px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;transition:0.3s;}
-.registerBtn{background:#ffcc00;color:#000;}
-.redeemBtn{background:#444;color:#fff;}
-.registerBtn:hover{background:#ffdb4d;transform:scale(1.05);}
-.redeemBtn:hover{background:#555;transform:scale(1.05);}
-
-.feed{margin-top:10px;width:90%;max-width:400px;background:#111;padding:10px;border-radius:12px;max-height:220px;overflow-y:auto;}
-.feed h3{margin-top:0;color:#ffcc00;text-align:center;}
-.feed ul{list-style:none;padding:0;margin:0;}
-.feed li{padding:5px 0;border-bottom:1px solid #222;font-size:0.95rem;}
-
-@media(max-width:480px){#multiplier{font-size:1.8rem;}#chartContainer{height:180px;}.bet-bar button{padding:5px;}}
+body{margin:0;font-family:Arial,sans-serif;background:#111;color:#fff;overflow-x:hidden;}
+#loginScreen,#modalCashout,#modalRegister{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:1000;}
+#loginScreen input{margin:5px;padding:10px;border:none;border-radius:5px;width:200px;}
+#loginScreen button,#modalCashout button,#modalRegister button{margin-top:10px;padding:10px 20px;border:none;border-radius:5px;background:#ffcc00;color:#000;font-weight:bold;cursor:pointer;transition:0.3s;}
+#loginScreen button:hover,#modalCashout button:hover,#modalRegister button:hover{background:#ffc400;}
+header{display:flex;justify-content:space-between;padding:10px 20px;background:#222;align-items:center;}
+header span{font-weight:bold;font-size:16px;}
+#traderCanvas{width:100%;height:300px;background:#111;display:block;margin:10px 0;}
+#betBar{display:flex;justify-content:space-around;align-items:center;padding:10px;background:#222;flex-wrap:wrap;}
+#betBar input{width:80px;padding:5px;border-radius:5px;border:none;text-align:center;}
+#betBar button{padding:5px 10px;border-radius:5px;border:none;background:#ffcc00;color:#000;font-weight:bold;cursor:pointer;margin:2px;}
+#cashLine{height:5px;background:#ffcc00;width:0;margin-top:5px;border-radius:3px;}
+.feed{background:#222;padding:10px;max-height:150px;overflow:hidden;}
+.feed ul{list-style:none;margin:0;padding:0;}
+.feed li{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #333;}
+.feed li.new{background:#333;color:#ff0;transition:0.5s;}
+.particle{position:absolute;width:4px;height:4px;background:#ffcc00;border-radius:50%;pointer-events:none;animation:particleAnim 0.6s linear forwards;}
+@keyframes particleAnim{0%{opacity:1;transform:translate(0,0);}100%{opacity:0;transform:translate(var(--dx),var(--dy));}}
+@media(max-width:600px){#betBar{flex-direction:column;}}
 </style>
 </head>
 <body>
 
+<!-- Login -->
 <div id="loginScreen">
-  <h2>Bem-vindo!</h2>
-  <input type="text" id="playerName" placeholder="Digite seu nome">
-  <input type="text" id="playerPhone" placeholder="Número de celular">
-  <button id="enterBtn">Entrar</button>
+<h2>Bem-vindo!</h2>
+<input type="text" id="playerName" placeholder="Seu nome">
+<input type="text" id="playerPhone" placeholder="Número de celular">
+<button id="enterBtn">Entrar</button>
 </div>
 
-<div class="top-bar">
-  <span>Saldo: <span id="balance">100</span> MZN</span>
-  <button id="cashoutBtn" disabled>Cashout</button>
+<!-- Header Saldo -->
+<header>
+<span>Saldo: <span id="balanceEl">100.00</span> MZN</span>
+<span id="multiplierEl">1.00x</span>
+</header>
+
+<!-- Trader -->
+<canvas id="traderCanvas"></canvas>
+
+<!-- Bet Bar -->
+<div id="betBar">
+<input type="number" id="betInput" value="8" min="8">
+<button id="halfBtn">½</button>
+<button id="doubleBtn">×2</button>
+<button id="maxBtn">MAX</button>
+<button id="cashoutBtn">Cashout</button>
+<div id="cashLine"></div>
 </div>
 
-<div id="chartContainer">
-  <canvas id="chart" width="400" height="220"></canvas>
-  <div id="multiplier">1.00x</div>
-  <div id="cashLine"></div>
-</div>
-
-<div class="bet-bar">
-  <input type="number" id="betInput" min="8" value="8">
-  <button id="halfBtn">½</button>
-  <button id="doubleBtn">×2</button>
-  <button id="maxBtn">MAX</button>
-</div>
-
-<div class="modal" id="modalCashout">
-  <div class="modal-content">
-    <h2>Parabéns!</h2>
-    <p>Ganhaste <span id="winValue">0</span> MZN!</p>
-    <button class="registerBtn" id="redeemBtn">Resgatar</button>
-  </div>
-</div>
-
-<div class="modal" id="modalRegister">
-  <div class="modal-content">
-    <h2>Registrar-se</h2>
-    <p>Para resgatar seu valor, faça seu cadastro e um depósito mínimo de <strong>50 MZN</strong>.</p>
-    <button class="registerBtn" id="goToSite">Ir para casa de apostas</button>
-  </div>
-</div>
-
+<!-- Feed Jogadores -->
 <div class="feed">
-  <h3>Jogadores online</h3>
-  <ul id="playersList"></ul>
+<ul id="playersList"></ul>
+</div>
+
+<!-- Modais -->
+<div id="modalCashout">
+<h3>Parabéns! Ganhou <span id="winValue">0</span> MZN!</h3>
+<button id="redeemBtn">Resgatar</button>
+</div>
+<div id="modalRegister">
+<h3>Para resgatar seu valor, faça seu cadastro e um depósito mínimo de 50 MZN.</h3>
+<button id="goToSite">Ir para casa de apostas</button>
 </div>
 
 <script>
+let balance=100;
+let betValue=8;
+let multiplier=1.0;
+let running=false;
+let waitingNewRound=false;
+let dataPoints=[];
+const canvas=document.getElementById("traderCanvas");
+const ctx=canvas.getContext("2d");
+canvas.width=canvas.offsetWidth;
+canvas.height=canvas.offsetHeight;
+
 const loginScreen=document.getElementById("loginScreen");
-const enterBtn=document.getElementById("enterBtn");
 const playerNameInput=document.getElementById("playerName");
 const playerPhoneInput=document.getElementById("playerPhone");
+const enterBtn=document.getElementById("enterBtn");
 
-const balanceEl=document.getElementById("balance");
+const balanceEl=document.getElementById("balanceEl");
+const multiplierEl=document.getElementById("multiplierEl");
 const betInput=document.getElementById("betInput");
 const halfBtn=document.getElementById("halfBtn");
 const doubleBtn=document.getElementById("doubleBtn");
 const maxBtn=document.getElementById("maxBtn");
 const cashoutBtn=document.getElementById("cashoutBtn");
-const multiplierEl=document.getElementById("multiplier");
 const cashLine=document.getElementById("cashLine");
-const canvas=document.getElementById("chart");
-const ctx=canvas.getContext("2d");
-const modalCashout=document.getElementById("modalCashout");
-const modalRegister=document.getElementById("modalRegister");
-const redeemBtn=document.getElementById("redeemBtn");
-const goToSite=document.getElementById("goToSite");
-const winValueEl=document.getElementById("winValue");
-const playersList=document.getElementById("playersList");
 
-let balance=100;
-let betValue=8;
-let multiplier=1.0;
-let running=false;
-let dataPoints=[];
+const modalCashout=document.getElementById("modalCashout");
+const winValueEl=document.getElementById("winValue");
+const redeemBtn=document.getElementById("redeemBtn");
+const modalRegister=document.getElementById("modalRegister");
+const goToSite=document.getElementById("goToSite");
+
+const playersList=document.getElementById("playersList");
 let traderLocked=false;
 
-// Jogadores online
-const playerNames=["Ana","Bruno","Carla","David","Elisa","Filipe","Gabriela","Hugo","Isabel","João","Karina","Luis","Maria","Nuno","Olivia","Paulo","Quim","Rita","Sara","Tiago","Ursula","Vitor","Xavier","Yara","Zé"];
-for(let i=0;i<50;i++){
-  const li=document.createElement("li");
-  const name=playerNames[Math.floor(Math.random()*playerNames.length)];
-  const value=(Math.random()*50+5).toFixed(2);
-  li.textContent=`${name} fez cashout ${value}x`;
-  playersList.appendChild(li);
-}
-
-// Entrar no jogo
 enterBtn.addEventListener("click",()=>{
-  if(playerNameInput.value.trim()=="" || playerPhoneInput.value.trim()==""){alert("Preencha nome e telefone!");return;}
+  if(playerNameInput.value.trim()=="" || playerPhoneInput.value.trim()=="") return alert("Preencha os campos!");
   loginScreen.style.display="none";
   startTrader();
+  history.pushState(null,null,location.href);
+  window.onpopstate=function(){history.go(1);}
 });
 
-// Atualizar aposta
-function updateBet(val){betValue=Math.max(8,Math.min(balance,val)); betInput.value=betValue;}
-halfBtn.addEventListener("click",()=>updateBet(Math.floor(betValue/2)));
-doubleBtn.addEventListener("click",()=>updateBet(Math.min(balance,betValue*2)));
-maxBtn.addEventListener("click",()=>updateBet(balance));
-betInput.addEventListener("input",()=>updateBet(parseInt(betInput.value)));
+halfBtn.addEventListener("click",()=>{betInput.value=Math.max(8,Math.floor(betValue/2));});
+doubleBtn.addEventListener("click",()=>{betInput.value=Math.min(balance,Math.floor(betValue*2));});
+maxBtn.addEventListener("click",()=>{betInput.value=balance;});
+betInput.addEventListener("input",()=>{betValue=parseInt(betInput.value)||8;});
 
-// Trader tipo Aviator com crash e flash
+// Trader Neon
+function drawTrader(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.beginPath();
+  ctx.moveTo(0,canvas.height-(dataPoints[0]-1)*20);
+  for(let i=1;i<dataPoints.length;i++){
+    ctx.lineTo(i,canvas.height-(dataPoints[i]-1)*20);
+  }
+  ctx.strokeStyle="#ffcc00";
+  ctx.lineWidth=2;
+  ctx.shadowColor="#ffcc00";
+  ctx.shadowBlur=8;
+  ctx.stroke();
+}
+
+// Partículas
+function flashCrash(){
+  document.body.style.transition="0.2s";
+  document.body.style.background="#ff0";
+  createParticles(30);
+  setTimeout(()=>document.body.style.background="#111",200);
+}
+function createParticles(count){
+  for(let i=0;i<count;i++){
+    const p=document.createElement("div");
+    p.className="particle";
+    p.style.left=Math.random()*canvas.offsetWidth+"px";
+    p.style.top=Math.random()*canvas.offsetHeight+"px";
+    p.style.setProperty("--dx",(Math.random()-0.5)*200+"px");
+    p.style.setProperty("--dy",(Math.random()-0.5)*200+"px");
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),600);
+  }
+}
+
+// Feed jogadores
+function addOnlinePlayer(name,bet,mult,win){
+  const li=document.createElement("li");
+  li.className="new";
+  li.innerHTML=`<span>${name}</span> <span>Aposta: ${bet} MZN</span> <span>X: ${mult}x</span> <span>Ganho: ${win} MZN</span>`;
+  playersList.prepend(li);
+  if(playersList.children.length>50) playersList.removeChild(playersList.lastChild);
+  setTimeout(()=>li.classList.remove("new"),1200);
+}
+
+// Trader estilo Aviator
 function startTrader(){
   running=true;
   cashoutBtn.disabled=false;
   multiplier=1.0;
   dataPoints=[];
-  let crash=false;
   function step(){
     if(!running) return;
-    multiplier*=(1 + (Math.random()*0.03-0.005));
-    multiplier=Math.max(1.00,multiplier);
-    if(Math.random()<0.002 && !crash){ // crash aleatório
-      crash=true;
-      running=false;
-      flashCrash();
-    }
+    if(waitingNewRound) return;
+    multiplier*=(1+Math.random()*0.03-0.005);
+    multiplier=Math.max(1.0,multiplier);
     multiplierEl.textContent=multiplier.toFixed(2)+"x";
     cashLine.style.width=((multiplier-1)/(10-1)*100)+"%";
-    
     dataPoints.push(multiplier);
     if(dataPoints.length>canvas.width) dataPoints.shift();
-    
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.beginPath();
-    ctx.moveTo(0,canvas.height-(dataPoints[0]-1)*35);
-    for(let i=1;i<dataPoints.length;i++){
-      ctx.lineTo(i,canvas.height-(dataPoints[i]-1)*35);
+    drawTrader();
+    if(Math.random()<0.002 && running){
+      crashTrader();
     }
-    ctx.strokeStyle="#ffcc00";
-    ctx.lineWidth=2;
-    ctx.stroke();
-    
     requestAnimationFrame(step);
   }
   step();
 }
 
-// Flash de crash
-function flashCrash(){
-  document.body.style.transition="0.2s";
-  document.body.style.background="#ff0";
-  setTimeout(()=>document.body.style.background="#111",200);
+// Crash e espera 30s
+function crashTrader(){
+  running=false;
+  waitingNewRound=true;
+  flashCrash();
+  setTimeout(()=>{
+    multiplier=1.0;
+    dataPoints=[];
+    running=true;
+    waitingNewRound=false;
+    startTrader();
+  },30000);
 }
 
 // Cashout
-function doCashout(){
+cashoutBtn.addEventListener("click",()=>{
   if(traderLocked || !running) return;
   running=false;
+  traderLocked=true;
   const win=(betValue*multiplier).toFixed(2);
   balance=parseFloat(balance)+parseFloat(win);
   balanceEl.textContent=balance.toFixed(2);
   winValueEl.textContent=win;
-  modalCashout.classList.add("active");
-  traderLocked=true;
-}
+  modalCashout.style.display="flex";
+  addOnlinePlayer(playerNameInput.value,betValue,multiplier.toFixed(2),win);
+});
 
-// Eventos modais
-cashoutBtn.addEventListener("click",doCashout);
+// Modais
 redeemBtn.addEventListener("click",()=>{
-  modalCashout.classList.remove("active");
-  modalRegister.classList.add("active");
+  modalCashout.style.display="none";
+  modalRegister.style.display="flex";
 });
 goToSite.addEventListener("click",()=>window.location.href="https://go.aff.betvivo.partners/wydkfw29");
-
-// Bloquear voltar
-history.pushState(null,null,location.href);
-window.onpopstate=function(){history.go(1);}
 </script>
 </body>
 </html>

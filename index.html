@@ -3,166 +3,231 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mini Site – Cashout</title>
+  <title>Mini Trader Cashout</title>
   <style>
-    /* Mesmos estilos anteriores, sem mudanças */
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #1a1a1a, #333);
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
       color: #fff;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
       height: 100vh;
-      margin: 0;
     }
-    button {
-      padding: 12px 24px;
-      font-size: 1.1rem;
+
+    h1 {
+      margin-bottom: 10px;
+      color: #ffcc00;
+      font-size: 1.8rem;
+      text-shadow: 0 0 8px rgba(255, 204, 0, 0.4);
+    }
+
+    .multiplier-box {
+      font-size: 3rem;
+      font-weight: bold;
+      background: #222;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
+      margin-bottom: 15px;
+      min-width: 220px;
+      text-align: center;
+    }
+
+    .timer {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      color: #ff5555;
+      font-weight: bold;
+    }
+
+    #cashoutBtn {
+      padding: 14px 28px;
+      font-size: 1.2rem;
+      font-weight: bold;
       border: none;
-      border-radius: 8px;
-      cursor: pointer;
+      border-radius: 10px;
       background: #ffcc00;
       color: #000;
-      font-weight: bold;
-      transition: transform 0.2s, background 0.3s;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4);
     }
-    button:hover {
-      transform: scale(1.05);
+
+    #cashoutBtn:hover {
       background: #ffdb4d;
+      transform: scale(1.05);
     }
+
+    /* Modal Base */
     .modal {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.7);
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       opacity: 0;
       visibility: hidden;
       transition: opacity 0.3s ease;
+      z-index: 1000;
     }
     .modal.active {
       opacity: 1;
       visibility: visible;
     }
+
     .modal-content {
-      background: #222;
-      padding: 20px;
-      border-radius: 12px;
+      background: #2a2a2a;
+      padding: 25px;
+      border-radius: 15px;
       max-width: 400px;
       width: 90%;
       text-align: center;
-      animation: slideUp 0.3s ease;
+      animation: slideUp 0.4s ease;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
     }
+
     @keyframes slideUp {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+      from {transform: translateY(50px); opacity: 0;}
+      to {transform: translateY(0); opacity: 1;}
     }
-    .timer {
-      font-size: 2rem;
-      margin: 15px 0;
+
+    .modal-content h2 {
+      margin-bottom: 15px;
       color: #ffcc00;
     }
-    .modal button {
-      margin: 8px;
-      width: 40%;
+
+    .modal-content p {
+      margin-bottom: 20px;
+      line-height: 1.5;
     }
-    @media (max-width: 480px) {
-      .modal-content {
-        padding: 15px;
-      }
-      .modal button {
-        width: 100%;
-        margin: 8px 0;
-      }
+
+    .modal-content button {
+      margin: 10px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .registerBtn { background: #ffcc00; color: #000; }
+    .redeemBtn { background: #444; color: #fff; }
+
+    .registerBtn:hover { background: #ffdb4d; transform: scale(1.05); }
+    .redeemBtn:hover { background: #555; transform: scale(1.05); }
+
+    @media(max-width: 480px){
+      h1 { font-size: 1.4rem; }
+      .multiplier-box { font-size: 2.2rem; padding: 20px; }
+      #cashoutBtn { width: 80%; font-size: 1rem; }
     }
   </style>
 </head>
 <body>
-
+  <h1>Mini Trader ao Vivo</h1>
+  <div class="multiplier-box" id="multiplier">1.00x</div>
+  <div class="timer">Tempo restante: <span id="timer">10</span>s</div>
   <button id="cashoutBtn">Cashout</button>
 
-  <!-- Modal de Cashout -->
+  <!-- Modal Cashout -->
   <div class="modal" id="modalCashout">
     <div class="modal-content">
-      <h2>Cashout</h2>
-      <div class="timer" id="timer">02:00</div>
-      <button id="registerBtn">Registrar-se</button>
-      <button id="redeemBtn">Resgatar</button>
+      <h2>Parabéns!</h2>
+      <p>Ganhaste <span id="winValue">0</span> MZN!</p>
+      <button class="registerBtn" id="redeemBtn">Resgatar</button>
     </div>
   </div>
 
-  <!-- Modal de Registro -->
+  <!-- Modal Registro -->
   <div class="modal" id="modalRegister">
     <div class="modal-content">
       <h2>Registrar-se</h2>
-      <p>Para continuar, é necessário se registrar e fazer um depósito mínimo de <strong>50 MZN</strong>.</p>
-      <button id="goToBetvivo">Ir para a Casa de Apostas</button>
+      <p>Para resgatar seu valor, faça seu cadastro e um depósito mínimo de <strong>50 MZN</strong>.</p>
+      <button class="registerBtn" id="goToSite">Ir para casa de apostas</button>
+    </div>
+  </div>
+
+  <!-- Modal Perdeu -->
+  <div class="modal" id="modalLose">
+    <div class="modal-content">
+      <h2>Ops!</h2>
+      <p>O multiplicador explodiu! 😢</p>
+      <button class="redeemBtn" onclick="location.reload()">Tentar de novo</button>
     </div>
   </div>
 
   <script>
-    const cashoutBtn = document.getElementById('cashoutBtn');
-    const modalCashout = document.getElementById('modalCashout');
-    const modalRegister = document.getElementById('modalRegister');
-    const registerBtn = document.getElementById('registerBtn');
-    const redeemBtn = document.getElementById('redeemBtn');
-    const timerEl = document.getElementById('timer');
-    const goToBetvivo = document.getElementById('goToBetvivo');
+    // --- Multiplicador e Timer ---
+    const multiplierEl = document.getElementById("multiplier");
+    const timerEl = document.getElementById("timer");
+    let multiplier = 1.00;
+    let running = true;
+    let timeLeft = 10; // segundos
 
-    let countdown;
-    let timeLeft = 120;
+    function updateMultiplier(){
+      if(running){
+        multiplier += 0.02 + Math.random()*0.03;
+        multiplierEl.textContent = multiplier.toFixed(2) + "x";
+      }
+      requestAnimationFrame(updateMultiplier);
+    }
+    updateMultiplier();
 
-    function startTimer() {
-      clearInterval(countdown);
-      timeLeft = 120;
-      updateDisplay();
-      countdown = setInterval(() => {
+    // Timer regressivo
+    const countdown = setInterval(()=>{
+      if(running){
         timeLeft--;
-        updateDisplay();
-        if (timeLeft <= 0) {
+        timerEl.textContent = timeLeft;
+        if(timeLeft <= 0){
+          running = false;
           clearInterval(countdown);
-          timerEl.textContent = "Expirado";
+          document.getElementById("modalLose").classList.add("active");
         }
-      }, 1000);
-    }
+      }
+    },1000);
 
-    function updateDisplay() {
-      const minutes = String(Math.floor(timeLeft / 60)).padStart(2, '0');
-      const seconds = String(timeLeft % 60).padStart(2, '0');
-      timerEl.textContent = `${minutes}:${seconds}`;
-    }
+    // --- Modais ---
+    const cashoutBtn = document.getElementById("cashoutBtn");
+    const modalCashout = document.getElementById("modalCashout");
+    const modalRegister = document.getElementById("modalRegister");
+    const redeemBtn = document.getElementById("redeemBtn");
+    const goToSite = document.getElementById("goToSite");
+    const winValueEl = document.getElementById("winValue");
 
-    cashoutBtn.addEventListener('click', () => {
-      modalCashout.classList.add('active');
-      startTimer();
+    let winAmount = 0;
+
+    cashoutBtn.addEventListener("click", ()=>{
+      if(!running) return;
+      running = false;
+      winAmount = (multiplier * 10).toFixed(2); // Base de 10 MZN
+      winValueEl.textContent = winAmount;
+      modalCashout.classList.add("active");
+      clearInterval(countdown);
     });
 
-    registerBtn.addEventListener('click', () => {
-      modalCashout.classList.remove('active');
-      modalRegister.classList.add('active');
+    redeemBtn.addEventListener("click", ()=>{
+      modalCashout.classList.remove("active");
+      modalRegister.classList.add("active");
     });
 
-    redeemBtn.addEventListener('click', () => {
-      alert("Resgate solicitado!");
-      modalCashout.classList.remove('active');
+    goToSite.addEventListener("click", ()=>{
+      window.open("https://go.aff.betvivo.partners/wydkfw29", "_blank");
     });
 
-    goToBetvivo.addEventListener('click', () => {
-      window.open('https://go.aff.betvivo.partners/wydkfw29', '_blank');
-    });
-
-    document.querySelectorAll('.modal').forEach(modal => {
-      modal.addEventListener('click', e => {
-        if (e.target === modal) {
-          modal.classList.remove('active');
-          clearInterval(countdown);
+    // Fechar modal ao clicar fora
+    document.querySelectorAll(".modal").forEach(modal=>{
+      modal.addEventListener("click", e=>{
+        if(e.target === modal){
+          modal.classList.remove("active");
         }
       });
     });
   </script>
-
 </body>
 </html>

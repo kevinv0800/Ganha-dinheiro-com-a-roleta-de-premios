@@ -3,24 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mini Trader</title>
+<title>Mini Trader Aviator</title>
 <style>
-  body {margin:0;font-family:sans-serif;background:#121212;color:#fff;display:flex;flex-direction:column;align-items:center;}
-  #welcome, #game {width:100%;max-width:400px;padding:20px;box-sizing:border-box;}
-  #welcome {display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;}
-  input {margin:5px 0;padding:10px;width:100%;border-radius:5px;border:none;}
-  button {padding:10px 20px;margin:5px;border:none;border-radius:5px;background:#1abc9c;color:#fff;font-weight:bold;cursor:pointer;transition:0.3s;}
-  button:hover {background:#16a085;}
-  #game {display:none;flex-direction:column;align-items:center;}
-  #balance-bar {width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:10px;background:#222;border-radius:10px;}
-  #trader-canvas {width:100%;height:200px;background:#111;border-radius:10px;margin-bottom:10px;}
-  #bet-line {width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:10px;background:#222;border-radius:10px;}
-  #players {width:100%;max-height:150px;overflow-y:auto;background:#1a1a1a;padding:10px;border-radius:10px;}
-  .player {display:flex;justify-content:space-between;margin-bottom:5px;font-size:14px;}
-  .modal {position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;justify-content:center;align-items:center;opacity:0;pointer-events:none;transition:0.3s;}
-  .modal.active {opacity:1;pointer-events:auto;}
-  .modal-content {background:#222;padding:20px;border-radius:10px;text-align:center;animation:fadeIn 0.3s;}
-  @keyframes fadeIn {from {transform:scale(0.8);opacity:0;} to {transform:scale(1);opacity:1;}}
+body {margin:0;font-family:sans-serif;background:#121212;color:#fff;display:flex;flex-direction:column;align-items:center;}
+#welcome, #game {width:100%;max-width:400px;padding:20px;box-sizing:border-box;}
+#welcome {display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;}
+input {margin:5px 0;padding:10px;width:100%;border-radius:5px;border:none;}
+button {padding:10px 20px;margin:5px;border:none;border-radius:5px;background:#1abc9c;color:#fff;font-weight:bold;cursor:pointer;transition:0.3s;}
+button:hover {background:#16a085;}
+#game {display:none;flex-direction:column;align-items:center;}
+#balance-bar {width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:10px;background:#222;border-radius:10px;}
+#trader-canvas {width:100%;height:200px;background:#111;border-radius:10px;margin-bottom:10px;}
+#bet-line {width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:10px;background:#222;border-radius:10px;}
+#players {width:100%;max-height:150px;overflow-y:auto;background:#1a1a1a;padding:10px;border-radius:10px;}
+.player {display:flex;justify-content:space-between;margin-bottom:5px;font-size:14px;}
+.modal {position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;justify-content:center;align-items:center;opacity:0;pointer-events:none;transition:0.3s;}
+.modal.active {opacity:1;pointer-events:auto;}
+.modal-content {background:#222;padding:20px;border-radius:10px;text-align:center;animation:fadeIn 0.3s;}
+@keyframes fadeIn {from {transform:scale(0.8);opacity:0;} to {transform:scale(1);opacity:1;}}
 </style>
 </head>
 <body>
@@ -79,11 +79,10 @@ const canvas = document.getElementById('trader-canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = canvas.offsetWidth;
 canvas.height = canvas.offsetHeight;
-
 let points = [];
 const maxPoints = 100;
 
-// Entrar na tela do trader
+// Entrada do usuário
 enterBtn.addEventListener('click', () => {
   const name = document.getElementById('username').value.trim();
   const phone = document.getElementById('phone').value.trim();
@@ -97,19 +96,20 @@ enterBtn.addEventListener('click', () => {
   }
 });
 
-// Função principal do voo do trader
+// Função principal do voo do trader (com movimento aleatório tipo Aviator)
 function startFlight(){
   if(blocked) return;
   flying = true;
   multiplier = 1.0;
   points = [];
   const startTime = Date.now();
-  const crashPoint = Math.random()*3+1.5;
+  const crashPoint = Math.random()*4+1.5;
+  let volatility = 0.02;
 
   function animate(){
     if(!flying) return;
-    const elapsed = Date.now()-startTime;
-    multiplier = 1 + elapsed/2000 + Math.sin(elapsed/500)*0.3;
+    multiplier += volatility + (Math.random()-0.5)*0.02;
+    if(multiplier<1) multiplier=1;
     if(multiplier >= crashPoint){
       crash();
       return;

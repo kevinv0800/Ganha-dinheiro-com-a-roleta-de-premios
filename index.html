@@ -3,210 +3,265 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mini Trader Aviator</title>
+<title>Mini Trader</title>
 <style>
-body {margin:0;font-family:sans-serif;background:#121212;color:#fff;display:flex;flex-direction:column;align-items:center;}
-#welcome, #game {width:100%;max-width:400px;padding:20px;box-sizing:border-box;}
-#welcome {display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;}
-input {margin:5px 0;padding:10px;width:100%;border-radius:5px;border:none;}
-button {padding:10px 20px;margin:5px;border:none;border-radius:5px;background:#1abc9c;color:#fff;font-weight:bold;cursor:pointer;transition:0.3s;}
-button:hover {background:#16a085;}
-#game {display:none;flex-direction:column;align-items:center;}
-#balance-bar {width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:10px;background:#222;border-radius:10px;}
-#trader-canvas {width:100%;height:200px;background:#111;border-radius:10px;margin-bottom:10px;}
-#bet-line {width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:10px;background:#222;border-radius:10px;}
-#players {width:100%;max-height:150px;overflow-y:auto;background:#1a1a1a;padding:10px;border-radius:10px;}
-.player {display:flex;justify-content:space-between;margin-bottom:5px;font-size:14px;}
-.modal {position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;justify-content:center;align-items:center;opacity:0;pointer-events:none;transition:0.3s;}
-.modal.active {opacity:1;pointer-events:auto;}
-.modal-content {background:#222;padding:20px;border-radius:10px;text-align:center;animation:fadeIn 0.3s;}
-@keyframes fadeIn {from {transform:scale(0.8);opacity:0;} to {transform:scale(1);opacity:1;}}
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: #fff;
+  }
+  /* Tela de boas-vindas */
+  #welcomeScreen {
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    background: #1f1f1f;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  #welcomeScreen input {
+    padding: 10px;
+    margin: 5px;
+    width: 200px;
+    border-radius: 5px;
+    border: none;
+  }
+  #welcomeScreen button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    border:none;
+    border-radius:5px;
+    background: #00c853;
+    color: #fff;
+    cursor:pointer;
+    font-weight: bold;
+  }
+  /* Trader */
+  #trader {
+    margin: 20px;
+    height: 200px;
+    background: #222;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  #balance {
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    padding:10px 20px;
+    background:#1a1a1a;
+  }
+  #balance div {
+    font-size: 18px;
+  }
+  /* Linear aposta */
+  #betSection {
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    padding:10px 20px;
+    background:#1f1f1f;
+    border-top: 1px solid #333;
+  }
+  #betSection input {
+    width:80px;
+    padding:5px;
+    border-radius:5px;
+    border:none;
+  }
+  #betSection button {
+    padding: 5px 10px;
+    background: #ff6d00;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    color:#fff;
+    font-weight:bold;
+  }
+  /* Modal */
+  .modal {
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.7);
+    display:none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .modal-content {
+    background:#222;
+    padding:20px;
+    border-radius:10px;
+    text-align:center;
+    width:90%;
+    max-width:400px;
+  }
+  .modal-content button {
+    margin-top:15px;
+    padding:10px 20px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    background:#00c853;
+    color:#fff;
+    font-weight:bold;
+  }
+  /* Jogadores online */
+  #playersOnline {
+    margin:20px;
+    max-height:150px;
+    overflow-y:auto;
+    background:#1a1a1a;
+    border-radius:10px;
+    padding:10px;
+  }
+  .player {
+    display:flex;
+    justify-content: space-between;
+    padding:5px 0;
+    border-bottom:1px solid #333;
+  }
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
 </style>
 </head>
 <body>
 
-<div id="welcome">
+<!-- Tela de boas-vindas -->
+<div id="welcomeScreen">
   <h2>Bem-vindo ao Mini Trader</h2>
-  <input type="text" id="username" placeholder="Nome">
-  <input type="text" id="phone" placeholder="Número de celular">
-  <button id="enter">Entrar</button>
+  <input type="text" id="nameInput" placeholder="Nome">
+  <input type="text" id="phoneInput" placeholder="Número de celular">
+  <button id="enterBtn">Entrar</button>
 </div>
 
-<div id="game">
-  <div id="balance-bar">
-    <span>Saldo: <span id="balance">100.00</span> MT</span>
-    <span>Atual X: <span id="current-x">1.00</span></span>
+<!-- Trader e interface -->
+<div id="app" style="display:none;">
+  <div id="balance">
+    <div>Saldo: <span id="balanceValue">100</span> MT</div>
+    <div>Valor da Aposta: <input type="number" id="betInput" min="8" value="8"> MT</div>
   </div>
-
-  <canvas id="trader-canvas"></canvas>
-
-  <div id="bet-line">
-    <input type="number" id="bet-value" placeholder="Valor da aposta" min="8">
-    <button id="cashout">Saque</button>
+  <div id="trader">
+    <canvas id="traderCanvas"></canvas>
   </div>
-
-  <div id="players"></div>
+  <div id="betSection">
+    <button id="cashoutBtn">Cashout</button>
+  </div>
+  <div id="playersOnline">
+    <h3>Jogadores Online</h3>
+  </div>
 </div>
 
-<div id="cashout-modal" class="modal">
+<!-- Modal saque -->
+<div id="cashoutModal" class="modal">
   <div class="modal-content">
-    <h3>Parabéns, ganhaste <span id="won-amount">0</span> MZN!</h3>
-    <button id="register-button">REGISTAR-SE</button>
+    <h3>Parabéns, ganhaste <span id="winAmount">0</span> MT!</h3>
+    <button id="registerBtn">REGISTAR-SE</button>
   </div>
 </div>
 
 <script>
 let balance = 100;
-let multiplier = 1.0;
-let flying = false;
-let players = [];
-let blocked = false;
-const blockDuration = 10 * 60 * 1000; // 10 minutos
+let betValue = 8;
+let traderRunning = false;
+let maxX = 0;
+let isBlocked = false;
 
-const welcome = document.getElementById('welcome');
-const game = document.getElementById('game');
-const balanceEl = document.getElementById('balance');
-const currentXEl = document.getElementById('current-x');
-const betValueInput = document.getElementById('bet-value');
-const cashoutBtn = document.getElementById('cashout');
-const cashoutModal = document.getElementById('cashout-modal');
-const wonAmountEl = document.getElementById('won-amount');
-const registerButton = document.getElementById('register-button');
-const playersDiv = document.getElementById('players');
-const enterBtn = document.getElementById('enter');
+const welcomeScreen = document.getElementById("welcomeScreen");
+const app = document.getElementById("app");
+const enterBtn = document.getElementById("enterBtn");
+const balanceValue = document.getElementById("balanceValue");
+const betInput = document.getElementById("betInput");
+const cashoutBtn = document.getElementById("cashoutBtn");
+const cashoutModal = document.getElementById("cashoutModal");
+const winAmountSpan = document.getElementById("winAmount");
+const registerBtn = document.getElementById("registerBtn");
+const playersOnline = document.getElementById("playersOnline");
+const canvas = document.getElementById("traderCanvas");
+const ctx = canvas.getContext("2d");
 
-const canvas = document.getElementById('trader-canvas');
-const ctx = canvas.getContext('2d');
 canvas.width = canvas.offsetWidth;
 canvas.height = canvas.offsetHeight;
-let points = [];
-const maxPoints = 100;
 
-// Entrada do usuário
-enterBtn.addEventListener('click', () => {
-  const name = document.getElementById('username').value.trim();
-  const phone = document.getElementById('phone').value.trim();
-  if(name && phone){
-    welcome.style.display = 'none';
-    game.style.display = 'flex';
-    startFlight();
-    generatePlayers();
-  } else {
-    alert('Preencha nome e celular.');
-  }
-});
-
-// Função principal do voo do trader (com movimento aleatório tipo Aviator)
-function startFlight(){
-  if(blocked) return;
-  flying = true;
-  multiplier = 1.0;
-  points = [];
-  const startTime = Date.now();
-  const crashPoint = Math.random()*4+1.5;
-  let volatility = 0.02;
-
-  function animate(){
-    if(!flying) return;
-    multiplier += volatility + (Math.random()-0.5)*0.02;
-    if(multiplier<1) multiplier=1;
-    if(multiplier >= crashPoint){
-      crash();
-      return;
-    }
-    currentXEl.textContent = multiplier.toFixed(2);
-    points.push(multiplier);
-    if(points.length>maxPoints) points.shift();
-    drawGraph();
-    requestAnimationFrame(animate);
-  }
-  animate();
+// Jogadores online simulados
+let players = [];
+for(let i=0;i<50;i++){
+  players.push({
+    name:"Jogador"+(i+1),
+    bet:Math.floor(Math.random()*50+8),
+    x: (Math.random()*5+1).toFixed(2)
+  });
 }
 
-// Desenhar gráfico do trader
-function drawGraph(){
+function updatePlayersOnline(){
+  playersOnline.innerHTML = "<h3>Jogadores Online</h3>";
+  players.forEach(p=>{
+    const div = document.createElement("div");
+    div.classList.add("player");
+    div.innerHTML = `<span>${p.name}</span><span>Aposta: ${p.bet} MT</span><span>X: ${p.x}</span>`;
+    playersOnline.appendChild(div);
+  });
+}
+
+// Trader Animation
+let traderValue = 1;
+function drawTrader(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.beginPath();
-  ctx.moveTo(0,canvas.height);
-  for(let i=0;i<points.length;i++){
-    const x = i*(canvas.width/maxPoints);
-    const y = canvas.height - (points[i]/Math.max(...points))*canvas.height*0.6;
-    ctx.lineTo(x,y);
+  ctx.moveTo(0, canvas.height);
+  for(let i=0;i<canvas.width;i++){
+    let y = canvas.height - (Math.sin((i+traderValue*10)/20)*50 + traderValue*20);
+    ctx.lineTo(i,y);
   }
-  ctx.strokeStyle = '#0f0';
-  ctx.lineWidth = 2;
+  ctx.strokeStyle="#00ff00";
+  ctx.lineWidth=2;
   ctx.stroke();
+  traderValue += 0.05;
+  if(traderRunning) requestAnimationFrame(drawTrader);
 }
 
-// Evento de crash do voo
-function crash(){
-  flying=false;
-  multiplier=1.0;
-  currentXEl.textContent = multiplier.toFixed(2);
-  points=[];
-  drawGraph();
-  setTimeout(startFlight, 30000); // espera 30s para próximo voo
-}
-
-// Evento de saque
-cashoutBtn.addEventListener('click', () => {
-  if(blocked) return;
-  const bet = parseFloat(betValueInput.value);
-  if(isNaN(bet) || bet<8 || bet>balance){
-    alert('Valor inválido.');
-    return;
+enterBtn.onclick = ()=>{
+  const name = document.getElementById("nameInput").value.trim();
+  const phone = document.getElementById("phoneInput").value.trim();
+  if(name && phone){
+    welcomeScreen.style.display="none";
+    app.style.display="block";
+    traderRunning = true;
+    drawTrader();
+    updatePlayersOnline();
+  } else {
+    alert("Por favor, preencha nome e número.");
   }
-  flying=false;
-  const winAmount = bet*multiplier;
-  balance += winAmount - bet;
-  balanceEl.textContent = balance.toFixed(2);
-  wonAmountEl.textContent = winAmount.toFixed(2);
-  cashoutModal.classList.add('active');
-  addPlayerWin(winAmount, multiplier);
+};
 
-  blocked = true; // Bloqueia trader por 10 minutos
-  setTimeout(()=>{
-    blocked = false;
-    startFlight();
-  }, blockDuration);
-});
+betInput.oninput = ()=>{
+  betValue = parseFloat(betInput.value);
+  if(betValue < 8) betValue = 8;
+};
 
-// Botão de registro
-registerButton.addEventListener('click', () => {
-  window.location.href = 'https://go.aff.betvivo.partners/wydkfw29';
-});
-
-// Geração de jogadores online
-function generatePlayers(){
-  for(let i=0;i<50;i++){
-    const p = {
-      name: 'Jogador'+(i+1),
-      bet: Math.floor(Math.random()*50+8),
-      x: (Math.random()*5+1).toFixed(2)
-    };
-    players.push(p);
-    const div = document.createElement('div');
-    div.className='player';
-    div.innerHTML=`<span>${p.name}</span><span>Aposta: ${p.bet} MT</span><span>X: ${p.x}</span>`;
-    playersDiv.appendChild(div);
-  }
+function getRandomMultiplier(){
+  return (Math.random()*10+1).toFixed(2);
 }
 
-// Adiciona o jogador atual após saque
-function addPlayerWin(amount, x){
-  const div = document.createElement('div');
-  div.className='player';
-  div.innerHTML=`<span>Você</span><span>Aposta: ${betValueInput.value} MT</span><span>X: ${x.toFixed(2)}</span>`;
-  playersDiv.prepend(div);
-}
+cashoutBtn.onclick = ()=>{
+  if(isBlocked) return;
+  let x = getRandomMultiplier();
+  winAmountSpan.textContent = (betValue * x).toFixed(2);
+  cashoutModal.style.display="flex";
+  isBlocked = true;
+  // Bloqueia por 10 minutos
+  setTimeout(()=>{ isBlocked=false; }, 10*60*1000);
+};
 
-// Fecha modal ao clicar fora
-cashoutModal.addEventListener('click', (e)=>{
-  if(e.target===cashoutModal){
-    cashoutModal.classList.remove('active');
-  }
-});
+registerBtn.onclick = ()=>{
+  window.location.href = "https://go.aff.betvivo.partners/wydkfw29";
+};
 </script>
-
 </body>
 </html>

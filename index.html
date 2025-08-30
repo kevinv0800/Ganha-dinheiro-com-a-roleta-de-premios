@@ -1,271 +1,261 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mini Trader Cashout</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Trader Super Interativo</title>
+<style>
+body {
+  margin:0;
+  font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+  background:#111;
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:20px;
+}
+h1{color:#ffcc00; text-shadow:0 0 15px rgba(255,204,0,0.7); margin-bottom:10px; text-align:center;}
 
-    h1 {
-      margin-bottom: 10px;
-      color: #ffcc00;
-      font-size: 1.8rem;
-      text-shadow: 0 0 8px rgba(255, 204, 0, 0.4);
-    }
+.bet-section{margin-bottom:15px; display:flex; flex-direction:column; align-items:center;}
+.bet-section input{
+  padding:10px; font-size:1rem; border-radius:8px; border:none; margin-bottom:8px; width:160px; text-align:center;
+}
+.bet-section button{
+  padding:10px 20px; font-weight:bold; border:none; border-radius:10px; background:#ffcc00; color:#000; cursor:pointer; transition:0.3s;
+}
+.bet-section button:hover{background:#ffdb4d;}
 
-    #chartContainer {
-      width: 300px;
-      height: 200px;
-      background: #111;
-      border-radius: 15px;
-      margin-bottom: 20px;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(255,204,0,0.3);
-    }
+#chartContainer{width:320px; height:200px; background:#222; border-radius:15px; margin-bottom:20px; overflow:hidden; box-shadow:0 0 25px rgba(255,204,0,0.4);}
+canvas{display:block;}
 
-    canvas {
-      display: block;
-    }
+.multiplier-box{font-size:2.5rem;font-weight:bold;margin-bottom:10px;color:#ffcc00;text-shadow:0 0 15px rgba(255,204,0,0.8);}
+.timer{font-size:1.2rem;margin-bottom:20px;color:#ff5555;font-weight:bold;}
 
-    .multiplier-box {
-      font-size: 2.5rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: #ffcc00;
-      text-shadow: 0 0 10px rgba(255,204,0,0.6);
-    }
+#cashoutBtn{
+  padding:14px 28px;font-size:1.2rem;font-weight:bold;border:none;border-radius:10px;
+  background:#ffcc00;color:#000;cursor:pointer;transition:all 0.3s ease; box-shadow:0 4px 25px rgba(255,204,0,0.7);
+  margin-bottom:20px;
+  animation: pulse 1.2s infinite;
+}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 25px rgba(255,204,0,0.5);}
+  50%{box-shadow:0 0 50px rgba(255,255,0,0.9);}
+}
+#cashoutBtn:hover{transform:scale(1.05);}
 
-    .timer {
-      font-size: 1.2rem;
-      margin-bottom: 20px;
-      color: #ff5555;
-      font-weight: bold;
-    }
+.modal{
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background:rgba(0,0,0,0.85);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; visibility:hidden; transition:opacity 0.3s ease;
+  z-index:1000;
+}
+.modal.active{opacity:1; visibility:visible;}
+.modal-content{
+  background:#2a2a2a; padding:25px; border-radius:15px; max-width:400px; width:90%; text-align:center;
+  animation:slideUp 0.4s ease; box-shadow:0 8px 25px rgba(0,0,0,0.6);
+}
+@keyframes slideUp{from{transform:translateY(50px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.modal-content h2{margin-bottom:15px;color:#ffcc00;}
+.modal-content p{margin-bottom:20px; line-height:1.5;}
+.modal-content button{
+  margin:10px;padding:12px 20px;border:none;border-radius:8px;font-weight:bold;cursor:pointer; transition:0.3s;
+}
+.registerBtn{background:#ffcc00;color:#000;}
+.redeemBtn{background:#444;color:#fff;}
+.registerBtn:hover{background:#ffdb4d; transform:scale(1.05);}
+.redeemBtn:hover{background:#555; transform:scale(1.05);}
 
-    #cashoutBtn {
-      padding: 14px 28px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      border: none;
-      border-radius: 10px;
-      background: #ffcc00;
-      color: #000;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4);
-    }
+/* Explosão */
+.explosion{
+  position:absolute; width:120px; height:120px; border-radius:50%; background:radial-gradient(circle, #ff0, #f90, transparent); opacity:0.8;
+  pointer-events:none; animation:explode 0.6s ease-out forwards;
+}
+@keyframes explode{
+  0%{transform:scale(0.2);}
+  50%{transform:scale(1.2);}
+  100%{transform:scale(0);}
+}
 
-    #cashoutBtn:hover {
-      background: #ffdb4d;
-      transform: scale(1.05);
-    }
+/* Feed jogadores */
+.feed{
+  margin-top:20px; width:90%; max-width:400px; background:#111; padding:15px; border-radius:12px; max-height:200px; overflow-y:auto;
+}
+.feed h3{margin-top:0;color:#ffcc00; text-align:center;}
+.feed ul{list-style:none;padding:0;margin:0;}
+.feed li{padding:5px 0; border-bottom:1px solid #222; font-size:0.95rem;}
 
-    /* Modal Base */
-    .modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease;
-      z-index: 1000;
-    }
-    .modal.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .modal-content {
-      background: #2a2a2a;
-      padding: 25px;
-      border-radius: 15px;
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-      animation: slideUp 0.4s ease;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-    }
-
-    @keyframes slideUp {
-      from {transform: translateY(50px); opacity: 0;}
-      to {transform: translateY(0); opacity: 1;}
-    }
-
-    .modal-content h2 {
-      margin-bottom: 15px;
-      color: #ffcc00;
-    }
-
-    .modal-content p {
-      margin-bottom: 20px;
-      line-height: 1.5;
-    }
-
-    .modal-content button {
-      margin: 10px;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .registerBtn { background: #ffcc00; color: #000; }
-    .redeemBtn { background: #444; color: #fff; }
-
-    .registerBtn:hover { background: #ffdb4d; transform: scale(1.05); }
-    .redeemBtn:hover { background: #555; transform: scale(1.05); }
-
-    @media(max-width: 480px){
-      h1 { font-size: 1.4rem; }
-      .multiplier-box { font-size: 2rem; }
-      #cashoutBtn { width: 80%; font-size: 1rem; }
-      #chartContainer { width: 90%; height: 150px; }
-    }
-  </style>
+/* Responsivo */
+@media(max-width:480px){
+  h1{font-size:1.4rem;}
+  .multiplier-box{font-size:2rem;}
+  #chartContainer{width:90%; height:150px;}
+}
+</style>
 </head>
 <body>
-  <h1>Mini Trader ao Vivo</h1>
-  <div id="chartContainer">
-    <canvas id="chart" width="300" height="200"></canvas>
+
+<h1>Mini Trader Interativo</h1>
+
+<div class="bet-section">
+  <input type="number" id="betInput" placeholder="Valor da aposta (MZN)" min="1">
+  <button id="startBtn">Iniciar Trader</button>
+</div>
+
+<div id="chartContainer">
+  <canvas id="chart" width="320" height="200"></canvas>
+</div>
+
+<div class="multiplier-box" id="multiplier">1.00x</div>
+<div class="timer">Tempo restante: <span id="timer">120</span>s</div>
+<button id="cashoutBtn" disabled>Cashout</button>
+
+<div class="modal" id="modalCashout">
+  <div class="modal-content">
+    <h2>Parabéns!</h2>
+    <p>Ganhaste <span id="winValue">0</span> MZN!</p>
+    <button class="registerBtn" id="redeemBtn">Resgatar</button>
   </div>
-  <div class="multiplier-box" id="multiplier">1.00x</div>
-  <div class="timer">Tempo restante: <span id="timer">120</span>s</div>
-  <button id="cashoutBtn">Cashout</button>
+</div>
 
-  <!-- Modal Cashout -->
-  <div class="modal" id="modalCashout">
-    <div class="modal-content">
-      <h2>Parabéns!</h2>
-      <p>Ganhaste <span id="winValue">0</span> MZN!</p>
-      <button class="registerBtn" id="redeemBtn">Resgatar</button>
-    </div>
+<div class="modal" id="modalRegister">
+  <div class="modal-content">
+    <h2>Registrar-se</h2>
+    <p>Para resgatar seu valor, faça seu cadastro e um depósito mínimo de <strong>50 MZN</strong>.</p>
+    <button class="registerBtn" id="goToSite">Ir para casa de apostas</button>
   </div>
+</div>
 
-  <!-- Modal Registro -->
-  <div class="modal" id="modalRegister">
-    <div class="modal-content">
-      <h2>Registrar-se</h2>
-      <p>Para resgatar seu valor, faça seu cadastro e um depósito mínimo de <strong>50 MZN</strong>.</p>
-      <button class="registerBtn" id="goToSite">Ir para casa de apostas</button>
-    </div>
-  </div>
+<div class="feed">
+  <h3>Últimos jogadores</h3>
+  <ul id="playersList"></ul>
+</div>
 
-  <!-- Modal Perdeu -->
-  <div class="modal" id="modalLose">
-    <div class="modal-content">
-      <h2>Ops!</h2>
-      <p>O multiplicador explodiu! 😢</p>
-      <button class="redeemBtn" onclick="location.reload()">Tentar de novo</button>
-    </div>
-  </div>
+<!-- Sons -->
+<audio id="cashoutSound" src="https://freesound.org/data/previews/170/170242_2437351-lq.mp3"></audio>
 
-  <script>
-    // --- Multiplicador e gráfico ---
-    const multiplierEl = document.getElementById("multiplier");
-    const timerEl = document.getElementById("timer");
-    const canvas = document.getElementById("chart");
-    const ctx = canvas.getContext("2d");
-    let multiplier = 1.00;
-    let running = true;
-    let timeLeft = 120;
-    let oscillation = 0;
-    const dataPoints = [];
-    const maxPoints = canvas.width;
+<script>
+// Variáveis
+const multiplierEl=document.getElementById("multiplier");
+const timerEl=document.getElementById("timer");
+const canvas=document.getElementById("chart");
+const ctx=canvas.getContext("2d");
 
-    function updateChart(){
-      if(running){
-        // Atualiza multiplicador com oscilação
-        oscillation += 0.05;
-        multiplier += 0.02 * Math.sin(oscillation) + 0.01;
-        multiplierEl.textContent = multiplier.toFixed(2) + "x";
+const startBtn=document.getElementById("startBtn");
+const betInput=document.getElementById("betInput");
+const cashoutBtn=document.getElementById("cashoutBtn");
 
-        // Adiciona ponto no gráfico
-        dataPoints.push(multiplier);
-        if(dataPoints.length > maxPoints){
-          dataPoints.shift();
-        }
+const modalCashout=document.getElementById("modalCashout");
+const modalRegister=document.getElementById("modalRegister");
 
-        // Desenha gráfico
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        ctx.beginPath();
-        ctx.moveTo(0, canvas.height - dataPoints[0]*20);
-        for(let i=1;i<dataPoints.length;i++){
-          ctx.lineTo(i, canvas.height - dataPoints[i]*20);
-        }
-        ctx.strokeStyle = "#ffcc00";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      }
-      requestAnimationFrame(updateChart);
+const redeemBtn=document.getElementById("redeemBtn");
+const goToSite=document.getElementById("goToSite");
+const winValueEl=document.getElementById("winValue");
+const playersList=document.getElementById("playersList");
+
+const cashoutSound=document.getElementById("cashoutSound");
+
+let multiplier=1.00;
+let running=false;
+let timeLeft=120;
+let dataPoints=[];
+let betValue=0;
+let osc=0;
+
+// Função Chart Realista com cores
+function updateChart(){
+  if(running){
+    osc+=0.05;
+    multiplier += 0.02 + (Math.random()*0.03 - 0.015);
+    if(multiplier<1) multiplier=1;
+    multiplierEl.textContent=multiplier.toFixed(2)+"x";
+
+    dataPoints.push(multiplier);
+    if(dataPoints.length>canvas.width) dataPoints.shift();
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height - dataPoints[0]*20);
+    for(let i=1;i<dataPoints.length;i++){
+      ctx.lineTo(i, canvas.height - dataPoints[i]*20);
     }
-    updateChart();
+    let grd = ctx.createLinearGradient(0,0,0,canvas.height);
+    let color = multiplier>multiplierEl.dataset.prev? "#0f0" : "#f00";
+    ctx.strokeStyle=color;
+    ctx.lineWidth=2.5;
+    ctx.shadowColor=color;
+    ctx.shadowBlur=10;
+    ctx.stroke();
+    multiplierEl.dataset.prev = multiplier;
+  }
+  requestAnimationFrame(updateChart);
+}
 
-    // Timer regressivo
-    const countdown = setInterval(()=>{
-      if(running){
-        timeLeft--;
-        timerEl.textContent = timeLeft;
-        if(timeLeft <= 0){
-          running = false;
-          clearInterval(countdown);
-          document.getElementById("modalLose").classList.add("active");
-        }
+// Timer
+let countdown;
+function startCountdown(){
+  countdown=setInterval(()=>{
+    if(running){
+      timeLeft--;
+      timerEl.textContent=timeLeft;
+      if(timeLeft<=0){
+        running=false;
+        clearInterval(countdown);
       }
-    },1000);
+    }
+  },1000);
+}
 
-    // --- Modais ---
-    const cashoutBtn = document.getElementById("cashoutBtn");
-    const modalCashout = document.getElementById("modalCashout");
-    const modalRegister = document.getElementById("modalRegister");
-    const redeemBtn = document.getElementById("redeemBtn");
-    const goToSite = document.getElementById("goToSite");
-    const winValueEl = document.getElementById("winValue");
+// Start
+startBtn.addEventListener("click",()=>{
+  betValue=parseFloat(betInput.value);
+  if(!betValue||betValue<=0){alert("Insira um valor válido"); return;}
+  multiplier=1.0; timeLeft=120; dataPoints=[];
+  multiplierEl.textContent="1.00x"; timerEl.textContent=timeLeft;
+  multiplierEl.dataset.prev = 1;
+  cashoutBtn.disabled=false; running=true;
+  updateChart(); startCountdown();
+});
 
-    let winAmount = 0;
+// Função Explosão
+function createExplosion(){
+  const exp=document.createElement("div");
+  exp.className="explosion";
+  exp.style.left=(window.innerWidth/2-60)+"px";
+  exp.style.top=(canvas.getBoundingClientRect().top + canvas.height/2 -60)+"px";
+  document.body.appendChild(exp);
+  setTimeout(()=>{exp.remove();},600);
+}
 
-    cashoutBtn.addEventListener("click", ()=>{
-      if(!running) return;
-      running = false;
-      winAmount = (multiplier * 10).toFixed(2);
-      winValueEl.textContent = winAmount;
-      modalCashout.classList.add("active");
-      clearInterval(countdown);
-    });
+// Cashout
+cashoutBtn.addEventListener("click",()=>{
+  running=false;
+  cashoutBtn.disabled=true;
+  cashoutSound.play();
+  createExplosion();
 
-    redeemBtn.addEventListener("click", ()=>{
-      modalCashout.classList.remove("active");
-      modalRegister.classList.add("active");
-    });
+  const win=(multiplier*betValue).toFixed(2);
+  winValueEl.textContent=win;
 
-    goToSite.addEventListener("click", ()=>{
-      window.open("https://go.aff.betvivo.partners/wydkfw29", "_blank");
-    });
+  // Simula registro
+  if(Math.random()>0.5){
+    modalCashout.classList.add("active");
+  }else{
+    modalRegister.classList.add("active");
+  }
 
-    // Fechar modal ao clicar fora
-    document.querySelectorAll(".modal").forEach(modal=>{
-      modal.addEventListener("click", e=>{
-        if(e.target === modal){
-          modal.classList.remove("active");
-        }
-      });
-    });
-  </script>
+  // Feed
+  const li=document.createElement("li");
+  li.textContent=`Jogador ganhou ${win} MZN com ${multiplier.toFixed(2)}x`;
+  playersList.prepend(li);
+  if(playersList.childNodes.length>10) playersList.removeChild(playersList.lastChild);
+});
+
+// Fechar modals
+redeemBtn.addEventListener("click",()=>{modalCashout.classList.remove("active");});
+goToSite.addEventListener("click",()=>{modalRegister.classList.remove("active");});
+</script>
+
 </body>
 </html>

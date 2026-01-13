@@ -1,216 +1,257 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mini Trader</title>
-<style>
-  * { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif;}
-  body { background: #111; color: #fff; display:flex; justify-content:center; align-items:center; min-height:100vh; overflow:hidden; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Passa Tempo ICE 2026</title>
+    <style>
+        :root {
+            --primary: #ff4d6d;
+            --secondary: #c9184a;
+            --bg: #fff0f3;
+            --gold: #FFD700;
+        }
 
-  .container { width: 100%; max-width: 500px; padding: 10px; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
 
-  #welcome { display:flex; flex-direction:column; justify-content:center; align-items:center; gap:15px; background:#222; padding:20px; border-radius:10px; }
-  #welcome input { padding:10px; width:80%; border-radius:5px; border:none; }
-  #welcome button { padding:10px 20px; border:none; border-radius:5px; background:#0f0; color:#000; font-weight:bold; cursor:pointer; transition:0.3s; }
-  #welcome button:hover { background:#0c0; }
+        body {
+            margin: 0; padding: 0;
+            background: var(--bg);
+            height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+        }
 
-  #saldo { display:flex; justify-content:space-between; padding:10px; background:#222; border-radius:10px; margin-bottom:10px; }
+        .heart-particle {
+            position: absolute; color: var(--primary);
+            font-size: 20px; pointer-events: none;
+            animation: float 6s infinite linear; opacity: 0;
+        }
+        @keyframes float {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
 
-  #trader { position:relative; width:100%; height:200px; background:#000; border-radius:10px; overflow:hidden; margin-bottom:10px; }
-  canvas { width:100%; height:100%; }
+        .container {
+            width: 92%; max-width: 400px;
+            background: white; border-radius: 25px;
+            padding: 25px; text-align: center;
+            box-shadow: 0 15px 35px rgba(201, 24, 74, 0.2);
+            border: 2px solid var(--primary);
+            position: relative; z-index: 10;
+        }
 
-  #bet-section { display:flex; gap:5px; margin-bottom:10px; }
-  #bet-section input { flex:1; padding:10px; border-radius:5px; border:none; }
-  #bet-section button { padding:10px; border:none; border-radius:5px; background:#0f0; color:#000; font-weight:bold; cursor:pointer; transition:0.3s; }
-  #bet-section button:hover { background:#0c0; }
+        h1 { color: var(--secondary); margin: 0; font-size: 1.3rem; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .timer-box {
+            background: var(--bg);
+            border-radius: 50%;
+            width: 60px; height: 60px;
+            line-height: 60px;
+            margin: 10px auto;
+            border: 3px solid var(--primary);
+            font-size: 1.5rem; font-weight: 900; color: var(--secondary);
+        }
+        
+        .btn-option {
+            width: 100%; background: white;
+            color: var(--secondary); border: 2px solid var(--primary);
+            padding: 12px; border-radius: 12px;
+            font-weight: 600; margin: 6px 0;
+            cursor: pointer; transition: 0.2s;
+            text-align: left; font-size: 0.9rem;
+        }
+        .btn-option:active { background: var(--primary); color: white; }
 
-  #players { background:#222; border-radius:10px; padding:10px; max-height:150px; overflow-y:auto; margin-bottom:10px; }
-  .player { display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #333; }
+        .btn-start {
+            width: 100%; background: var(--primary);
+            color: white; border: none; padding: 15px;
+            border-radius: 12px; font-weight: bold; margin-top: 10px; cursor: pointer;
+        }
 
-  .modal { position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; opacity:0; pointer-events:none; transition:0.3s; }
-  .modal.active { opacity:1; pointer-events:auto; }
-  .modal-content { background:#222; padding:20px; border-radius:10px; text-align:center; width:90%; max-width:300px; }
-  .modal-content button { margin-top:10px; padding:10px 20px; border:none; border-radius:5px; background:#0f0; color:#000; font-weight:bold; cursor:pointer; transition:0.3s; }
-  .modal-content button:hover { background:#0c0; }
-</style>
+        .theme-tag {
+            font-size: 0.7rem; background: var(--bg); color: var(--secondary);
+            padding: 4px 12px; border-radius: 20px; font-weight: bold;
+            display: inline-block; margin-bottom: 5px;
+        }
+
+        .hidden { display: none; }
+        .info { font-size: 0.75rem; color: #888; margin-top: 10px; }
+        #question-text { font-size: 1rem; font-weight: 600; min-height: 50px; margin: 10px 0; color: #333; }
+        
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+    </style>
 </head>
 <body>
 
-<div class="container">
+    <div id="hearts"></div>
 
-  <div id="welcome">
-    <h2>Bem-vindo!</h2>
-    <input type="text" id="username" placeholder="Seu nome">
-    <input type="text" id="phone" placeholder="Número de celular">
-    <button id="enter">Entrar</button>
-  </div>
+    <div class="container">
+        <div id="screen-start">
+            <h1>ICE 2026</h1>
+            <p style="font-size: 0.8rem; color: var(--primary); font-weight: bold;">PASSA TEMPO PREMIUM</p>
+            <input type="text" id="username" placeholder="Seu nome" style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd; outline:none; text-align:center;">
+            <button class="btn-start" onclick="initGame()">COMEÇAR DESAFIO</button>
+            <p class="info">REGRAS:<br>• 30s por questão<br>• Se errar, pula para a próxima<br>• 2 erros = Bloqueio permanente</p>
+        </div>
 
-  <div id="game" style="display:none;">
-    <div id="saldo">
-      <div>Saldo: <span id="balance">100</span> MT</div>
-      <div>X atual: <span id="current-x">1.00</span></div>
+        <div id="screen-game" class="hidden">
+            <div id="theme-label" class="theme-tag">TEMA</div>
+            <div id="progress" style="font-size: 0.85rem; color: var(--primary); font-weight: bold;">Questão 1/10</div>
+            
+            <div class="timer-box" id="clock">30</div>
+            
+            <div id="question-text"></div>
+            <div id="options-container"></div>
+            
+            <div class="info" id="try-info" style="color: var(--secondary); font-weight: bold;">ERROS ACUMULADOS: 0/2</div>
+        </div>
+
+        <div id="screen-fail" class="hidden">
+            <h1 style="color: #444;">💔 BLOQUEADO</h1>
+            <p id="fail-reason">Você atingiu o limite de erros.</p>
+            <p style="font-size: 0.7rem;">Este dispositivo foi banido do jogo ICE 2026.</p>
+        </div>
+
+        <div id="screen-win" class="hidden">
+            <h1 style="color: var(--secondary);">🏆 VENCEDOR!</h1>
+            <p id="win-msg" style="padding: 10px; font-size: 0.9rem;"></p>
+            <div style="font-size: 3rem; animation: pulse 1s infinite;">💖</div>
+        </div>
     </div>
 
-    <div id="trader">
-      <canvas id="trader-canvas"></canvas>
-    </div>
+    <script>
+        const quizData = [
+            { t: "AVENTURA", q: "Quem libertou o povo do Egito e abriu o Mar Vermelho?", o: ["Abraão", "Moisés", "Noé", "Davi"], a: 1 },
+            { t: "AMOR", q: "Qual o nome feminino que rima com 'Bem' e 'Vem'?", o: ["Karen", "Maria", "Ana", "Carla"], a: 0 },
+            { t: "CARROS", q: "Qual destas é uma famosa marca de carros japonesa?", o: ["Fiat", "BMW", "Nissan", "Renault"], a: 2 },
+            { t: "PAÍSES", q: "Em que país se encontra a Torre Eiffel?", o: ["Itália", "Alemanha", "França", "Espanha"], a: 2 },
+            { t: "ROMANCE", q: "Qual flor é o símbolo universal dos namorados?", o: ["Girassol", "Rosa", "Margarida", "Orquídea"], a: 1 },
+            { t: "AVENTURA", q: "Qual oceano banha a costa de Moçambique?", o: ["Atlântico", "Índico", "Pacífico", "Ártico"], a: 1 },
+            { t: "CARROS", q: "Qual destas cores é a mais icônica da marca Ferrari?", o: ["Azul", "Amarelo", "Preto", "Vermelho"], a: 3 },
+            { t: "PAÍSES", q: "Luanda é a capital de qual país africano?", o: ["Moçambique", "África do Sul", "Angola", "Namíbia"], a: 2 },
+            { t: "AMOR", q: "Qual o dia oficial de São Valentim em muitos países?", o: ["12 de Junho", "14 de Fevereiro", "25 de Dezembro", "01 de Janeiro"], a: 1 },
+            { t: "MISTÉRIO", q: "Qual é o limite de erros permitidos antes do bloqueio?", o: ["1", "5", "2", "Ilimitados"], a: 2 }
+        ];
 
-    <div id="bet-section">
-      <input type="number" id="bet-value" placeholder="Valor da aposta (min 8)" min="8">
-      <button id="cashout">Cashout</button>
-    </div>
+        let current = 0;
+        let timeLeft = 30;
+        let timerFunc;
+        let totalErrors = parseInt(localStorage.getItem('ice_2026_errors')) || 0;
+        const maxErrors = 2;
 
-    <div id="players"></div>
-  </div>
+        // Efeito de fundo
+        setInterval(() => {
+            const h = document.createElement('div');
+            h.className = 'heart-particle'; h.innerHTML = '❤️';
+            h.style.left = Math.random() * 100 + 'vw';
+            document.getElementById('hearts').appendChild(h);
+            setTimeout(() => h.remove(), 6000);
+        }, 500);
 
-</div>
+        function initGame() {
+            const name = document.getElementById('username').value.trim();
+            if(!name) return alert("Por favor, digite seu nome!");
+            
+            if(localStorage.getItem('ice_2026_blocked') === 'true' || totalErrors >= maxErrors) {
+                showScreen('screen-fail'); return;
+            }
+            
+            localStorage.setItem('ice_2026_name', name);
+            showScreen('screen-game');
+            loadQuestion();
+        }
 
-<div id="cashout-modal" class="modal">
-  <div class="modal-content">
-    <h3>Parabéns!</h3>
-    <p>Ganhaste <span id="won-amount">0</span> MT!</p>
-    <button id="register-button">REGISTAR-SE</button>
-  </div>
-</div>
+        function loadQuestion() {
+            if(current >= quizData.length) { 
+                victory(); 
+                return; 
+            }
+            
+            const data = quizData[current];
+            document.getElementById('theme-label').innerText = `TEMA: ${data.t}`;
+            document.getElementById('progress').innerText = `Questão ${current + 1} de 10`;
+            document.getElementById('question-text').innerText = data.q;
+            document.getElementById('try-info').innerText = `ERROS ACUMULADOS: ${totalErrors}/${maxErrors}`;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            data.o.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-option';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(idx);
+                container.appendChild(btn);
+            });
 
-<script>
-  let balance = 100;
-  let multiplier = 1.0;
-  let flying = false;
-  let players = [];
+            startTimer();
+        }
 
-  const welcome = document.getElementById('welcome');
-  const game = document.getElementById('game');
-  const balanceEl = document.getElementById('balance');
-  const currentXEl = document.getElementById('current-x');
-  const betValueInput = document.getElementById('bet-value');
-  const cashoutBtn = document.getElementById('cashout');
-  const cashoutModal = document.getElementById('cashout-modal');
-  const wonAmountEl = document.getElementById('won-amount');
-  const registerButton = document.getElementById('register-button');
-  const playersDiv = document.getElementById('players');
+        function startTimer() {
+            clearInterval(timerFunc);
+            timeLeft = 30;
+            document.getElementById('clock').innerText = timeLeft;
+            document.getElementById('clock').style.color = "var(--secondary)";
 
-  const enterBtn = document.getElementById('enter');
+            timerFunc = setInterval(() => {
+                timeLeft--;
+                document.getElementById('clock').innerText = timeLeft;
+                if(timeLeft <= 10) document.getElementById('clock').style.color = "red";
 
-  const canvas = document.getElementById('trader-canvas');
-  const ctx = canvas.getContext('2d');
+                if(timeLeft <= 0) {
+                    clearInterval(timerFunc);
+                    document.getElementById('fail-reason').innerText = "O tempo acabou!";
+                    registerFail();
+                }
+            }, 1000);
+        }
 
-  canvas.width = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
+        function checkAnswer(choice) {
+            if(choice === quizData[current].a) {
+                // Acertou
+                current++;
+                loadQuestion();
+            } else {
+                // Errou
+                totalErrors++;
+                localStorage.setItem('ice_2026_errors', totalErrors);
+                
+                if(totalErrors >= maxErrors) {
+                    document.getElementById('fail-reason').innerText = "Você atingiu o limite de 2 erros.";
+                    registerFail();
+                } else {
+                    alert("Resposta errada! Passando para a próxima questão...");
+                    current++; // Pula para a próxima questão automaticamente
+                    loadQuestion();
+                }
+            }
+        }
 
-  let points = [];
-  const maxPoints = 100;
+        function registerFail() {
+            clearInterval(timerFunc);
+            localStorage.setItem('ice_2026_blocked', 'true');
+            showScreen('screen-fail');
+        }
 
-  enterBtn.addEventListener('click', () => {
-    const name = document.getElementById('username').value;
-    const phone = document.getElementById('phone').value;
-    if(name && phone){
-      welcome.style.display = 'none';
-      game.style.display = 'block';
-      startFlight();
-      generatePlayers();
-    } else {
-      alert('Preencha nome e celular.');
-    }
-  });
+        function victory() {
+            clearInterval(timerFunc);
+            const name = localStorage.getItem('ice_2026_name');
+            document.getElementById('win-msg').innerText = `PARABÉNS, ${name.toUpperCase()}! Você completou o desafio e encontrou Moisés, Karen e Nissan!`;
+            showScreen('screen-win');
+        }
 
-  function startFlight(){
-    flying = true;
-    multiplier = 1.0;
-    points = [];
-    const startTime = Date.now();
-    const flightTime = Math.random()*5000+3000; // 3-8s
-    const crashPoint = Math.random()*3+1.5; // 1.5 - 4.5x
+        function showScreen(id) {
+            document.querySelectorAll('.container > div').forEach(d => d.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+        }
 
-    function animate(){
-      if(!flying) return;
-      const elapsed = Date.now()-startTime;
-      multiplier = 1 + elapsed/2000 + Math.sin(elapsed/500)*0.3;
-      if(multiplier >= crashPoint){
-        crash();
-        return;
-      }
-      currentXEl.textContent = multiplier.toFixed(2);
-      points.push(multiplier);
-      if(points.length>maxPoints) points.shift();
-      drawGraph();
-      requestAnimationFrame(animate);
-    }
-    animate();
-  }
+        window.onbeforeunload = function() {
+            if(!document.getElementById('screen-game').classList.contains('hidden')) {
+                localStorage.setItem('ice_2026_blocked', 'true');
+            }
+        };
 
-  function drawGraph(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.beginPath();
-    ctx.moveTo(0,canvas.height);
-    for(let i=0;i<points.length;i++){
-      const x = i*(canvas.width/maxPoints);
-      const y = canvas.height - (points[i]/Math.max(...points))*canvas.height*0.6;
-      ctx.lineTo(x,y);
-    }
-    ctx.strokeStyle = '#0f0';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  }
-
-  function crash(){
-    flying=false;
-    multiplier=1.0;
-    currentXEl.textContent = multiplier.toFixed(2);
-    points=[];
-    drawGraph();
-    setTimeout(startFlight, 30000);
-  }
-
-  cashoutBtn.addEventListener('click', () => {
-    const bet = parseFloat(betValueInput.value);
-    if(isNaN(bet) || bet<8 || bet>balance){
-      alert('Valor inválido.');
-      return;
-    }
-    flying=false;
-    const winAmount = bet*multiplier;
-    balance += winAmount - bet;
-    balanceEl.textContent = balance.toFixed(2);
-    wonAmountEl.textContent = winAmount.toFixed(2);
-    cashoutModal.classList.add('active');
-    addPlayerWin(winAmount, multiplier);
-  });
-
-  registerButton.addEventListener('click', () => {
-    window.location.href = 'https://go.aff.betvivo.partners/wydkfw29';
-  });
-
-  function generatePlayers(){
-    for(let i=0;i<50;i++){
-      const p = {
-        name: 'Jogador'+(i+1),
-        bet: Math.floor(Math.random()*50+8),
-        x: (Math.random()*5+1).toFixed(2)
-      };
-      players.push(p);
-      const div = document.createElement('div');
-      div.className='player';
-      div.innerHTML=`<span>${p.name}</span><span>Aposta: ${p.bet} MT</span><span>X: ${p.x}</span>`;
-      playersDiv.appendChild(div);
-    }
-  }
-
-  function addPlayerWin(amount, x){
-    const div = document.createElement('div');
-    div.className='player';
-    div.innerHTML=`<span>Você</span><span>Aposta: ${betValueInput.value} MT</span><span>X: ${x.toFixed(2)}</span>`;
-    playersDiv.prepend(div);
-  }
-
-  cashoutModal.addEventListener('click', (e)=>{
-    if(e.target===cashoutModal){
-      cashoutModal.classList.remove('active');
-    }
-  });
-
-</script>
-
+        if(localStorage.getItem('ice_2026_blocked') === 'true') showScreen('screen-fail');
+    </script>
 </body>
 </html>

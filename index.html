@@ -17,7 +17,7 @@
             100% { transform: translate(var(--tw-x), var(--tw-y)) scale(3); opacity: 0; }
         }
 
-        /* INTERFACE */
+        /* INTERFACE PRINCIPAL */
         .online-count { background: rgba(0, 255, 136, 0.1); color: #00ff88; padding: 8px 20px; border-radius: 50px; font-size: 0.7rem; margin-bottom: 15px; border: 1px solid #00ff88; z-index: 10; }
         .brand { color: #fff; font-size: 2.2rem; text-align: center; margin-bottom: 20px; z-index: 10; }
         .brand span { color: #e02020; }
@@ -32,33 +32,21 @@
         .progress-bar { width: 250px; height: 10px; background: #222; border-radius: 20px; overflow: hidden; border: 1px solid #333; }
         #fill { width: 0%; height: 100%; background: #00ff88; box-shadow: 0 0 20px #00ff88; transition: width 0.1s; }
 
-        /* DIALOGO COM ANIMAÇÃO */
-        #register-dialog { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.95); display: none; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(10px); }
+        /* MODAIS */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.98); display: none; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(15px); }
+        .dialog-content { background: #121212; padding: 30px; border-radius: 35px; border: 2px solid #e02020; text-align: center; width: 90%; max-width: 400px; animation: dialogZoom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes dialogZoom { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .btn-dialog { background: linear-gradient(180deg, #ff4b4b 0%, #e02020 100%); color: #fff; padding: 18px; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; width: 100%; text-decoration: none; display: block; margin-top: 15px; }
+        .btn-secondary { background: transparent; color: #555; border: none; padding: 10px; width: 100%; cursor: pointer; font-weight: bold; text-decoration: underline; font-size: 0.8rem; margin-top: 10px; }
         
-        @keyframes dialogZoom {
-            from { transform: scale(0.7); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .dialog-content { 
-            background: #121212; 
-            padding: 40px 30px; 
-            border-radius: 25px; 
-            border: 2px solid #e02020; 
-            text-align: center; 
-            width: 85%; 
-            max-width: 360px; 
-            box-shadow: 0 0 40px rgba(224, 32, 32, 0.4);
-            animation: dialogZoom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .btn-dialog { background: #e02020; color: #fff; padding: 18px; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; width: 100%; text-decoration: none; display: block; margin-top: 15px; }
-        .btn-secondary { background: transparent; color: #666; border: none; padding: 12px; width: 100%; border-radius: 10px; margin-top: 10px; cursor: pointer; font-weight: bold; text-decoration: underline; }
+        .painel-ganhos { background: rgba(0, 255, 136, 0.05); border: 1px solid rgba(0, 255, 136, 0.2); border-radius: 20px; padding: 12px; margin: 15px 0; }
+        .linha-ganho { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #222; font-size: 0.75rem; font-family: sans-serif; }
     </style>
 </head>
 <body>
 
-    <div class="online-count">● <span id="user-count">58</span> ATIVOS AGORA</div>
+    <div class="online-count">● <span id="user-count">74</span> ATIVOS AGORA</div>
     <div id="numbers-container"></div>
     <div class="brand">888<span>BET</span> ANGOLA</div>
 
@@ -71,114 +59,93 @@
         </div>
     </div>
 
-    <button class="btn-generate" onclick="checkLogic()">GERAR SINAL VIP</button>
+    <button class="btn-generate" onclick="mostrarPrimeiroDialogo()">GERAR SINAL VIP</button>
 
     <div id="loading-overlay">
-        <div class="status-msg">HACKEANDO SERVIDOR...</div>
-        <div class="progress-bar">
-            <div id="fill"></div>
+        <div class="status-msg">SINCRONIZANDO IA...</div>
+        <div class="progress-bar"><div id="fill"></div></div>
+    </div>
+
+    <div id="register-dialog" class="modal-overlay">
+        <div class="dialog-content">
+            <h2 style="color: #fff; margin-bottom: 10px;">IA 888 VIP</h2>
+            <p style="color: #bbb; font-size: 0.9rem; font-family: sans-serif;">Nossa estratégia de <b>99% de acerto</b> requer uma conta oficial para validar seus lucros.</p>
+            <div class="painel-ganhos" id="feed-ganhos"></div>
+            <a href="https://tracking.888africa.com/visit/?bta=1115&brand=888angola" target="_blank" class="btn-dialog">CADASTRAR E GANHAR</a>
+            <button class="btn-secondary" onclick="mostrarConfirmacao()">JÁ TENHO CONTA</button>
         </div>
     </div>
 
-    <div id="register-dialog">
-        <div class="dialog-content">
-            <h2 style="color: #fff; margin-bottom: 10px;">AVISO IMPORTANTE</h2>
-            <p style="color: #bbb; line-height: 1.4;">Se cadastre para que o bot funcione com 99% de assertividade.</p>
-            <a href="https://tracking.888africa.com/visit/?bta=1115&brand=888angola" target="_blank" class="btn-dialog" onclick="registerClick()">REGISTAR AGORA</a>
-            <button class="btn-secondary" onclick="closePop()">JÁ TENHO CONTA</button>
+    <div id="confirm-dialog" class="modal-overlay">
+        <div class="dialog-content" style="border-color: #ffcc00;">
+            <h2 style="color: #ffcc00; margin-bottom: 15px;">TEM CERTEZA?</h2>
+            <p style="color: #fff; line-height: 1.5; font-family: sans-serif;">
+                Tenha certeza que já criou uma conta <b>dentro do robô</b> pelo link oficial. Se não for isso, o robô vai estar a dar falha e você perderá o sinal.
+            </p>
+            <a href="https://tracking.888africa.com/visit/?bta=1115&brand=888angola" target="_blank" class="btn-dialog" style="background: #ffcc00; color: #000;">CRIAR CONTA AGORA</a>
+            <button class="btn-secondary" style="color: #fff;" onclick="iniciarGeracao()">TENHO CERTEZA, PROSSEGUIR</button>
         </div>
     </div>
 
     <script>
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
-        function playSound(freq, dur) {
-            try {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + dur);
-            } catch(e) {}
-        }
+        function playSound(f, d) { try { const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.type = 'square'; o.frequency.setValueAtTime(f, audioCtx.currentTime); g.gain.setValueAtTime(0.05, audioCtx.currentTime); o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime + d); } catch(e) {} }
 
-        // Lógica de Persistência
-        const LIMIT = 3;
-        const COOLDOWN = 2 * 60 * 1000; // 2 minutos
-
-        function checkLogic() {
+        // MOSTRAR SEMPRE AO CLICAR
+        function mostrarPrimeiroDialogo() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
-
-            let views = parseInt(localStorage.getItem('pop_views') || "0");
-            let lastTime = parseInt(localStorage.getItem('pop_last_time') || "0");
-            const now = Date.now();
-
-            // Se ainda não mostrou 3 vezes E passou o tempo de 2 min
-            if (views < LIMIT && (now - lastTime) > COOLDOWN) {
-                document.getElementById('register-dialog').style.display = 'flex';
-                localStorage.setItem('pop_views', views + 1);
-                localStorage.setItem('pop_last_time', now);
-            } else {
-                generateProcess();
-            }
+            document.getElementById('register-dialog').style.display = 'flex';
+            atualizarFeed();
         }
 
-        function registerClick() {
-            // Se ele clicar em registrar, assumimos que ele não precisa ver mais o aviso
-            localStorage.setItem('pop_views', "99"); 
-            closePop();
+        function mostrarConfirmacao() {
+            document.getElementById('register-dialog').style.display = 'none';
+            document.getElementById('confirm-dialog').style.display = 'flex';
         }
 
-        function closePop() {
+        function iniciarGeracao() {
+            document.getElementById('confirm-dialog').style.display = 'none';
             document.getElementById('register-dialog').style.display = 'none';
             generateProcess();
+        }
+
+        function atualizarFeed() {
+            const f = document.getElementById('feed-ganhos');
+            const n = ["Afonso M.", "Teresa C.", "Mário B.", "Eunice G.", "Dário S."];
+            let h = "";
+            for(let i=0; i<3; i++) {
+                h += `<div class="linha-ganho"><span class="user-id">${n[Math.floor(Math.random()*n.length)]}</span><span style="color:#00ff88">ESTRATÉGIA OK</span><span style="color:#00ff88;font-weight:900">+${(Math.random()*15000+1000).toFixed(0)} Kz</span></div>`;
+            }
+            f.innerHTML = h;
         }
 
         function generateProcess() {
             document.getElementById('loading-overlay').style.display = 'flex';
             let p = 0;
-            const interval = setInterval(() => {
-                p += 5;
-                document.getElementById('fill').style.width = p + "%";
+            const inv = setInterval(() => {
+                p += 5; document.getElementById('fill').style.width = p + "%";
                 playSound(150 + (p * 4), 0.05);
-                if(p >= 100) {
-                    clearInterval(interval);
-                    document.getElementById('loading-overlay').style.display = 'none';
-                    finishSignal();
-                }
+                if(p >= 100) { clearInterval(inv); document.getElementById('loading-overlay').style.display = 'none'; finishSignal(); }
             }, 70);
         }
 
         function finishSignal() {
-            playSound(500, 0.3);
             const r = Math.random() * 100;
             let target = (r < 85) ? (Math.random() * 2.5 + 1.2).toFixed(2) : (Math.random() * 10 + 4).toFixed(2);
-            
             document.getElementById('main-signal').innerText = target + "x";
-            document.getElementById('main-signal').style.color = (parseFloat(target) >= 4) ? "#ff00ff" : "#fff";
-            
-            const agora = new Date();
-            agora.setMinutes(agora.getMinutes() + 1);
-            document.getElementById('time-signal').innerText = agora.getHours().toString().padStart(2,'0') + ":" + agora.getMinutes().toString().padStart(2,'0');
-            document.getElementById('exit-signal').innerText = "1.50x";
             document.getElementById('status-label').innerText = "SINAL CONFIRMADO ✅";
+            const a = new Date(); a.setMinutes(a.getMinutes() + 1);
+            document.getElementById('time-signal').innerText = a.getHours().toString().padStart(2,'0') + ":" + a.getMinutes().toString().padStart(2,'0');
+            document.getElementById('exit-signal').innerText = "1.50x";
         }
 
-        // Efeito de fundo
+        // Efeito visual de fundo
         setInterval(() => {
-            const el = document.createElement('div');
-            el.className = 'floating-number';
-            el.innerText = (Math.random() * 3 + 1).toFixed(2) + "x";
+            const el = document.createElement('div'); el.className = 'floating-number'; el.innerText = (Math.random() * 3 + 1).toFixed(2) + "x";
             el.style.left = "50%"; el.style.top = "50%";
-            const angle = Math.random() * Math.PI * 2;
-            const dist = 300 + Math.random() * 300;
-            el.style.setProperty('--tw-x', `${Math.cos(angle) * dist}px`);
-            el.style.setProperty('--tw-y', `${Math.sin(angle) * dist}px`);
-            document.getElementById('numbers-container').appendChild(el);
-            setTimeout(() => el.remove(), 1500);
+            const a = Math.random() * Math.PI * 2; const d = 300 + Math.random() * 300;
+            el.style.setProperty('--tw-x', `${Math.cos(a) * d}px`); el.style.setProperty('--tw-y', `${Math.sin(a) * d}px`);
+            document.getElementById('numbers-container').appendChild(el); setTimeout(() => el.remove(), 1500);
         }, 150);
     </script>
 </body>

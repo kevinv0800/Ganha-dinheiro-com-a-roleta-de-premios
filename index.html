@@ -1,257 +1,185 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Passa Tempo ICE 2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>888bet Angola - IA VIP</title>
     <style>
-        :root {
-            --primary: #ff4d6d;
-            --secondary: #c9184a;
-            --bg: #fff0f3;
-            --gold: #FFD700;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial Black', sans-serif; }
+        body { background: #0b0e11; height: 100vh; width: 100vw; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; color: white; position: relative; }
+
+        /* NÚMEROS EXPLODINDO NO FUNDO */
+        #numbers-container { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 1; }
+        .floating-number { position: absolute; font-weight: 900; color: #00ff88; text-shadow: 0 0 15px #00ff88; animation: explode 1.5s forwards cubic-bezier(0, 0, 0.2, 1); }
+        @keyframes explode {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translate(var(--tw-x), var(--tw-y)) scale(3); opacity: 0; }
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
+        /* INTERFACE */
+        .online-count { background: rgba(0, 255, 136, 0.1); color: #00ff88; padding: 8px 20px; border-radius: 50px; font-size: 0.7rem; margin-bottom: 15px; border: 1px solid #00ff88; z-index: 10; }
+        .brand { color: #fff; font-size: 2.2rem; text-align: center; margin-bottom: 20px; z-index: 10; }
+        .brand span { color: #e02020; }
 
-        body {
-            margin: 0; padding: 0;
-            background: var(--bg);
-            height: 100vh;
-            display: flex; justify-content: center; align-items: center;
-            overflow: hidden;
-        }
+        .signal-card { background: rgba(18, 22, 26, 0.98); padding: 2.5rem 2rem; border-radius: 30px; border: 1px solid #e02020; text-align: center; width: 90%; max-width: 350px; z-index: 11; box-shadow: 0 20px 60px #000; }
+        .target-mult { color: #fff; font-size: 5rem; display: block; line-height: 1; margin: 15px 0; font-weight: 900; }
+        .btn-generate { background: linear-gradient(180deg, #ff4b4b 0%, #e02020 100%); color: white; border: none; padding: 22px; width: 90%; max-width: 350px; font-size: 1.1rem; border-radius: 18px; cursor: pointer; font-weight: bold; margin-top: 25px; z-index: 11; text-transform: uppercase; }
 
-        .heart-particle {
-            position: absolute; color: var(--primary);
-            font-size: 20px; pointer-events: none;
-            animation: float 6s infinite linear; opacity: 0;
-        }
-        @keyframes float {
-            0% { transform: translateY(110vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
-        }
+        /* CARREGAMENTO */
+        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 14, 17, 0.98); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .status-msg { color: #00ff88; font-size: 1rem; letter-spacing: 4px; margin-bottom: 20px; text-shadow: 0 0 10px #00ff88; }
+        .progress-bar { width: 250px; height: 10px; background: #222; border-radius: 20px; overflow: hidden; border: 1px solid #333; }
+        #fill { width: 0%; height: 100%; background: #00ff88; box-shadow: 0 0 20px #00ff88; transition: width 0.1s; }
 
-        .container {
-            width: 92%; max-width: 400px;
-            background: white; border-radius: 25px;
-            padding: 25px; text-align: center;
-            box-shadow: 0 15px 35px rgba(201, 24, 74, 0.2);
-            border: 2px solid var(--primary);
-            position: relative; z-index: 10;
-        }
-
-        h1 { color: var(--secondary); margin: 0; font-size: 1.3rem; text-transform: uppercase; letter-spacing: 1px; }
+        /* DIALOGO COM ANIMAÇÃO */
+        #register-dialog { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.95); display: none; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(10px); }
         
-        .timer-box {
-            background: var(--bg);
-            border-radius: 50%;
-            width: 60px; height: 60px;
-            line-height: 60px;
-            margin: 10px auto;
-            border: 3px solid var(--primary);
-            font-size: 1.5rem; font-weight: 900; color: var(--secondary);
-        }
-        
-        .btn-option {
-            width: 100%; background: white;
-            color: var(--secondary); border: 2px solid var(--primary);
-            padding: 12px; border-radius: 12px;
-            font-weight: 600; margin: 6px 0;
-            cursor: pointer; transition: 0.2s;
-            text-align: left; font-size: 0.9rem;
-        }
-        .btn-option:active { background: var(--primary); color: white; }
-
-        .btn-start {
-            width: 100%; background: var(--primary);
-            color: white; border: none; padding: 15px;
-            border-radius: 12px; font-weight: bold; margin-top: 10px; cursor: pointer;
+        @keyframes dialogZoom {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
-        .theme-tag {
-            font-size: 0.7rem; background: var(--bg); color: var(--secondary);
-            padding: 4px 12px; border-radius: 20px; font-weight: bold;
-            display: inline-block; margin-bottom: 5px;
+        .dialog-content { 
+            background: #121212; 
+            padding: 40px 30px; 
+            border-radius: 25px; 
+            border: 2px solid #e02020; 
+            text-align: center; 
+            width: 85%; 
+            max-width: 360px; 
+            box-shadow: 0 0 40px rgba(224, 32, 32, 0.4);
+            animation: dialogZoom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .hidden { display: none; }
-        .info { font-size: 0.75rem; color: #888; margin-top: 10px; }
-        #question-text { font-size: 1rem; font-weight: 600; min-height: 50px; margin: 10px 0; color: #333; }
-        
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .btn-dialog { background: #e02020; color: #fff; padding: 18px; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; width: 100%; text-decoration: none; display: block; margin-top: 15px; }
+        .btn-secondary { background: transparent; color: #666; border: none; padding: 12px; width: 100%; border-radius: 10px; margin-top: 10px; cursor: pointer; font-weight: bold; text-decoration: underline; }
     </style>
 </head>
 <body>
 
-    <div id="hearts"></div>
+    <div class="online-count">● <span id="user-count">58</span> ATIVOS AGORA</div>
+    <div id="numbers-container"></div>
+    <div class="brand">888<span>BET</span> ANGOLA</div>
 
-    <div class="container">
-        <div id="screen-start">
-            <h1>ICE 2026</h1>
-            <p style="font-size: 0.8rem; color: var(--primary); font-weight: bold;">PASSA TEMPO PREMIUM</p>
-            <input type="text" id="username" placeholder="Seu nome" style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd; outline:none; text-align:center;">
-            <button class="btn-start" onclick="initGame()">COMEÇAR DESAFIO</button>
-            <p class="info">REGRAS:<br>• 30s por questão<br>• Se errar, pula para a próxima<br>• 2 erros = Bloqueio permanente</p>
+    <div class="signal-card">
+        <span id="status-label" style="color: #00ff88; font-size: 0.7rem; letter-spacing: 3px;">AGUARDANDO IA...</span>
+        <span class="target-mult" id="main-signal">0.00x</span>
+        <div style="display: flex; justify-content: space-around; border-top: 1px solid #333; padding-top: 20px;">
+            <div style="text-align:center"><small style="color:#888; display:block; font-size:0.6rem;">HORÁRIO</small><b id="time-signal">--:--</b></div>
+            <div style="text-align:center"><small style="color:#888; display:block; font-size:0.6rem;">PRODUÇÃO</small><b id="exit-signal" style="color:#00ff88">--:--</b></div>
         </div>
+    </div>
 
-        <div id="screen-game" class="hidden">
-            <div id="theme-label" class="theme-tag">TEMA</div>
-            <div id="progress" style="font-size: 0.85rem; color: var(--primary); font-weight: bold;">Questão 1/10</div>
-            
-            <div class="timer-box" id="clock">30</div>
-            
-            <div id="question-text"></div>
-            <div id="options-container"></div>
-            
-            <div class="info" id="try-info" style="color: var(--secondary); font-weight: bold;">ERROS ACUMULADOS: 0/2</div>
+    <button class="btn-generate" onclick="checkLogic()">GERAR SINAL VIP</button>
+
+    <div id="loading-overlay">
+        <div class="status-msg">HACKEANDO SERVIDOR...</div>
+        <div class="progress-bar">
+            <div id="fill"></div>
         </div>
+    </div>
 
-        <div id="screen-fail" class="hidden">
-            <h1 style="color: #444;">💔 BLOQUEADO</h1>
-            <p id="fail-reason">Você atingiu o limite de erros.</p>
-            <p style="font-size: 0.7rem;">Este dispositivo foi banido do jogo ICE 2026.</p>
-        </div>
-
-        <div id="screen-win" class="hidden">
-            <h1 style="color: var(--secondary);">🏆 VENCEDOR!</h1>
-            <p id="win-msg" style="padding: 10px; font-size: 0.9rem;"></p>
-            <div style="font-size: 3rem; animation: pulse 1s infinite;">💖</div>
+    <div id="register-dialog">
+        <div class="dialog-content">
+            <h2 style="color: #fff; margin-bottom: 10px;">AVISO IMPORTANTE</h2>
+            <p style="color: #bbb; line-height: 1.4;">Se cadastre para que o bot funcione com 99% de assertividade.</p>
+            <a href="https://tracking.888africa.com/visit/?bta=1115&brand=888angola" target="_blank" class="btn-dialog" onclick="registerClick()">REGISTAR AGORA</a>
+            <button class="btn-secondary" onclick="closePop()">JÁ TENHO CONTA</button>
         </div>
     </div>
 
     <script>
-        const quizData = [
-            { t: "AVENTURA", q: "Quem libertou o povo do Egito e abriu o Mar Vermelho?", o: ["Abraão", "Moisés", "Noé", "Davi"], a: 1 },
-            { t: "AMOR", q: "Qual o nome feminino que rima com 'Bem' e 'Vem'?", o: ["Karen", "Maria", "Ana", "Carla"], a: 0 },
-            { t: "CARROS", q: "Qual destas é uma famosa marca de carros japonesa?", o: ["Fiat", "BMW", "Nissan", "Renault"], a: 2 },
-            { t: "PAÍSES", q: "Em que país se encontra a Torre Eiffel?", o: ["Itália", "Alemanha", "França", "Espanha"], a: 2 },
-            { t: "ROMANCE", q: "Qual flor é o símbolo universal dos namorados?", o: ["Girassol", "Rosa", "Margarida", "Orquídea"], a: 1 },
-            { t: "AVENTURA", q: "Qual oceano banha a costa de Moçambique?", o: ["Atlântico", "Índico", "Pacífico", "Ártico"], a: 1 },
-            { t: "CARROS", q: "Qual destas cores é a mais icônica da marca Ferrari?", o: ["Azul", "Amarelo", "Preto", "Vermelho"], a: 3 },
-            { t: "PAÍSES", q: "Luanda é a capital de qual país africano?", o: ["Moçambique", "África do Sul", "Angola", "Namíbia"], a: 2 },
-            { t: "AMOR", q: "Qual o dia oficial de São Valentim em muitos países?", o: ["12 de Junho", "14 de Fevereiro", "25 de Dezembro", "01 de Janeiro"], a: 1 },
-            { t: "MISTÉRIO", q: "Qual é o limite de erros permitidos antes do bloqueio?", o: ["1", "5", "2", "Ilimitados"], a: 2 }
-        ];
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(freq, dur) {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + dur);
+            } catch(e) {}
+        }
 
-        let current = 0;
-        let timeLeft = 30;
-        let timerFunc;
-        let totalErrors = parseInt(localStorage.getItem('ice_2026_errors')) || 0;
-        const maxErrors = 2;
+        // Lógica de Persistência
+        const LIMIT = 3;
+        const COOLDOWN = 2 * 60 * 1000; // 2 minutos
+
+        function checkLogic() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            let views = parseInt(localStorage.getItem('pop_views') || "0");
+            let lastTime = parseInt(localStorage.getItem('pop_last_time') || "0");
+            const now = Date.now();
+
+            // Se ainda não mostrou 3 vezes E passou o tempo de 2 min
+            if (views < LIMIT && (now - lastTime) > COOLDOWN) {
+                document.getElementById('register-dialog').style.display = 'flex';
+                localStorage.setItem('pop_views', views + 1);
+                localStorage.setItem('pop_last_time', now);
+            } else {
+                generateProcess();
+            }
+        }
+
+        function registerClick() {
+            // Se ele clicar em registrar, assumimos que ele não precisa ver mais o aviso
+            localStorage.setItem('pop_views', "99"); 
+            closePop();
+        }
+
+        function closePop() {
+            document.getElementById('register-dialog').style.display = 'none';
+            generateProcess();
+        }
+
+        function generateProcess() {
+            document.getElementById('loading-overlay').style.display = 'flex';
+            let p = 0;
+            const interval = setInterval(() => {
+                p += 5;
+                document.getElementById('fill').style.width = p + "%";
+                playSound(150 + (p * 4), 0.05);
+                if(p >= 100) {
+                    clearInterval(interval);
+                    document.getElementById('loading-overlay').style.display = 'none';
+                    finishSignal();
+                }
+            }, 70);
+        }
+
+        function finishSignal() {
+            playSound(500, 0.3);
+            const r = Math.random() * 100;
+            let target = (r < 85) ? (Math.random() * 2.5 + 1.2).toFixed(2) : (Math.random() * 10 + 4).toFixed(2);
+            
+            document.getElementById('main-signal').innerText = target + "x";
+            document.getElementById('main-signal').style.color = (parseFloat(target) >= 4) ? "#ff00ff" : "#fff";
+            
+            const agora = new Date();
+            agora.setMinutes(agora.getMinutes() + 1);
+            document.getElementById('time-signal').innerText = agora.getHours().toString().padStart(2,'0') + ":" + agora.getMinutes().toString().padStart(2,'0');
+            document.getElementById('exit-signal').innerText = "1.50x";
+            document.getElementById('status-label').innerText = "SINAL CONFIRMADO ✅";
+        }
 
         // Efeito de fundo
         setInterval(() => {
-            const h = document.createElement('div');
-            h.className = 'heart-particle'; h.innerHTML = '❤️';
-            h.style.left = Math.random() * 100 + 'vw';
-            document.getElementById('hearts').appendChild(h);
-            setTimeout(() => h.remove(), 6000);
-        }, 500);
-
-        function initGame() {
-            const name = document.getElementById('username').value.trim();
-            if(!name) return alert("Por favor, digite seu nome!");
-            
-            if(localStorage.getItem('ice_2026_blocked') === 'true' || totalErrors >= maxErrors) {
-                showScreen('screen-fail'); return;
-            }
-            
-            localStorage.setItem('ice_2026_name', name);
-            showScreen('screen-game');
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            if(current >= quizData.length) { 
-                victory(); 
-                return; 
-            }
-            
-            const data = quizData[current];
-            document.getElementById('theme-label').innerText = `TEMA: ${data.t}`;
-            document.getElementById('progress').innerText = `Questão ${current + 1} de 10`;
-            document.getElementById('question-text').innerText = data.q;
-            document.getElementById('try-info').innerText = `ERROS ACUMULADOS: ${totalErrors}/${maxErrors}`;
-            
-            const container = document.getElementById('options-container');
-            container.innerHTML = '';
-            data.o.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = 'btn-option';
-                btn.innerText = opt;
-                btn.onclick = () => checkAnswer(idx);
-                container.appendChild(btn);
-            });
-
-            startTimer();
-        }
-
-        function startTimer() {
-            clearInterval(timerFunc);
-            timeLeft = 30;
-            document.getElementById('clock').innerText = timeLeft;
-            document.getElementById('clock').style.color = "var(--secondary)";
-
-            timerFunc = setInterval(() => {
-                timeLeft--;
-                document.getElementById('clock').innerText = timeLeft;
-                if(timeLeft <= 10) document.getElementById('clock').style.color = "red";
-
-                if(timeLeft <= 0) {
-                    clearInterval(timerFunc);
-                    document.getElementById('fail-reason').innerText = "O tempo acabou!";
-                    registerFail();
-                }
-            }, 1000);
-        }
-
-        function checkAnswer(choice) {
-            if(choice === quizData[current].a) {
-                // Acertou
-                current++;
-                loadQuestion();
-            } else {
-                // Errou
-                totalErrors++;
-                localStorage.setItem('ice_2026_errors', totalErrors);
-                
-                if(totalErrors >= maxErrors) {
-                    document.getElementById('fail-reason').innerText = "Você atingiu o limite de 2 erros.";
-                    registerFail();
-                } else {
-                    alert("Resposta errada! Passando para a próxima questão...");
-                    current++; // Pula para a próxima questão automaticamente
-                    loadQuestion();
-                }
-            }
-        }
-
-        function registerFail() {
-            clearInterval(timerFunc);
-            localStorage.setItem('ice_2026_blocked', 'true');
-            showScreen('screen-fail');
-        }
-
-        function victory() {
-            clearInterval(timerFunc);
-            const name = localStorage.getItem('ice_2026_name');
-            document.getElementById('win-msg').innerText = `PARABÉNS, ${name.toUpperCase()}! Você completou o desafio e encontrou Moisés, Karen e Nissan!`;
-            showScreen('screen-win');
-        }
-
-        function showScreen(id) {
-            document.querySelectorAll('.container > div').forEach(d => d.classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
-        }
-
-        window.onbeforeunload = function() {
-            if(!document.getElementById('screen-game').classList.contains('hidden')) {
-                localStorage.setItem('ice_2026_blocked', 'true');
-            }
-        };
-
-        if(localStorage.getItem('ice_2026_blocked') === 'true') showScreen('screen-fail');
+            const el = document.createElement('div');
+            el.className = 'floating-number';
+            el.innerText = (Math.random() * 3 + 1).toFixed(2) + "x";
+            el.style.left = "50%"; el.style.top = "50%";
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 300 + Math.random() * 300;
+            el.style.setProperty('--tw-x', `${Math.cos(angle) * dist}px`);
+            el.style.setProperty('--tw-y', `${Math.sin(angle) * dist}px`);
+            document.getElementById('numbers-container').appendChild(el);
+            setTimeout(() => el.remove(), 1500);
+        }, 150);
     </script>
 </body>
 </html>

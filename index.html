@@ -1,152 +1,120 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-ao">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>888bet Angola - IA VIP</title>
+    <title>Cashout Prime v3</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial Black', sans-serif; }
-        body { background: #0b0e11; height: 100vh; width: 100vw; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; color: white; position: relative; }
+        :root { --primary: #00ff00; --secondary: #ff3b3b; --bg: #052d1b; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); font-family: sans-serif; overflow: hidden; }
 
-        /* NÚMEROS EXPLODINDO NO FUNDO */
-        #numbers-container { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 1; }
-        .floating-number { position: absolute; font-weight: 900; color: #00ff88; text-shadow: 0 0 15px #00ff88; animation: explode 1.5s forwards cubic-bezier(0, 0, 0.2, 1); }
-        @keyframes explode {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-            20% { opacity: 1; }
-            100% { transform: translate(var(--tw-x), var(--tw-y)) scale(3); opacity: 0; }
-        }
+        /* SPLASH SCREEN */
+        #splash { position: fixed; width: 100%; height: 100%; z-index: 5000; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .loader { width: 50px; height: 50px; border: 5px solid #111; border-top: 5px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* INTERFACE PRINCIPAL */
-        .online-count { background: rgba(0, 255, 136, 0.1); color: #00ff88; padding: 8px 20px; border-radius: 50px; font-size: 0.7rem; margin-bottom: 15px; border: 1px solid #00ff88; z-index: 10; }
-        .brand { color: #fff; font-size: 2.2rem; text-align: center; margin-bottom: 20px; z-index: 10; }
-        .brand span { color: #e02020; }
+        /* LOGIN */
+        #login-screen { position: fixed; width: 100%; height: 100%; z-index: 4000; background: var(--bg); display: none; align-items: center; justify-content: center; }
+        .card { background: rgba(0,0,0,0.8); padding: 30px; border-radius: 15px; border: 1px solid var(--primary); width: 80%; max-width: 320px; text-align: center; color: white; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; background: #1a4d35; color: white; box-sizing: border-box; }
+        .btn { background: var(--primary); color: #000; padding: 12px; border: none; border-radius: 5px; width: 100%; font-weight: bold; cursor: pointer; }
 
-        .signal-card { background: rgba(18, 22, 26, 0.98); padding: 2.5rem 2rem; border-radius: 30px; border: 1px solid #e02020; text-align: center; width: 90%; max-width: 350px; z-index: 11; box-shadow: 0 20px 60px #000; }
-        .target-mult { color: #fff; font-size: 5rem; display: block; line-height: 1; margin: 15px 0; font-weight: 900; }
-        .btn-generate { background: linear-gradient(180deg, #ff4b4b 0%, #e02020 100%); color: white; border: none; padding: 22px; width: 90%; max-width: 350px; font-size: 1.1rem; border-radius: 18px; cursor: pointer; font-weight: bold; margin-top: 25px; z-index: 11; text-transform: uppercase; }
+        /* AREA DO JOGO */
+        #main-app { display: none; width: 100%; height: 100%; }
+        iframe { width: 100%; height: 100%; border: none; background: #000; }
 
-        /* CARREGAMENTO */
-        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 14, 17, 0.98); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
-        .status-msg { color: #00ff88; font-size: 1rem; letter-spacing: 4px; margin-bottom: 20px; text-shadow: 0 0 10px #00ff88; }
-        .progress-bar { width: 250px; height: 10px; background: #222; border-radius: 20px; overflow: hidden; border: 1px solid #333; }
-        #fill { width: 0%; height: 100%; background: #00ff88; box-shadow: 0 0 20px #00ff88; transition: width 0.1s; }
-
-        /* MODAIS */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.98); display: none; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(15px); }
-        .dialog-content { background: #121212; padding: 30px; border-radius: 35px; border: 2px solid #e02020; text-align: center; width: 90%; max-width: 400px; animation: dialogZoom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes dialogZoom { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        .btn-dialog { background: linear-gradient(180deg, #ff4b4b 0%, #e02020 100%); color: #fff; padding: 18px; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; width: 100%; text-decoration: none; display: block; margin-top: 15px; }
-        .btn-secondary { background: transparent; color: #555; border: none; padding: 10px; width: 100%; cursor: pointer; font-weight: bold; text-decoration: underline; font-size: 0.8rem; margin-top: 10px; }
+        /* SINAIS FLUTUANTES (DESIGN FIEL AO SEU PRINT) */
+        #float-btn { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 3000; border: 3px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         
-        .painel-ganhos { background: rgba(0, 255, 136, 0.05); border: 1px solid rgba(0, 255, 136, 0.2); border-radius: 20px; padding: 12px; margin: 15px 0; }
-        .linha-ganho { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #222; font-size: 0.75rem; font-family: sans-serif; }
+        #signal-card { 
+            position: fixed; bottom: 90px; right: 15px; width: 330px; 
+            background: var(--bg); border: 2px solid var(--secondary); border-radius: 15px; 
+            padding: 12px; display: none; z-index: 2999; color: white;
+        }
+        .header-box { font-size: 11px; font-weight: bold; color: var(--primary); margin-bottom: 10px; }
+        .grid { display: flex; justify-content: space-between; gap: 5px; }
+        .box { border: 2px solid var(--primary); border-radius: 8px; padding: 10px 2px; flex: 1; text-align: center; font-size: 13px; font-weight: bold; background: rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
 
-    <div class="online-count">● <span id="user-count">74</span> ATIVOS AGORA</div>
-    <div id="numbers-container"></div>
-    <div class="brand">888<span>BET</span> ANGOLA</div>
+<audio id="beep" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
 
-    <div class="signal-card">
-        <span id="status-label" style="color: #00ff88; font-size: 0.7rem; letter-spacing: 3px;">AGUARDANDO IA...</span>
-        <span class="target-mult" id="main-signal">0.00x</span>
-        <div style="display: flex; justify-content: space-around; border-top: 1px solid #333; padding-top: 20px;">
-            <div style="text-align:center"><small style="color:#888; display:block; font-size:0.6rem;">HORÁRIO</small><b id="time-signal">--:--</b></div>
-            <div style="text-align:center"><small style="color:#888; display:block; font-size:0.6rem;">PRODUÇÃO</small><b id="exit-signal" style="color:#00ff88">--:--</b></div>
+<div id="splash"><div class="loader"></div><h2 style="color:var(--primary); margin-top:15px;">CASHOUT PRIME</h2></div>
+
+<div id="login-screen">
+    <div class="card">
+        <h2>LOGIN</h2>
+        <input type="text" id="u" placeholder="Nome">
+        <input type="password" id="p" placeholder="Senha">
+        <button class="btn" onclick="auth()">ENTRAR</button>
+    </div>
+</div>
+
+<div id="main-app">
+    <iframe src="https://m.bantubet.co.ao/pt/games/external/spribe/aviator" 
+            allow="autoplay; fullscreen" 
+            sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-scripts allow-same-origin">
+    </iframe>
+
+    <div id="float-btn" onclick="toggleWin()">
+        <img src="https://img.icons8.com/color/48/000000/robot-2.png" width="35"/>
+    </div>
+
+    <div id="signal-card">
+        <div class="header-box">CASHOUT <span style="color:white">PRIME</span></div>
+        <div class="grid">
+            <div class="box" id="s-val" style="color:#fbff00;">ANALISANDO...</div>
+            <div class="box">PROTEÇÃO: <span style="color:var(--primary)">1.50X</span></div>
+            <div class="box" id="s-time">00:00:00</div>
         </div>
     </div>
+</div>
 
-    <button class="btn-generate" onclick="mostrarPrimeiroDialogo()">GERAR SINAL VIP</button>
+<script>
+    function auth() {
+        const user = document.getElementById('u').value;
+        const pass = document.getElementById('p').value;
+        if ((user === "0800" && pass === "BG") || (user === "Breno" && pass === "123")) {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+            startSignals();
+        } else { alert("Chave inválida!"); }
+    }
 
-    <div id="loading-overlay">
-        <div class="status-msg">SINCRONIZANDO IA...</div>
-        <div class="progress-bar"><div id="fill"></div></div>
-    </div>
+    window.onload = () => setTimeout(() => { 
+        document.getElementById('splash').style.display = 'none'; 
+        document.getElementById('login-screen').style.display = 'flex'; 
+    }, 2500);
 
-    <div id="register-dialog" class="modal-overlay">
-        <div class="dialog-content">
-            <h2 style="color: #fff; margin-bottom: 10px;">IA 888 VIP</h2>
-            <p style="color: #bbb; font-size: 0.9rem; font-family: sans-serif;">Nossa estratégia de <b>99% de acerto</b> requer uma conta oficial para validar seus lucros.</p>
-            <div class="painel-ganhos" id="feed-ganhos"></div>
-            <a href="https://tracking.888africa.com/visit/?bta=1115&brand=888angola" target="_blank" class="btn-dialog">CADASTRAR E GANHAR</a>
-            <button class="btn-secondary" onclick="mostrarConfirmacao()">JÁ TENHO CONTA</button>
-        </div>
-    </div>
+    function toggleWin() {
+        const card = document.getElementById('signal-card');
+        card.style.display = (card.style.display === 'block') ? 'none' : 'block';
+    }
 
-    <div id="confirm-dialog" class="modal-overlay">
-        <div class="dialog-content" style="border-color: #ffcc00;">
-            <h2 style="color: #ffcc00; margin-bottom: 15px;">TEM CERTEZA?</h2>
-            <p style="color: #fff; line-height: 1.5; font-family: sans-serif;">
-                Tenha certeza que já criou uma conta <b>dentro do robô</b> pelo link oficial. Se não for isso, o robô vai estar a dar falha e você perderá o sinal.
-            </p>
-            <a href="https://tracking.888africa.com/visit/?bta=1115&brand=888angola" target="_blank" class="btn-dialog" style="background: #ffcc00; color: #000;">CRIAR CONTA AGORA</a>
-            <button class="btn-secondary" style="color: #fff;" onclick="iniciarGeracao()">TENHO CERTEZA, PROSSEGUIR</button>
-        </div>
-    </div>
-
-    <script>
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playSound(f, d) { try { const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.type = 'square'; o.frequency.setValueAtTime(f, audioCtx.currentTime); g.gain.setValueAtTime(0.05, audioCtx.currentTime); o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime + d); } catch(e) {} }
-
-        // MOSTRAR SEMPRE AO CLICAR
-        function mostrarPrimeiroDialogo() {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            document.getElementById('register-dialog').style.display = 'flex';
-            atualizarFeed();
-        }
-
-        function mostrarConfirmacao() {
-            document.getElementById('register-dialog').style.display = 'none';
-            document.getElementById('confirm-dialog').style.display = 'flex';
-        }
-
-        function iniciarGeracao() {
-            document.getElementById('confirm-dialog').style.display = 'none';
-            document.getElementById('register-dialog').style.display = 'none';
-            generateProcess();
-        }
-
-        function atualizarFeed() {
-            const f = document.getElementById('feed-ganhos');
-            const n = ["Afonso M.", "Teresa C.", "Mário B.", "Eunice G.", "Dário S."];
-            let h = "";
-            for(let i=0; i<3; i++) {
-                h += `<div class="linha-ganho"><span class="user-id">${n[Math.floor(Math.random()*n.length)]}</span><span style="color:#00ff88">ESTRATÉGIA OK</span><span style="color:#00ff88;font-weight:900">+${(Math.random()*15000+1000).toFixed(0)} Kz</span></div>`;
-            }
-            f.innerHTML = h;
-        }
-
-        function generateProcess() {
-            document.getElementById('loading-overlay').style.display = 'flex';
-            let p = 0;
-            const inv = setInterval(() => {
-                p += 5; document.getElementById('fill').style.width = p + "%";
-                playSound(150 + (p * 4), 0.05);
-                if(p >= 100) { clearInterval(inv); document.getElementById('loading-overlay').style.display = 'none'; finishSignal(); }
-            }, 70);
-        }
-
-        function finishSignal() {
-            const r = Math.random() * 100;
-            let target = (r < 85) ? (Math.random() * 2.5 + 1.2).toFixed(2) : (Math.random() * 10 + 4).toFixed(2);
-            document.getElementById('main-signal').innerText = target + "x";
-            document.getElementById('status-label').innerText = "SINAL CONFIRMADO ✅";
-            const a = new Date(); a.setMinutes(a.getMinutes() + 1);
-            document.getElementById('time-signal').innerText = a.getHours().toString().padStart(2,'0') + ":" + a.getMinutes().toString().padStart(2,'0');
-            document.getElementById('exit-signal').innerText = "1.50x";
-        }
-
-        // Efeito visual de fundo
+    function startSignals() {
+        const audio = document.getElementById('beep');
+        let active = false;
         setInterval(() => {
-            const el = document.createElement('div'); el.className = 'floating-number'; el.innerText = (Math.random() * 3 + 1).toFixed(2) + "x";
-            el.style.left = "50%"; el.style.top = "50%";
-            const a = Math.random() * Math.PI * 2; const d = 300 + Math.random() * 300;
-            el.style.setProperty('--tw-x', `${Math.cos(a) * d}px`); el.style.setProperty('--tw-y', `${Math.sin(a) * d}px`);
-            document.getElementById('numbers-container').appendChild(el); setTimeout(() => el.remove(), 1500);
-        }, 150);
-    </script>
+            const now = new Date();
+            document.getElementById('s-time').innerText = now.toLocaleTimeString('pt-BR');
+            const cycle = ((now.getMinutes() * 60) + now.getSeconds()) % 90;
+
+            if (cycle < 25) { // Janela de 25 segundos para o sinal
+                if (!active) {
+                    const h = now.getHours().toString().padStart(2, '0');
+                    const m = (now.getMinutes() + 1).toString().padStart(2, '0');
+                    const x = Math.floor(Math.random() * 5) + 2; // Pick Random 2 to 6
+                    document.getElementById('s-val').innerHTML = `${h}:${m} ➔ <span style="color:var(--primary)">${x}X</span>`;
+                    audio.play().catch(() => {});
+                    active = true;
+                }
+            } else {
+                document.getElementById('s-val').innerText = "ANALISANDO...";
+                active = false;
+            }
+        }, 1000);
+    }
+</script>
 </body>
 </html>
